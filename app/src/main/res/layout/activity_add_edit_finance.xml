@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AddEditFinanceActivity">
+
+    <TextView
+        android:id="@+id/tv_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:minWidth="@dimen/title_width"
+        android:text="Ngày"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_day_finance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/tv_day"
+        android:text="12/12/2020"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_day"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:minWidth="@dimen/title_width"
+        android:text="Giờ"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_time_finance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_day_finance"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/tv_time"
+        android:text="21:30"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_time"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:minWidth="@dimen/title_width"
+        android:text="Tài khoản"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_account_finance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_time_finance"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/tv_time"
+        android:text="Tiền mặt"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_account"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:minWidth="@dimen/title_width"
+        android:text="Số tiền"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/ed_cost_finance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_account_finance"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/tv_time"
+        android:background="@null"
+        android:inputType="number"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="50.000 đ"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_cost"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:minWidth="@dimen/title_width"
+        android:text="Ghi chú"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/ed_note_finance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ed_cost_finance"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/tv_note"
+        android:background="@null"
+        android:text="Mua bánh"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_note"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:text="Hoàn tất" />
+
+</RelativeLayout>
