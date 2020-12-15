@@ -17,6 +17,10 @@ public class Account {
     private long balance;
 
 
+    public Account(String accountName, long balance) {
+        this.accountName = accountName;
+        this.balance = balance;
+    }
 
     public int getId() {
         return id;

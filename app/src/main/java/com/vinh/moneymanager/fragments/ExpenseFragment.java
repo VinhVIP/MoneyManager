@@ -19,10 +19,13 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
 import com.vinh.moneymanager.R;
+import com.vinh.moneymanager.activities.AddEditCategoryActivity;
 import com.vinh.moneymanager.activities.AddEditFinanceActivity;
 import com.vinh.moneymanager.adapters.ExpandableListFinanceAdapter;
 import com.vinh.moneymanager.adapters.GridCategoryAdapter;
@@ -30,29 +33,40 @@ import com.vinh.moneymanager.adapters.RecyclerWeekAdapter;
 import com.vinh.moneymanager.components.SingleChoice;
 import com.vinh.moneymanager.databinding.FragmentExpenseBinding;
 import com.vinh.moneymanager.libs.DateRange;
+import com.vinh.moneymanager.libs.Define;
 import com.vinh.moneymanager.libs.DialogWeek;
 import com.vinh.moneymanager.models.DateRangeModel;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
+import com.vinh.moneymanager.viewmodels.CategoryViewModel;
+import com.vinh.moneymanager.viewmodels.FinanceViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSelectedListener, RecyclerWeekAdapter.OnItemWeekClickListener, GridCategoryAdapter.OnGridItemClickListener {
 
     private static ExpenseFragment instance;
 
+    // GridView hiển thị các danh mục chi tiêu và số tiền đã chi tiêu
     private GridView gridViewCategories;
+    private CategoryViewModel categoryViewModel;
 
+    // Expand List hiển thị các khoản chi tiêu theo danh mục và thời gian
     private ExpandableListView expandableListCategoryFinance;
     private ExpandableListFinanceAdapter listCategoryFinanceAdapter;
+    private FinanceViewModel financeViewModel;
 
 
     private View viewControlBottomSheet;
 
-    private List<Category> categories;
+    // List các danh mục
+    private List<Category> categories = new ArrayList<>();
+    // Map các khoản chi tiêu theo danh mục
     private HashMap<Category, List<Finance>> mapFinance;
 
     private Calendar calendar;
@@ -96,19 +110,35 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         dateRangeModel = new DateRangeModel();
         dateRangeModel.dateRange.set(new DateRange());
         binding.setDateRangeModel(dateRangeModel);
-
         dateHandlerClick = new DateHandlerClick();
         binding.setDateHandler(dateHandlerClick);
 
         dialogWeek = new DialogWeek(getContext(), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR), this);
 
+
+        // category view model
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+
         gridViewCategories = view.findViewById(R.id.grid_view_category);
+        gridViewCategories.setAdapter(new GridCategoryAdapter(this.getContext(), categories, this));
 
-        mapFinance = populatedListData();
-        categories = new ArrayList<>(mapFinance.keySet());
+        categoryViewModel.getExpenseCategories().observe(this.getActivity(), new Observer<List<Category>>() {
+            @Override
+            public void onChanged(List<Category> categories) {
+                ExpenseFragment.this.categories = categories;
+                gridViewCategories.setAdapter(new GridCategoryAdapter(ExpenseFragment.this.getContext(), categories, ExpenseFragment.this));
+            }
+        });
 
-        gridViewCategories.setAdapter(new GridCategoryAdapter(this.getContext(), getListCategory(), this));
 
+        setLayoutBottomSheet(view);
+        initExpandableList(view);
+
+        return view;
+    }
+
+
+    private void setLayoutBottomSheet(View view) {
         mainLayout = view.findViewById(R.id.main_layout);
         layoutBottomSheet = view.findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
@@ -144,17 +174,10 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
             }
         });
-
         initTabLayout(view);
-
-
-        initExpandableList(view);
-
-        return view;
     }
 
-
-    private void initTabLayout(View view){
+    private void initTabLayout(View view) {
         tabLayout = view.findViewById(R.id.tab_layout);
         setMarginTabItem(tabLayout);    // tab item margin
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -184,7 +207,32 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         }
     }
 
-    private void initExpandableList(View view){
+    private void initExpandableList(View view) {
+        mapFinance = new HashMap<>();
+
+        financeViewModel = new ViewModelProvider(this).get(FinanceViewModel.class);
+        financeViewModel.getAllFinances().observe(this.getActivity(), new Observer<List<Finance>>() {
+            @Override
+            public void onChanged(List<Finance> finances) {
+
+                for (Category c : categories) {
+                    if (!mapFinance.containsKey(c)) mapFinance.put(c, new ArrayList<Finance>());
+                }
+
+                for (Finance f : finances) {
+                    for (Category c : categories) {
+                        if (f.getCategoryId() == c.getId() && !mapFinance.get(c).contains(f)) {
+                            mapFinance.get(c).add(f);
+                        }
+                    }
+                }
+
+//                listCategoryFinanceAdapter.notifyDataSetChanged();
+                listCategoryFinanceAdapter = new ExpandableListFinanceAdapter(ExpenseFragment.this.getContext(), categories, mapFinance);
+                expandableListCategoryFinance.setAdapter(listCategoryFinanceAdapter);
+            }
+        });
+
         expandableListCategoryFinance = view.findViewById(R.id.expandable_list_category_finance);
         listCategoryFinanceAdapter = new ExpandableListFinanceAdapter(this.getContext(), categories, mapFinance);
         expandableListCategoryFinance.setAdapter(listCategoryFinanceAdapter);
@@ -197,53 +245,10 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     }
 
 
-    private static HashMap<Category, List<Finance>> populatedListData() {
-        HashMap<Category, List<Finance>> hashMap = new HashMap<>();
-
-        List<Finance> cricket = new ArrayList<>();
-        cricket.add(new Finance(0, 20000, "11:30", "Mua ABC", 0));
-        cricket.add(new Finance(0, 20000, "11:30", "Mua ABC", 0));
-        cricket.add(new Finance(0, 20000, "11:30", "Mua ABC", 0));
-        cricket.add(new Finance(0, 20000, "11:30", "Mua ABC", 0));
-
-
-        List<Finance> football = new ArrayList<>();
-        football.add(new Finance(0, 20000, "11:30", "Mua ABC", 0));
-        football.add(new Finance(0, 20000, "11:30", "Mua ABC", 0));
-        football.add(new Finance(0, 20000, "11:30", "Mua ABC", 0));
-        football.add(new Finance(0, 20000, "11:30", "Mua ABC", 0));
-
-        List<Finance> basketball = new ArrayList<>();
-        basketball.add(new Finance(0, 20000, "11:30", "Mua ABC", 0));
-        basketball.add(new Finance(0, 20000, "11:30", "Mua ABC", 0));
-        basketball.add(new Finance(0, 20000, "11:30", "Mua ABC", 0));
-        basketball.add(new Finance(0, 20000, "11:30", "Mua ABC", 0));
-        basketball.add(new Finance(0, 20000, "11:30", "Mua ABC", 0));
-
-        hashMap.put(new Category("Shopping", 1, "Ahihi"), cricket);
-        hashMap.put(new Category("Car", 1, "Ahihi"), football);
-        hashMap.put(new Category("Massage", 1, "Ahihi"), basketball);
-
-        return hashMap;
-    }
-
-    private List<Category> getListCategory() {
-        List<Category> list = new ArrayList<>();
-        list.add(new Category("AAA", 1, "Ahihi"));
-        list.add(new Category("BBB", 1, "Ahihi"));
-        list.add(new Category("CCC", 1, "Ahihi"));
-        list.add(new Category("DDD", 1, "Ahihi"));
-        list.add(new Category("BBB", 1, "Ahihi"));
-        list.add(new Category("CCC", 1, "Ahihi"));
-        list.add(new Category("DDD", 1, "Ahihi"));
-
-        return list;
-    }
-
     @Override
     public void onChoiceClick(int index) {
         DateRange range = dateRangeModel.dateRange.get();
-        if(index == range.getMode()) return;
+        if (index == range.getMode()) return;
         Calendar calendar = Calendar.getInstance();
 
         range.setMode(index);
@@ -256,7 +261,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
                 range.setWeek(week, calendar.get(Calendar.YEAR));
                 break;
             case DateRange.MODE_MONTH:
-                range.setStartDate(new DateRange.Date(1,calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR)));
+                range.setStartDate(new DateRange.Date(1, calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR)));
                 break;
         }
         dateRangeModel.setDateRangeValue(range);
@@ -269,9 +274,39 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     }
 
     @Override
-    public void onGridItemClick(int position) {
-        Intent intent = new Intent(getActivity(), AddEditFinanceActivity.class);
-        startActivity(intent);
+    public void onGridItemClick(int position, boolean isCategory) {
+        if (isCategory) {
+            Intent intent = new Intent(getActivity(), AddEditFinanceActivity.class);
+            startActivityForResult(intent, Define.REQUEST_ADD_FINANCE);
+        } else {
+            Intent intent = new Intent(getActivity(), AddEditCategoryActivity.class);
+            startActivityForResult(intent, Define.REQUEST_ADD_CATEGORY);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Define.REQUEST_ADD_CATEGORY) {
+            if (resultCode == RESULT_OK) {
+                Category inputCategory = new Category(data.getStringExtra("name"),
+                        data.getIntExtra("type", 0),
+                        data.getStringExtra("description"));
+
+                categoryViewModel.insert(inputCategory);
+            }
+        } else if (requestCode == Define.REQUEST_ADD_FINANCE) {
+            if (resultCode == RESULT_OK) {
+                Finance inputFinance = new Finance(data.getIntExtra("cost", 0),
+                        data.getStringExtra("datetime"),
+                        data.getStringExtra("detail"),
+                        data.getIntExtra("category_id", 0),
+                        data.getIntExtra("account_id", 0));
+
+                financeViewModel.insert(inputFinance);
+                System.out.println("Them khoan chi tieu thanh cong!");
+            }
+        }
     }
 
     public class DateHandlerClick {

@@ -46,12 +46,12 @@ public class Finance {
     @ColumnInfo(name = "account_id")
     private int accountId;
 
-    public Finance(int id, long cost, String dateTime, String detail, int categoryId) {
-        this.id = id;
+    public Finance(long cost, String dateTime, String detail, int categoryId, int accountId) {
         this.cost = cost;
         this.dateTime = dateTime;
         this.detail = detail;
         this.categoryId = categoryId;
+        this.accountId = accountId;
     }
 
     public int getId() {

@@ -65,7 +65,7 @@ public class IncomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_income, container, false);
         expandableListFinance = view.findViewById(R.id.expandable_list_finance);
 
-        mapFinance = populatedListData();
+        mapFinance = new HashMap<>();
         categories = new ArrayList<>(mapFinance.keySet());
 
         listAdapter = new ExpandableListFinanceAdapter(this.getContext(), categories, mapFinance);
@@ -134,7 +134,7 @@ public class IncomeFragment extends Fragment {
         }
     };
 
-    private static HashMap<Category, List<Finance>> populatedListData() {
+    /*private static HashMap<Category, List<Finance>> populatedListData() {
         HashMap<Category, List<Finance>> hashMap = new HashMap<>();
 
         List<Finance> cricket = new ArrayList<>();
@@ -162,5 +162,5 @@ public class IncomeFragment extends Fragment {
         hashMap.put(new Category("Massage", 1, "Ahihi"), basketball);
 
         return hashMap;
-    }
+    }*/
 }

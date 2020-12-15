@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MoneyManager">
-        <activity android:name=".activities.AddEditFinanceActivity"></activity>
+        <activity android:name=".activities.AddEditCategoryActivity"></activity>
+        <activity android:name=".activities.AddEditFinanceActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

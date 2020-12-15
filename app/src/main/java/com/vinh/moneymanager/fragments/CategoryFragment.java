@@ -57,8 +57,9 @@ public class CategoryFragment extends Fragment implements GridCategoryAdapter.On
         return list;
     }
 
-    @Override
-    public void onGridItemClick(int position) {
 
+    @Override
+    public void onGridItemClick(int position, boolean isCategory) {
+        
     }
 }

@@ -20,6 +20,7 @@ public class FinanceRepository {
         MoneyManagerDatabase database = MoneyManagerDatabase.getInstance(application);
         financeDao = database.financeDao();
 
+        finances = financeDao.getAllFinances();
     }
 
     public void insert(Finance finance){
@@ -32,5 +33,9 @@ public class FinanceRepository {
 
     public void delete(Finance finance){
         financeDao.delete(finance);
+    }
+
+    public LiveData<List<Finance>> getAllFinances(){
+        return finances;
     }
 }

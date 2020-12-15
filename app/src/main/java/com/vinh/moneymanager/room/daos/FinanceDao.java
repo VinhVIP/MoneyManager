@@ -1,5 +1,6 @@
 package com.vinh.moneymanager.room.daos;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -22,6 +23,9 @@ public interface FinanceDao {
     void delete(Finance finance);
 
     @Query("SELECT * FROM finance WHERE category_id = :categoryId")
-    List<Finance> getFinanceByCategory(int categoryId);
+    LiveData<List<Finance>> getFinancesByCategory(int categoryId);
+
+    @Query("SELECT * FROM finance")
+    LiveData<List<Finance>> getAllFinances();
 
 }

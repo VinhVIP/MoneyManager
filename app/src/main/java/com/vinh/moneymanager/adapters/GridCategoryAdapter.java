@@ -29,7 +29,7 @@ public class GridCategoryAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return categories.size();
+        return categories.size() + 1;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class GridCategoryAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return categories.get(position).getId();
+        return position;
     }
 
     @Override
@@ -57,13 +57,18 @@ public class GridCategoryAdapter extends BaseAdapter {
             holder = (GridViewHolder) convertView.getTag();
         }
 
-        Category category = categories.get(position);
-        holder.categoryName.setText(category.getName());
-        holder.categoryImage.setImageResource(R.drawable.ic_star);
-        holder.categoryTotal.setText("100.000");
-
+        if(position != getCount()-1) {
+            Category category = categories.get(position);
+            holder.categoryName.setText(category.getName());
+            holder.categoryImage.setImageResource(R.drawable.ic_star);
+            holder.categoryTotal.setText("100.000");
+        }else{
+            holder.categoryName.setText("Thêm");
+            holder.categoryImage.setImageResource(R.drawable.ic_add_circle_outline);
+            holder.categoryTotal.setText("");
+        }
         convertView.setOnClickListener((v)->{
-            listener.onGridItemClick(position);
+            listener.onGridItemClick(position, position != getCount()-1);
         });
 
         return convertView;
@@ -76,6 +81,6 @@ public class GridCategoryAdapter extends BaseAdapter {
     }
 
     public interface OnGridItemClickListener{
-        void onGridItemClick(int position);
+        void onGridItemClick(int position, boolean isCategory);
     }
 }
