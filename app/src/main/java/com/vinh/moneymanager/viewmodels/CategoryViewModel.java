@@ -1,6 +1,7 @@
 package com.vinh.moneymanager.viewmodels;
 
 import android.app.Application;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -21,6 +22,7 @@ public class CategoryViewModel extends AndroidViewModel {
     public CategoryViewModel(@NonNull Application application) {
         super(application);
         repository = new CategoryRepository(application);
+
         incomeCategories = repository.getIncomeCategories();
         expenseCategories = repository.getExpenseCategories();
     }

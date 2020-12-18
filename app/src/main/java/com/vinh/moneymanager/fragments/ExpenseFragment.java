@@ -43,8 +43,10 @@ import com.vinh.moneymanager.viewmodels.FinanceViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -67,7 +69,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     // List các danh mục
     private List<Category> categories = new ArrayList<>();
     // Map các khoản chi tiêu theo danh mục
-    private HashMap<Category, List<Finance>> mapFinance;
+    private Map<Category, List<Finance>> mapFinance;
 
     private Calendar calendar;
     private DialogWeek dialogWeek;
@@ -208,29 +210,32 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     }
 
     private void initExpandableList(View view) {
-        mapFinance = new HashMap<>();
+        mapFinance = new TreeMap<>((c1, c2) -> c1.getId() - c2.getId());
 
         financeViewModel = new ViewModelProvider(this).get(FinanceViewModel.class);
-        financeViewModel.getAllFinances().observe(this.getActivity(), new Observer<List<Finance>>() {
-            @Override
-            public void onChanged(List<Finance> finances) {
 
-                for (Category c : categories) {
-                    if (!mapFinance.containsKey(c)) mapFinance.put(c, new ArrayList<Finance>());
-                }
+        financeViewModel.getAllFinances().observe(this.getActivity(), finances -> {
+            mapFinance.clear();
 
-                for (Finance f : finances) {
-                    for (Category c : categories) {
-                        if (f.getCategoryId() == c.getId() && !mapFinance.get(c).contains(f)) {
-                            mapFinance.get(c).add(f);
-                        }
+            for (Category c : categories) {
+                mapFinance.put(c, new ArrayList<>());
+            }
+
+            for (Finance f : finances) {
+                for (Category c : mapFinance.keySet()) {
+                    if (f.getCategoryId() == c.getId()) {
+                        mapFinance.get(c).add(f);
                     }
                 }
-
-//                listCategoryFinanceAdapter.notifyDataSetChanged();
-                listCategoryFinanceAdapter = new ExpandableListFinanceAdapter(ExpenseFragment.this.getContext(), categories, mapFinance);
-                expandableListCategoryFinance.setAdapter(listCategoryFinanceAdapter);
             }
+
+            for (Category c : mapFinance.keySet()) {
+                for (Finance f : mapFinance.get(c)) {
+                    System.out.println(f.getId() + " " + f.getDetail());
+                }
+            }
+
+            listCategoryFinanceAdapter.setMapFinance(mapFinance);
         });
 
         expandableListCategoryFinance = view.findViewById(R.id.expandable_list_category_finance);
@@ -241,7 +246,27 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
         });
 
-        expandableListCategoryFinance.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> false);
+        expandableListCategoryFinance.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+            System.out.println(mapFinance.get(categories.get(groupPosition)).get(childPosition).getDetail());
+
+            Category c = categories.get(groupPosition);
+            Finance f = mapFinance.get(c).get(childPosition);
+            Intent intent = new Intent(getActivity(), AddEditFinanceActivity.class);
+
+            intent.putExtra(Define.FINANCE_ID, f.getId());
+            intent.putExtra(Define.CATEGORY_ID, c.getId());
+            intent.putExtra(Define.CATEGORY_NAME, c.getName());
+
+            intent.putExtra(Define.ACCOUNT_ID, 1);
+            intent.putExtra(Define.ACCOUNT_NAME, "Tiền mặt");
+
+            intent.putExtra(Define.FINANCE_DATETIME, f.getDateTime());
+            intent.putExtra(Define.FINANCE_COST, f.getCost());
+            intent.putExtra(Define.FINANCE_DETAIL, f.getDetail());
+
+            startActivityForResult(intent, Define.REQUEST_EDIT_FINANCE);
+            return false;
+        });
     }
 
 
@@ -277,6 +302,12 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     public void onGridItemClick(int position, boolean isCategory) {
         if (isCategory) {
             Intent intent = new Intent(getActivity(), AddEditFinanceActivity.class);
+            intent.putExtra(Define.CATEGORY_ID, categories.get(position).getId());
+            intent.putExtra(Define.CATEGORY_NAME, categories.get(position).getName());
+
+            intent.putExtra(Define.ACCOUNT_ID, 1);
+            intent.putExtra(Define.ACCOUNT_NAME, "Tiền mặt");
+
             startActivityForResult(intent, Define.REQUEST_ADD_FINANCE);
         } else {
             Intent intent = new Intent(getActivity(), AddEditCategoryActivity.class);
@@ -297,14 +328,26 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             }
         } else if (requestCode == Define.REQUEST_ADD_FINANCE) {
             if (resultCode == RESULT_OK) {
-                Finance inputFinance = new Finance(data.getIntExtra("cost", 0),
-                        data.getStringExtra("datetime"),
-                        data.getStringExtra("detail"),
-                        data.getIntExtra("category_id", 0),
-                        data.getIntExtra("account_id", 0));
+                Finance inputFinance = new Finance(data.getLongExtra(Define.FINANCE_COST, 0),
+                        data.getStringExtra(Define.FINANCE_DATETIME),
+                        data.getStringExtra(Define.FINANCE_DETAIL),
+                        data.getIntExtra(Define.CATEGORY_ID, 0),
+                        data.getIntExtra(Define.ACCOUNT_ID, 0));
 
                 financeViewModel.insert(inputFinance);
                 System.out.println("Them khoan chi tieu thanh cong!");
+            }
+        } else if (requestCode == Define.REQUEST_EDIT_FINANCE) {
+            if (resultCode == RESULT_OK) {
+                Finance updateFinance = new Finance(data.getLongExtra(Define.FINANCE_COST, 0),
+                        data.getStringExtra(Define.FINANCE_DATETIME),
+                        data.getStringExtra(Define.FINANCE_DETAIL),
+                        data.getIntExtra(Define.CATEGORY_ID, 0),
+                        data.getIntExtra(Define.ACCOUNT_ID, 0));
+                updateFinance.setId(data.getIntExtra(Define.FINANCE_ID, -1));
+                System.out.println("ID Finance: " + updateFinance.getId());
+                financeViewModel.update(updateFinance);
+                System.out.println("Cap nhat khoan chi tieu thanh cong!");
             }
         }
     }

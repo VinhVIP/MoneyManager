@@ -1,7 +1,7 @@
 package com.vinh.moneymanager.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
+import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,20 +13,33 @@ import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
 
-import java.util.HashMap;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class ExpandableListFinanceAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private List<Category> categories;
-    private HashMap<Category, List<Finance>> mapFinance;
+    private Map<Category, List<Finance>> mapFinance;
 
+    @Override
+    public void registerDataSetObserver(DataSetObserver observer) {
+        super.registerDataSetObserver(observer);
+    }
 
-    public ExpandableListFinanceAdapter(Context context, List<Category> categories, HashMap<Category, List<Finance>> mapFinance) {
+    public ExpandableListFinanceAdapter(Context context, List<Category> categories, Map<Category, List<Finance>> mapFinance) {
         this.context = context;
         this.categories = categories;
         this.mapFinance = mapFinance;
+    }
+
+    public void setMapFinance(Map<Category, List<Finance>> mapFinance) {
+        this.mapFinance = mapFinance;
+        categories.clear();
+        categories.addAll(mapFinance.keySet());
+        notifyDataSetInvalidated();
     }
 
     @Override
@@ -77,7 +90,16 @@ public class ExpandableListFinanceAdapter extends BaseExpandableListAdapter {
 
         imgView.setImageResource(R.drawable.ic_star);
         tvTitle.setText(categories.get(groupPosition).getName());
-        tvTotal.setText("100.000đ");
+
+        long totalCost = 0;
+        for (Finance f : mapFinance.get(categories.get(groupPosition))) {
+            totalCost += f.getCost();
+        }
+
+        Locale localeVN = new Locale("vi", "VN");
+        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+
+        tvTotal.setText(currencyVN.format(totalCost));
 
         return convertView;
     }
@@ -94,7 +116,13 @@ public class ExpandableListFinanceAdapter extends BaseExpandableListAdapter {
 
         tvTime.setText(mapFinance.get(categories.get(groupPosition)).get(childPosition).getDateTime());
         tvDetail.setText(mapFinance.get(categories.get(groupPosition)).get(childPosition).getDetail());
-        tvCost.setText(mapFinance.get(categories.get(groupPosition)).get(childPosition).getCost()+"đ");
+
+        long cost = mapFinance.get(categories.get(groupPosition)).get(childPosition).getCost();
+
+
+        Locale localeVN = new Locale("vi", "VN");
+        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+        tvCost.setText(currencyVN.format(cost));
 
         return convertView;
     }

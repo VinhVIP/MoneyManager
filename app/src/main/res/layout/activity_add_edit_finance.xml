@@ -23,7 +23,7 @@
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/tv_day"
         android:text="Mua sắm"
-        android:textColor="@color/black"
+        android:textColor="#3F51B5"
         android:textSize="18sp" />
 
     <TextView
@@ -89,7 +89,7 @@
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/tv_time"
         android:text="Tiền mặt"
-        android:textColor="@color/black"
+        android:textColor="#3F51B5"
         android:textSize="18sp" />
 
     <TextView
@@ -114,7 +114,7 @@
         android:inputType="number"
         android:maxLines="1"
         android:singleLine="true"
-        android:text="50.000 đ"
+        android:hint="50000"
         android:textColor="@color/black"
         android:textSize="18sp" />
 
@@ -137,7 +137,7 @@
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/tv_note"
         android:background="@null"
-        android:text="Mua bánh"
+        android:hint="Mua bánh"
         android:textColor="@color/black"
         android:textSize="18sp" />
 

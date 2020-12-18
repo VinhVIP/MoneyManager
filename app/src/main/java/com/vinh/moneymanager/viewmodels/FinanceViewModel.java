@@ -41,4 +41,8 @@ public class FinanceViewModel extends AndroidViewModel {
         return finances;
     }
 
+    public LiveData<List<Finance>> getFinances(int categoryId){
+        return repository.getFinances(categoryId);
+    }
+
 }

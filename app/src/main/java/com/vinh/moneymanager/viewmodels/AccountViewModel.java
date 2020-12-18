@@ -4,17 +4,23 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 import com.vinh.moneymanager.repositories.AccountRepository;
 import com.vinh.moneymanager.room.entities.Account;
 
+import java.util.List;
+
 public class AccountViewModel extends AndroidViewModel {
     private AccountRepository repository;
 
+    private LiveData<List<Account>> accounts;
 
     public AccountViewModel(@NonNull Application application) {
         super(application);
         repository = new AccountRepository(application);
+
+        accounts = repository.getAccounts();
     }
 
     public void insert(Account account) {
@@ -27,5 +33,9 @@ public class AccountViewModel extends AndroidViewModel {
 
     public void delete(Account account) {
         repository.update(account);
+    }
+
+    public LiveData<List<Account>> getAccounts(){
+        return accounts;
     }
 }

@@ -23,10 +23,10 @@ public interface CategoryDao {
     @Delete
     void delete(Category category);
 
-    @Query("SELECT * FROM category WHERE type = 0")
+    @Query("SELECT * FROM category WHERE type = 0 ORDER BY category_id ASC")
     LiveData<List<Category>> getIncomeCategories();
 
-    @Query("SELECT * FROM category WHERE type = 1")
+    @Query("SELECT * FROM category WHERE type = 1  ORDER BY category_id ASC")
     LiveData<List<Category>> getExpenseCategories();
 
 

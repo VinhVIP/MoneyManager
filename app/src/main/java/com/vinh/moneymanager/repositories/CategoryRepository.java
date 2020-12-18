@@ -1,6 +1,7 @@
 package com.vinh.moneymanager.repositories;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
@@ -26,15 +27,15 @@ public class CategoryRepository {
     }
 
     public void insert(Category category) {
-        categoryDao.insert(category);
+        new InsertCategoryAsyncTask(categoryDao).execute(category);
     }
 
     public void update(Category category) {
-        categoryDao.update(category);
+        new UpdateCategoryAsyncTask(categoryDao).execute(category);
     }
 
     public void delete(Category category) {
-        categoryDao.delete(category);
+        new DeleteCategoryAsyncTask(categoryDao).execute(category);
     }
 
     public LiveData<List<Category>> getIncomeCategories() {
@@ -43,5 +44,45 @@ public class CategoryRepository {
 
     public LiveData<List<Category>> getExpenseCategories() {
         return expenseCategories;
+    }
+
+    // AsyncTask
+    private static class InsertCategoryAsyncTask extends AsyncTask<Category, Void, Void>{
+        private CategoryDao categoryDao;
+        private InsertCategoryAsyncTask(CategoryDao categoryDao){
+            this.categoryDao = categoryDao;
+        }
+
+        @Override
+        protected Void doInBackground(Category... categories) {
+            categoryDao.insert(categories[0]);
+            return null;
+        }
+    }
+
+    private static class DeleteCategoryAsyncTask extends AsyncTask<Category, Void, Void>{
+        private CategoryDao categoryDao;
+        private DeleteCategoryAsyncTask(CategoryDao categoryDao){
+            this.categoryDao = categoryDao;
+        }
+
+        @Override
+        protected Void doInBackground(Category... categories) {
+            categoryDao.delete(categories[0]);
+            return null;
+        }
+    }
+
+    private static class UpdateCategoryAsyncTask extends AsyncTask<Category, Void, Void>{
+        private CategoryDao categoryDao;
+        private UpdateCategoryAsyncTask(CategoryDao categoryDao){
+            this.categoryDao = categoryDao;
+        }
+
+        @Override
+        protected Void doInBackground(Category... categories) {
+            categoryDao.update(categories[0]);
+            return null;
+        }
     }
 }
