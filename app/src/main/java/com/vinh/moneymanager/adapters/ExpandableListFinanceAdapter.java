@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vinh.moneymanager.R;
+import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
 
@@ -96,10 +97,7 @@ public class ExpandableListFinanceAdapter extends BaseExpandableListAdapter {
             totalCost += f.getCost();
         }
 
-        Locale localeVN = new Locale("vi", "VN");
-        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
-
-        tvTotal.setText(currencyVN.format(totalCost));
+        tvTotal.setText(Helper.formatCurrency(totalCost));
 
         return convertView;
     }
@@ -119,10 +117,7 @@ public class ExpandableListFinanceAdapter extends BaseExpandableListAdapter {
 
         long cost = mapFinance.get(categories.get(groupPosition)).get(childPosition).getCost();
 
-
-        Locale localeVN = new Locale("vi", "VN");
-        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
-        tvCost.setText(currencyVN.format(cost));
+        tvCost.setText(Helper.formatCurrency(cost));
 
         return convertView;
     }

@@ -1,6 +1,9 @@
 package com.vinh.moneymanager.libs;
 
-public class Define {
+import java.text.NumberFormat;
+import java.util.Locale;
+
+public class Helper {
     public static final int REQUEST_ADD_CATEGORY = 102;
     public static final int REQUEST_EDIT_CATEGORY = 103;
     public static final int REQUEST_ADD_FINANCE = 201;
@@ -17,5 +20,12 @@ public class Define {
     public static final String FINANCE_ID = "f_id";
 
     public static final String FINANCE_DATETIME = "f_datetime";
+
+    public static String formatCurrency(long cost) {
+        Locale localeVN = new Locale("vi", "VN");
+        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+
+        return currencyVN.format(cost);
+    }
 
 }

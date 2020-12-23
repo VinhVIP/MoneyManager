@@ -2,6 +2,7 @@ package com.vinh.moneymanager.room.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "category")
@@ -15,6 +16,9 @@ public class Category {
     private int type;
 
     private String description;
+
+    @Ignore
+    private long totalCost;
 
     public Category(String name, int type, String description) {
         this.name = name;
@@ -52,6 +56,14 @@ public class Category {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public long getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(long totalCost) {
+        this.totalCost = totalCost;
     }
 
 }

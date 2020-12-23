@@ -8,26 +8,25 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ObservableInt;
 import androidx.fragment.app.Fragment;
 
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.databinding.SingleChoiceBinding;
-import com.vinh.moneymanager.models.SingleChoiceModel;
+import com.vinh.moneymanager.viewmodels.SingleChoiceViewModel;
 
 public class SingleChoice extends Fragment {
 
 
-    private SingleChoiceModel model;
+    private SingleChoiceViewModel viewModel;
 
     public SingleChoice(OnChoiceSelectedListener listener) {
-        model = new SingleChoiceModel(listener);
-        model.selectedIndex.set(2);
+        viewModel = new SingleChoiceViewModel(listener);
+        viewModel.selectedIndex.set(2);
     }
 
     public SingleChoice(OnChoiceSelectedListener listener, int selectedIndex) {
-        model = new SingleChoiceModel(listener);
-        model.selectedIndex.set(selectedIndex);
+        viewModel = new SingleChoiceViewModel(listener);
+        viewModel.selectedIndex.set(selectedIndex);
     }
 
     @Nullable
@@ -36,7 +35,7 @@ public class SingleChoice extends Fragment {
         SingleChoiceBinding binding = DataBindingUtil.inflate(inflater, R.layout.single_choice, container, false);
         View view = binding.getRoot();
 
-        binding.setModel(model);
+        binding.setViewModel(viewModel);
 
         return view;
     }

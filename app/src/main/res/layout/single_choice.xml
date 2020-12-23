@@ -3,8 +3,8 @@
 
     <data>
         <variable
-            name="model"
-            type="com.vinh.moneymanager.models.SingleChoiceModel" />
+            name="viewModel"
+            type="com.vinh.moneymanager.viewmodels.SingleChoiceViewModel" />
     </data>
 
     <LinearLayout
@@ -16,34 +16,34 @@
             android:id="@+id/tv_choose_date"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:background="@{model.selectedIndex == 0 ? @drawable/single_choice_bg_left_highlight : @drawable/single_choice_bg_left_default}"
+            android:background="@{viewModel.selectedIndex == 0 ? @drawable/single_choice_bg_left_highlight : @drawable/single_choice_bg_left_default}"
             android:gravity="center"
             android:padding="4dp"
             android:text="Ngày"
-            android:onClick="@{()->model.setSelectedIndex(0)}"
-            android:textColor="@{model.selectedIndex == 0 ? @color/white : @color/black}" />
+            android:onClick="@{()->viewModel.setSelectedIndex(0)}"
+            android:textColor="@{viewModel.selectedIndex == 0 ? @color/white : @color/black}" />
 
         <TextView
             android:id="@+id/tv_choose_week"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:background="@{model.selectedIndex == 1 ? @drawable/single_choice_bg_mid_highlight : @drawable/single_choice_bg_mid_default}"
+            android:background="@{viewModel.selectedIndex == 1 ? @drawable/single_choice_bg_mid_highlight : @drawable/single_choice_bg_mid_default}"
             android:gravity="center"
             android:padding="4dp"
             android:text="Tuần"
-            android:onClick="@{()->model.setSelectedIndex(1)}"
-            android:textColor="@{model.selectedIndex == 1 ? @color/white : @color/black}" />
+            android:onClick="@{()->viewModel.setSelectedIndex(1)}"
+            android:textColor="@{viewModel.selectedIndex == 1 ? @color/white : @color/black}" />
 
         <TextView
             android:id="@+id/tv_choose_month"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:background="@{model.selectedIndex == 2 ? @drawable/single_choice_bg_right_highlight : @drawable/single_choice_bg_right_default}"
+            android:background="@{viewModel.selectedIndex == 2 ? @drawable/single_choice_bg_right_highlight : @drawable/single_choice_bg_right_default}"
             android:gravity="center"
             android:padding="4dp"
             android:text="Tháng"
-            android:onClick="@{()->model.setSelectedIndex(2)}"
-            android:textColor="@{model.selectedIndex == 2 ? @color/white : @color/black}" />
+            android:onClick="@{()->viewModel.setSelectedIndex(2)}"
+            android:textColor="@{viewModel.selectedIndex == 2 ? @color/white : @color/black}" />
 
     </LinearLayout>
 </layout>

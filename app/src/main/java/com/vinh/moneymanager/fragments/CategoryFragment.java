@@ -26,18 +26,18 @@ public class CategoryFragment extends Fragment implements GridCategoryAdapter.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category, container, false);
-        gridViewCategories = view.findViewById(R.id.grid_view_category);
-
-        gridViewCategories.setAdapter(new GridCategoryAdapter(this.getContext(), getListCategory(), this));
-        gridViewCategories.setExpanded(true);
-
-        gridViewCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Category category = (Category) gridViewCategories.getItemAtPosition(position);
-                System.out.println(category.getName());
-            }
-        });
+//        gridViewCategories = view.findViewById(R.id.grid_view_category);
+//
+//        gridViewCategories.setAdapter(new GridCategoryAdapter(this.getContext(), getListCategory(), this));
+//        gridViewCategories.setExpanded(true);
+//
+//        gridViewCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Category category = (Category) gridViewCategories.getItemAtPosition(position);
+//                System.out.println(category.getName());
+//            }
+//        });
 
         return view;
     }

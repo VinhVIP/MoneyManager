@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-            name="dateRangeModel"
-            type="com.vinh.moneymanager.models.DateRangeModel" />
+        <import type="com.vinh.moneymanager.libs.Helper" />
 
         <variable
             name="dateHandler"
             type="com.vinh.moneymanager.fragments.ExpenseFragment.DateHandlerClick" />
+        <variable
+            name="viewModel"
+            type="com.vinh.moneymanager.viewmodels.CategoryFinanceViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -36,7 +36,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:background="@drawable/ic_left_arrow"
-                    android:onClick="@{(v)->dateRangeModel.previous()}"
+                    android:onClick="@{(v)->viewModel.previous()}"
                     android:padding="4dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:onClick="@{dateHandler::onDateClick}"
-                    android:text="@{dateRangeModel.dateRange.dateString}"
+                    android:text="@{viewModel.dateRange.dateString}"
                     android:textColor="@color/purple_700"
                     android:textSize="17sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -60,7 +60,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:background="@drawable/ic_right_arrow"
-                    android:onClick="@{(v)->dateRangeModel.next()}"
+                    android:onClick="@{(v)->viewModel.next()}"
                     android:padding="4dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/text_view_date"
@@ -96,9 +96,10 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/text_view_total_cost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="450.000đ"
+                    android:text="@{Helper.formatCurrency(viewModel.totalCost)}"
                     android:textColor="@color/black"
                     android:textSize="17sp"
                     android:textStyle="bold"

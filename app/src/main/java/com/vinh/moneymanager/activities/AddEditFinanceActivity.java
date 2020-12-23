@@ -17,7 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.vinh.moneymanager.R;
-import com.vinh.moneymanager.libs.Define;
+import com.vinh.moneymanager.libs.Helper;
+import com.vinh.moneymanager.libs.Store;
 import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.viewmodels.AccountViewModel;
@@ -58,12 +59,12 @@ public class AddEditFinanceActivity extends AppCompatActivity {
 
         btnSubmit.setOnClickListener((v) -> {
             Intent dataReturn = new Intent();
-            dataReturn.putExtra(Define.CATEGORY_ID, selectedCategoryId);
-            dataReturn.putExtra(Define.FINANCE_DATETIME, tvDay.getText() + " - " + tvTime.getText());
-            dataReturn.putExtra(Define.ACCOUNT_ID, selectedAccountId);
-            dataReturn.putExtra(Define.FINANCE_COST, Long.parseLong(edCost.getText().toString()));
-            dataReturn.putExtra(Define.FINANCE_DETAIL, edDetail.getText().toString().trim());
-            dataReturn.putExtra(Define.FINANCE_ID, financeIdUpdate);
+            dataReturn.putExtra(Helper.CATEGORY_ID, selectedCategoryId);
+            dataReturn.putExtra(Helper.FINANCE_DATETIME, tvDay.getText() + " - " + tvTime.getText());
+            dataReturn.putExtra(Helper.ACCOUNT_ID, selectedAccountId);
+            dataReturn.putExtra(Helper.FINANCE_COST, Long.parseLong(edCost.getText().toString()));
+            dataReturn.putExtra(Helper.FINANCE_DETAIL, edDetail.getText().toString().trim());
+            dataReturn.putExtra(Helper.FINANCE_ID, financeIdUpdate);
 
             setResult(RESULT_OK, dataReturn);
             finish();
@@ -82,19 +83,19 @@ public class AddEditFinanceActivity extends AppCompatActivity {
         Intent data = getIntent();
         Calendar calendar = Calendar.getInstance();
 
-        selectedCategoryId = data.getIntExtra(Define.CATEGORY_ID, 0);
-        selectedAccountId = data.getIntExtra(Define.ACCOUNT_ID, 0);
-        financeIdUpdate = data.getIntExtra(Define.FINANCE_ID, -1);
+        selectedCategoryId = data.getIntExtra(Helper.CATEGORY_ID, 0);
+        selectedAccountId = data.getIntExtra(Helper.ACCOUNT_ID, 0);
+        financeIdUpdate = data.getIntExtra(Helper.FINANCE_ID, -1);
 
-        tvCategory.setText(data.getStringExtra(Define.CATEGORY_NAME));
-        tvAccount.setText(data.getStringExtra(Define.ACCOUNT_NAME));
+        tvCategory.setText(data.getStringExtra(Helper.CATEGORY_NAME));
+        tvAccount.setText(data.getStringExtra(Helper.ACCOUNT_NAME));
 
-        if (data.hasExtra(Define.FINANCE_DATETIME)) {
-            String[] datetime = data.getStringExtra(Define.FINANCE_DATETIME).split("-");
+        if (data.hasExtra(Helper.FINANCE_DATETIME)) {
+            String[] datetime = data.getStringExtra(Helper.FINANCE_DATETIME).split("-");
             tvDay.setText(datetime[0].trim());
             tvTime.setText(datetime[1].trim());
-            edCost.setText(String.valueOf(data.getLongExtra(Define.FINANCE_COST, 0)));
-            edDetail.setText(data.getStringExtra(Define.FINANCE_DETAIL));
+            edCost.setText(String.valueOf(data.getLongExtra(Helper.FINANCE_COST, 0)));
+            edDetail.setText(data.getStringExtra(Helper.FINANCE_DETAIL));
         } else {
             tvDay.setText(String.format("%02d/%02d/%02d", calendar.get(Calendar.DAY_OF_MONTH),
                     calendar.get(Calendar.MONTH) + 1,
