@@ -26,7 +26,7 @@ public class SingleChoice extends Fragment {
 
     public SingleChoice(OnChoiceSelectedListener listener, int selectedIndex) {
         viewModel = new SingleChoiceViewModel(listener);
-        viewModel.selectedIndex.set(selectedIndex);
+        viewModel.setSelectedIndex(selectedIndex);
     }
 
     @Nullable

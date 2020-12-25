@@ -19,8 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
@@ -42,12 +40,13 @@ import com.vinh.moneymanager.viewmodels.CategoryFinanceViewModel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSelectedListener, RecyclerWeekAdapter.OnItemWeekClickListener, GridCategoryAdapter.OnGridItemClickListener {
+public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSelectedListener,
+        RecyclerWeekAdapter.OnItemWeekClickListener,
+        GridCategoryAdapter.OnGridItemClickListener, GridCategoryAdapter.OnGridItemLongClickListener {
 
     private static ExpenseFragment instance;
 
@@ -63,11 +62,6 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
 
     private View viewControlBottomSheet;
-
-    // List các danh mục
-    //private List<Category> categories = new ArrayList<>();
-    // Map các khoản chi tiêu theo danh mục
-//    private Map<Category, List<Finance>> Store.mapFinance;
 
     private Calendar calendar;
     private DialogWeek dialogWeek;
@@ -91,12 +85,32 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         return instance;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mViewModel = new CategoryFinanceViewModel(this, this);
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+
+        // Mặc định là MODE_MONTH
+        DateRange range = new DateRange(DateRange.MODE_MONTH,
+                new DateRange.Date(1, month, year),
+                new DateRange.Date(DateRange.getLastDay(month, year), month, year));
+
+        mViewModel.dateRange.set(range);
+        dateHandlerClick = new DateHandlerClick();
+        dialogWeek = new DialogWeek(getContext(), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR), this);
+
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Fragment singleChoiceFragment = new SingleChoice(this, 2);
+        Fragment singleChoiceFragment = new SingleChoice(this, mViewModel.dateRange.get().getMode());
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_single_choice, singleChoiceFragment).commit();
+
     }
 
     @Override
@@ -106,22 +120,12 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         FragmentExpenseBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_expense, container, false);
         View view = binding.getRoot();
 
-        mViewModel = new CategoryFinanceViewModel(this, this);
-        mViewModel.dateRange.set(new DateRange());
-        dateHandlerClick = new DateHandlerClick();
         binding.setDateHandler(dateHandlerClick);
         binding.setViewModel(mViewModel);
 
-        dialogWeek = new DialogWeek(getContext(), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR), this);
-
-
         initExpandListFinances(view);
-
         initGridCategories(view);
-
-
         setLayoutBottomSheet(view);
-
 
         return view;
     }
@@ -231,7 +235,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
     private void initGridCategories(View view) {
         gridViewCategories = view.findViewById(R.id.grid_view_category);
-        categoryAdapter = new GridCategoryAdapter(this.getContext(), new TreeMap<Category, List<Finance>>(), this);
+        categoryAdapter = new GridCategoryAdapter(this.getContext(), new TreeMap<Category, List<Finance>>(), this, this);
         gridViewCategories.setAdapter(categoryAdapter);
 
         mViewModel.getCategories().observe(this.getViewLifecycleOwner(), categories -> {
@@ -255,15 +259,24 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         switch (range.getMode()) {
             case DateRange.MODE_DAY:
                 range.setStartDate(DateRange.nowDate);
+                range.setEndDate(DateRange.nowDate);
                 break;
+
             case DateRange.MODE_WEEK:
                 int week = calendar.get(Calendar.WEEK_OF_YEAR);
                 range.setWeek(week, calendar.get(Calendar.YEAR));
                 break;
+
             case DateRange.MODE_MONTH:
-                range.setStartDate(new DateRange.Date(1, calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR)));
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH) + 1;
+                int endDayInMonth = DateRange.getLastDay(month, year);
+
+                range.setStartDate(new DateRange.Date(1, month, year));
+                range.setEndDate(new DateRange.Date(endDayInMonth, month, year));
                 break;
         }
+
         mViewModel.setDateRangeValue(range);
     }
 
@@ -291,17 +304,39 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     }
 
     @Override
+    public void onGridItemLongClick(int position, boolean isCategory) {
+        if(isCategory){
+            Intent intent = new Intent(getActivity(), AddEditCategoryActivity.class);
+            intent.putExtra(Helper.CATEGORY_ID, mViewModel.getCategories().getValue().get(position).getId());
+            intent.putExtra(Helper.CATEGORY_TYPE, mViewModel.getCategories().getValue().get(position).getType());
+            intent.putExtra(Helper.CATEGORY_NAME, mViewModel.getCategories().getValue().get(position).getName());
+            intent.putExtra(Helper.CATEGORY_DESCRIPTION, mViewModel.getCategories().getValue().get(position).getDescription());
+
+            startActivityForResult(intent, Helper.REQUEST_EDIT_CATEGORY);
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Helper.REQUEST_ADD_CATEGORY) {
             if (resultCode == RESULT_OK) {
-                Category inputCategory = new Category(data.getStringExtra("name"),
-                        data.getIntExtra("type", 0),
-                        data.getStringExtra("description"));
+                Category inputCategory = new Category(data.getStringExtra(Helper.CATEGORY_NAME),
+                        data.getIntExtra(Helper.CATEGORY_TYPE, 0),
+                        data.getStringExtra(Helper.CATEGORY_DESCRIPTION));
 
                 mViewModel.categoryViewModel.insert(inputCategory);
             }
-        } else if (requestCode == Helper.REQUEST_ADD_FINANCE) {
+        } else if(requestCode == Helper.REQUEST_EDIT_CATEGORY){
+            if (resultCode == RESULT_OK) {
+                Category updateCategory = new Category(data.getStringExtra(Helper.CATEGORY_NAME),
+                        data.getIntExtra(Helper.CATEGORY_TYPE, 0),
+                        data.getStringExtra(Helper.CATEGORY_DESCRIPTION));
+                updateCategory.setId(data.getIntExtra(Helper.CATEGORY_ID, -1));
+
+                mViewModel.categoryViewModel.update(updateCategory);
+            }
+        }else if (requestCode == Helper.REQUEST_ADD_FINANCE) {
             if (resultCode == RESULT_OK) {
                 Finance inputFinance = new Finance(data.getLongExtra(Helper.FINANCE_COST, 0),
                         data.getStringExtra(Helper.FINANCE_DATETIME),
@@ -327,6 +362,9 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         }
     }
 
+
+
+
     public class DateHandlerClick {
 
         public void onDateClick(View v) {
@@ -349,6 +387,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             DatePickerDialog datePickerDialog = new DatePickerDialog(ExpenseFragment.this.getContext(),
                     (view, year, month, dayOfMonth) -> {
                         range.setStartDate(new DateRange.Date(dayOfMonth, month + 1, year));
+                        range.setEndDate(new DateRange.Date(dayOfMonth, month + 1, year));
                         mViewModel.setDateRangeValue(range);
                     },
                     range.getStartDate().getYear(),
@@ -388,9 +427,10 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             gridMonth.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    range.setStartDate(new DateRange.Date(1, position + 1, Integer.parseInt(tvYear.getText().toString())));
+                    int year = Integer.parseInt(tvYear.getText().toString());
+                    range.setStartDate(new DateRange.Date(1, position + 1, year));
+                    range.setEndDate(new DateRange.Date(range.getLastDay(position+1, year), position + 1, year));
                     mViewModel.setDateRangeValue(range);
-//                tvDate.setText(dateRange1.getDateString());
                     dialog.cancel();
                 }
             });

@@ -109,10 +109,14 @@ public class ExpandableListFinanceAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.list_item, null);
         }
         TextView tvTime = convertView.findViewById(R.id.text_view_item_time);
+        TextView tvDate = convertView.findViewById(R.id.text_view_item_date);
         TextView tvDetail = convertView.findViewById(R.id.text_view_item_detail);
         TextView tvCost = convertView.findViewById(R.id.text_view_item_price);
 
-        tvTime.setText(mapFinance.get(categories.get(groupPosition)).get(childPosition).getDateTime());
+        String str = mapFinance.get(categories.get(groupPosition)).get(childPosition).getDateTime();
+        String[] dateTime = str.split("-");
+        tvDate.setText(dateTime[0].trim());
+        tvTime.setText(dateTime[1].trim());
         tvDetail.setText(mapFinance.get(categories.get(groupPosition)).get(childPosition).getDetail());
 
         long cost = mapFinance.get(categories.get(groupPosition)).get(childPosition).getCost();

@@ -5,7 +5,15 @@
     android:layout_height="match_parent"
     tools:context=".activities.AddEditCategoryActivity">
 
+    <include
+        android:layout_marginBottom="8dp"
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <TextView
+        android:layout_below="@id/toolbar_layout"
         android:id="@+id/tv_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,6 +24,7 @@
         android:textSize="18sp" />
 
     <RadioGroup
+        android:layout_below="@id/toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/tv_type"
@@ -81,7 +90,10 @@
         android:layout_marginTop="16dp"
         android:layout_toRightOf="@+id/tv_description"
         android:background="@null"
+        android:gravity="top"
         android:hint="..."
+        android:lines="3"
+        android:maxLines="3"
         android:textColor="@color/black"
         android:textSize="18sp" />
 

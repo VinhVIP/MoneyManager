@@ -40,7 +40,7 @@
         android:layout_marginRight="4dp"
         android:text="120.000đ"
         android:textSize="16sp"
-        android:textStyle="bold|italic"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

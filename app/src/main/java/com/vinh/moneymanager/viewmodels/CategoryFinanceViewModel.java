@@ -22,6 +22,9 @@ public class CategoryFinanceViewModel {
     public FinanceViewModel financeViewModel;
     public CategoryViewModel categoryViewModel;
 
+    private List<Category> allCategories;
+    private Map<Category, List<Finance>> allFinances;
+
     private MutableLiveData<List<Category>> categories;
     private MutableLiveData<Map<Category, List<Finance>>> mapFinance;
 
@@ -37,7 +40,7 @@ public class CategoryFinanceViewModel {
 
         categoryViewModel.getExpenseCategories().observe(lifecycleOwner, allCategories -> {
             this.categories.setValue(allCategories);
-
+            this.allCategories = allCategories;
 
             financeViewModel.getAllFinances().observe(lifecycleOwner, finances -> {
                 Map<Category, List<Finance>> map = new TreeMap<>((c1, c2) -> c1.getId() - c2.getId());
@@ -60,22 +63,48 @@ public class CategoryFinanceViewModel {
                     }
                 }
 
-                long total = 0;
-                for (Finance f : finances) {
-                    total += f.getCost();
-                }
 
-                this.totalCost.set(total);
 
-                this.mapFinance.setValue(map);
+                // all finanes
+                this.allFinances = map;
+
+                // list finances of date range
+
+//                this.mapFinance.setValue(map);
+                update();
             });
         });
 
+
+
+    }
+
+    private void update(){
+        DateRange rangeValue = dateRange.get();
+
+        Map<Category, List<Finance>> mapRange = new TreeMap<>((c1, c2) -> c1.getId() - c2.getId());
+        long totalCost = 0;
+
+        for (Category c : allFinances.keySet()) {
+            mapRange.put(c, new ArrayList<>());
+
+            for (Finance f : allFinances.get(c)) {
+                String s = f.getDateTime().split("-")[0].trim();
+                DateRange.Date date = new DateRange.Date(s);
+                if (date.compare(rangeValue.getStartDate()) >= 0 && date.compare(rangeValue.getEndDate()) <= 0) {
+                    mapRange.get(c).add(f);
+                    totalCost += f.getCost();
+                }
+            }
+        }
+        this.mapFinance.setValue(mapRange);
+        this.totalCost.set(totalCost);
     }
 
     public void setDateRangeValue(DateRange rangeValue) {
         dateRange.set(rangeValue);
         dateRange.notifyChange();
+        update();
     }
 
     public void next() {

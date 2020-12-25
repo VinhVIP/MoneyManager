@@ -106,6 +106,7 @@ public class DateRange {
         calendar.set(Calendar.YEAR, startDate.year);
         calendar.add(Calendar.DAY_OF_YEAR, n);
         startDate = new Date(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR));
+        endDate = new Date(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR));
     }
 
     private void nextDay(){
@@ -143,6 +144,25 @@ public class DateRange {
         calendar.set(Calendar.YEAR, startDate.year);
         calendar.add(Calendar.MONTH, n);
         startDate = new Date(1, calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR));
+        endDate = new Date(getLastDay(calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR)), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR));
+    }
+
+    public static int getLastDay(int month, int year){
+        switch (month) {
+            case 2:
+                if (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)) {
+                    return 29;
+                } else {
+                    return 28;
+                }
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                return 30;
+            default:
+                return 31;
+        }
     }
 
     public void setWeek(int week, int year){
@@ -210,6 +230,13 @@ public class DateRange {
             this.day = day;
             this.month = month;
             this.year = year;
+        }
+
+        public Date(String s){
+            String[] arr = s.split("/");
+            day = Integer.parseInt(arr[0]);
+            month = Integer.parseInt(arr[1]);
+            year = Integer.parseInt(arr[2]);
         }
 
         public int compare(Date d){

@@ -5,11 +5,18 @@
     android:layout_height="match_parent"
     tools:context=".activities.AddEditFinanceActivity">
 
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" />
 
     <TextView
         android:id="@+id/tv_category_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_layout"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:minWidth="@dimen/title_width"
@@ -20,6 +27,7 @@
         android:id="@+id/tv_category_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_layout"
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/tv_day"
         android:text="Mua sắm"
@@ -111,10 +119,10 @@
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/tv_time"
         android:background="@null"
+        android:hint="50000"
         android:inputType="number"
         android:maxLines="1"
         android:singleLine="true"
-        android:hint="50000"
         android:textColor="@color/black"
         android:textSize="18sp" />
 
@@ -137,7 +145,10 @@
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/tv_note"
         android:background="@null"
+        android:gravity="top"
         android:hint="Mua bánh"
+        android:lines="3"
+        android:maxLines="5"
         android:textColor="@color/black"
         android:textSize="18sp" />
 
@@ -145,7 +156,7 @@
         android:id="@+id/btn_submit_finance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_note"
+        android:layout_below="@id/ed_note_finance"
         android:layout_centerHorizontal="true"
         android:layout_margin="16dp"
         android:text="Hoàn tất" />

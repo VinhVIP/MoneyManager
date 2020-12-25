@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="com.vinh.moneymanager.libs.Helper" />
 
         <variable
             name="dateHandler"
             type="com.vinh.moneymanager.fragments.ExpenseFragment.DateHandlerClick" />
+
         <variable
             name="viewModel"
             type="com.vinh.moneymanager.viewmodels.CategoryFinanceViewModel" />
@@ -24,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@color/white"
-            android:elevation="0dp">
+            app:elevation="3dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -96,6 +98,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:paddingRight="6dp"
                     android:id="@+id/text_view_total_cost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

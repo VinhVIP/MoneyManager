@@ -10,14 +10,11 @@ import android.widget.TextView;
 
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.libs.Helper;
-import com.vinh.moneymanager.libs.Store;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class GridCategoryAdapter extends BaseAdapter {
@@ -27,13 +24,15 @@ public class GridCategoryAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
     private Context context;
-    private OnGridItemClickListener listener;
+    private OnGridItemClickListener clickListener;
+    private OnGridItemLongClickListener longListener;
 
-    public GridCategoryAdapter(Context context, Map<Category, List<Finance>> mapFinance, OnGridItemClickListener listener) {
+    public GridCategoryAdapter(Context context, Map<Category, List<Finance>> mapFinance, OnGridItemClickListener clickListener, OnGridItemLongClickListener longListener) {
         categories = new ArrayList<>();
         setMapFinance(mapFinance);
         this.context = context;
-        this.listener = listener;
+        this.clickListener = clickListener;
+        this.longListener = longListener;
         inflater = LayoutInflater.from(context);
     }
 
@@ -62,7 +61,7 @@ public class GridCategoryAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         GridViewHolder holder;
-        if(convertView == null){
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.grid_category_item, null);
             holder = new GridViewHolder();
             holder.categoryImage = convertView.findViewById(R.id.image_view_category);
@@ -70,39 +69,47 @@ public class GridCategoryAdapter extends BaseAdapter {
             holder.categoryTotal = convertView.findViewById(R.id.text_view_category_total);
 
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (GridViewHolder) convertView.getTag();
         }
 
-        if(position != getCount()-1) {
+        if (position != getCount() - 1) {
             Category category = categories.get(position);
             holder.categoryName.setText(category.getName());
             // TODO: set image category
-            holder.categoryImage.setImageResource(R.drawable.ic_star);
+            holder.categoryImage.setImageResource(R.drawable.icon);
             long totalCost = 0;
-            for(Finance f: mapFinance.get(categories.get(position))){
+            for (Finance f : mapFinance.get(categories.get(position))) {
                 totalCost += f.getCost();
             }
-            holder.categoryTotal.setText(Helper.formatCurrency(totalCost));
-        }else{
+            holder.categoryTotal.setText(Helper.formatCurrentWithoutSymbol(totalCost));
+        } else {
             holder.categoryName.setText("Thêm");
             holder.categoryImage.setImageResource(R.drawable.ic_add_circle_outline);
             holder.categoryTotal.setText("");
         }
-        convertView.setOnClickListener((v)->{
-            listener.onGridItemClick(position, position != getCount()-1);
+        convertView.setOnClickListener((v) -> {
+            clickListener.onGridItemClick(position, position != getCount() - 1);
+        });
+        convertView.setOnLongClickListener((v) -> {
+            longListener.onGridItemLongClick(position, position != getCount() - 1);
+            return false;
         });
 
         return convertView;
     }
 
-    private class GridViewHolder{
+    private class GridViewHolder {
         ImageView categoryImage;
         TextView categoryName;
         TextView categoryTotal;
     }
 
-    public interface OnGridItemClickListener{
+    public interface OnGridItemClickListener {
         void onGridItemClick(int position, boolean isCategory);
+    }
+
+    public interface OnGridItemLongClickListener {
+        void onGridItemLongClick(int position, boolean isCategory);
     }
 }
