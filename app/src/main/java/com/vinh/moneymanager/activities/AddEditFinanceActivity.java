@@ -4,13 +4,13 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -98,6 +98,8 @@ public class AddEditFinanceActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_white);
+
         getData();
     }
 
@@ -119,14 +121,14 @@ public class AddEditFinanceActivity extends AppCompatActivity {
             edCost.setText(String.valueOf(data.getLongExtra(Helper.FINANCE_COST, 0)));
             edDetail.setText(data.getStringExtra(Helper.FINANCE_DETAIL));
 
-            getSupportActionBar().setTitle("Thêm khoản chi tiêu");
+            getSupportActionBar().setTitle("Chỉnh sửa");
         } else {
             tvDay.setText(String.format("%02d/%02d/%02d", calendar.get(Calendar.DAY_OF_MONTH),
                     calendar.get(Calendar.MONTH) + 1,
                     calendar.get(Calendar.YEAR)));
             tvTime.setText(String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)));
 
-            getSupportActionBar().setTitle("Chỉnh sửa");
+            getSupportActionBar().setTitle("Thêm khoản chi tiêu");
         }
 
     }
@@ -159,6 +161,14 @@ public class AddEditFinanceActivity extends AppCompatActivity {
     private void showDialogSelectCategory() {
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_list);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        ImageView imgClose = dialog.findViewById(R.id.img_close_dialog);
+        imgClose.setOnClickListener(v -> dialog.cancel());
+
+        TextView tvTitle = dialog.findViewById(R.id.tv_dialog_title);
+        tvTitle.setText("Danh mục");
+
         ListView listView = dialog.findViewById(R.id.list_category_dialog);
         listView.setAdapter(new BaseAdapter() {
             @Override
@@ -207,6 +217,14 @@ public class AddEditFinanceActivity extends AppCompatActivity {
     private void showDialogSelectAccount() {
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_list);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        ImageView imgClose = dialog.findViewById(R.id.img_close_dialog);
+        imgClose.setOnClickListener((v) -> dialog.cancel());
+
+        TextView tvTitle = dialog.findViewById(R.id.tv_dialog_title);
+        tvTitle.setText("Tài khoản");
+
         ListView listView = dialog.findViewById(R.id.list_category_dialog);
         listView.setAdapter(new BaseAdapter() {
             @Override

@@ -6,26 +6,9 @@
     android:paddingLeft="28dp"
     android:paddingRight="6dp">
 
-    <LinearLayout
-        android:id="@+id/linear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_gravity="center"
-            android:id="@+id/text_view_item_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="10:30" />
-
-        <TextView
-            android:id="@+id/text_view_item_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="22/12/2020" />
-    </LinearLayout>
+    <include
+        android:id="@+id/layout_calendar"
+        layout="@layout/calendar" />
 
     <TextView
         android:id="@+id/text_view_item_detail"
@@ -34,18 +17,19 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="120dp"
-        android:layout_toRightOf="@id/linear"
+        android:layout_toRightOf="@id/layout_calendar"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="Buy something" />
+        android:text="Buy something"
+        android:textColor="@color/textColorSecondary" />
 
     <TextView
-        android:textStyle="italic"
         android:id="@+id/text_view_item_price"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:gravity="right"
-        android:text="120.500.000" />
+        android:text="120.500.000"
+        android:textStyle="italic" />
 </RelativeLayout>

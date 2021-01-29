@@ -101,7 +101,7 @@ public class RecyclerFinanceAdapter extends RecyclerView.Adapter {
 
         public ChildHolder(@NonNull View itemView) {
             super(itemView);
-            tvTime = itemView.findViewById(R.id.text_view_item_time);
+            tvTime = itemView.findViewById(R.id.tv_calendar_day);
             tvDetail = itemView.findViewById(R.id.text_view_item_detail);
             tvCost = itemView.findViewById(R.id.text_view_item_price);
         }

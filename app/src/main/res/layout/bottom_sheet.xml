@@ -7,7 +7,7 @@
     android:background="@drawable/bg_bottom_sheet"
     android:orientation="vertical"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="56dp"
+    app:behavior_peekHeight="65dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
 
@@ -31,11 +31,12 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="@color/bg_bottom_sheet"
+        android:background="@color/colorPrimaryLight"
         app:tabBackground="@drawable/tab_selector"
         app:tabGravity="center"
         app:tabIndicator="@null"
         app:tabInlineLabel="true"
+        android:layout_marginHorizontal="2dp"
         app:tabMode="fixed"
         app:tabPaddingEnd="10dp"
         app:tabPaddingStart="10dp"
@@ -60,7 +61,7 @@
         android:id="@+id/expandable_list_category_finance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@android:color/darker_gray"
+        android:divider="@color/divider"
         android:dividerHeight="0.5dp"
         android:groupIndicator="@null" />
 

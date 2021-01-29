@@ -25,8 +25,12 @@ public class CategoryFinanceViewModel {
     private List<Category> allCategories;
     private Map<Category, List<Finance>> allFinances;
 
-    private MutableLiveData<List<Category>> categories;
-    private MutableLiveData<Map<Category, List<Finance>>> mapFinance;
+    private final MutableLiveData<List<Category>> categories;
+    private final MutableLiveData<Map<Category, List<Finance>>> mapCategoryFinance;
+
+    private final MutableLiveData<List<DateRange.Date>> dates;
+    private final MutableLiveData<Map<String, List<Finance>>> mapTimeFinance;
+
 
     public ObservableField<DateRange> dateRange = new ObservableField<>();
     public ObservableLong totalCost = new ObservableLong();
@@ -36,7 +40,10 @@ public class CategoryFinanceViewModel {
         categoryViewModel = new ViewModelProvider(owner).get(CategoryViewModel.class);
 
         categories = new MutableLiveData<>();
-        mapFinance = new MutableLiveData<>();
+        mapCategoryFinance = new MutableLiveData<>();
+
+        dates = new MutableLiveData<>();
+        mapTimeFinance = new MutableLiveData<>();
 
         categoryViewModel.getExpenseCategories().observe(lifecycleOwner, allCategories -> {
             this.categories.setValue(allCategories);
@@ -64,7 +71,6 @@ public class CategoryFinanceViewModel {
                 }
 
 
-
                 // all finanes
                 this.allFinances = map;
 
@@ -76,28 +82,41 @@ public class CategoryFinanceViewModel {
         });
 
 
-
     }
 
-    private void update(){
+    private void update() {
         DateRange rangeValue = dateRange.get();
 
         Map<Category, List<Finance>> mapRange = new TreeMap<>((c1, c2) -> c1.getId() - c2.getId());
+        Map<String, List<Finance>> mapTime = new TreeMap<>((o1, o2) -> {
+            DateRange.Date d1 = new DateRange.Date(o1);
+            DateRange.Date d2 = new DateRange.Date(o2);
+            return d1.compare(d2);
+        });
+
         long totalCost = 0;
 
         for (Category c : allFinances.keySet()) {
             mapRange.put(c, new ArrayList<>());
 
             for (Finance f : allFinances.get(c)) {
-                String s = f.getDateTime().split("-")[0].trim();
-                DateRange.Date date = new DateRange.Date(s);
+                String strDate = f.getDateTime().split("-")[0].trim();
+                DateRange.Date date = new DateRange.Date(strDate);
                 if (date.compare(rangeValue.getStartDate()) >= 0 && date.compare(rangeValue.getEndDate()) <= 0) {
+                    if (!mapTime.containsKey(strDate))
+                        mapTime.put(strDate, new ArrayList<>());
+
+                    mapTime.get(strDate).add(f);
                     mapRange.get(c).add(f);
                     totalCost += f.getCost();
                 }
             }
         }
-        this.mapFinance.setValue(mapRange);
+
+
+        this.mapCategoryFinance.setValue(mapRange);
+        this.mapTimeFinance.setValue(mapTime);
+
         this.totalCost.set(totalCost);
     }
 
@@ -121,9 +140,14 @@ public class CategoryFinanceViewModel {
 
     public LiveData<List<Category>> getCategories() {
         return categories;
+
     }
 
-    public LiveData<Map<Category, List<Finance>>> getMapFinance() {
-        return mapFinance;
+    public LiveData<Map<Category, List<Finance>>> getMapCategoryFinance() {
+        return mapCategoryFinance;
+    }
+
+    public MutableLiveData<Map<String, List<Finance>>> getMapTimeFinance() {
+        return mapTimeFinance;
     }
 }

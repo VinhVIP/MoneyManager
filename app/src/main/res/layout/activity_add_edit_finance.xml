@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/windowBackground"
     tools:context=".activities.AddEditFinanceActivity">
 
     <include
@@ -31,7 +32,7 @@
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/tv_day"
         android:text="Mua sắm"
-        android:textColor="#3F51B5"
+        android:textColor="@color/text_view_color"
         android:textSize="18sp" />
 
     <TextView
@@ -53,7 +54,7 @@
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/tv_day"
         android:text="12/12/2020"
-        android:textColor="@color/black"
+        android:textColor="@color/text_view_color_default"
         android:textSize="18sp" />
 
     <TextView
@@ -75,7 +76,7 @@
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/tv_time"
         android:text="21:30"
-        android:textColor="@color/black"
+        android:textColor="@color/text_view_color_default"
         android:textSize="18sp" />
 
     <TextView
@@ -97,7 +98,7 @@
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/tv_time"
         android:text="Tiền mặt"
-        android:textColor="#3F51B5"
+        android:textColor="@color/text_view_color"
         android:textSize="18sp" />
 
     <TextView
@@ -119,7 +120,7 @@
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/tv_time"
         android:background="@null"
-        android:hint="50000"
+        android:hint=""
         android:inputType="number"
         android:maxLines="1"
         android:singleLine="true"
@@ -146,8 +147,8 @@
         android:layout_toRightOf="@+id/tv_note"
         android:background="@null"
         android:gravity="top"
-        android:hint="Mua bánh"
-        android:lines="3"
+        android:hint="..."
+        android:lines="5"
         android:maxLines="5"
         android:textColor="@color/black"
         android:textSize="18sp" />

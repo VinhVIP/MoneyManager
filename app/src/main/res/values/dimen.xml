@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="title_width">100dp</dimen>
+    <dimen name="margin_left_title">16dp</dimen>
+    <dimen name="margin_top_title">16dp</dimen>
+    <dimen name="default_margin_right">6dp</dimen>
 </resources>

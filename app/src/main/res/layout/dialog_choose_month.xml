@@ -2,53 +2,94 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingVertical="18dp">
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog"
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp">
-
-        <View
-            android:id="@+id/btn_previous_month"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="@drawable/ic_left_arrow"
-            android:padding="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="50dp">
 
         <TextView
-            android:id="@+id/text_view_year"
+            android:id="@+id/tv_choose_current_month"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginStart="32dp"
+            android:foreground="?android:attr/selectableItemBackground"
             android:gravity="center"
-            android:text="2020"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_next_month"
-            app:layout_constraintStart_toEndOf="@+id/btn_previous_month"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="Tháng hiện tại"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-        <View
-            android:id="@+id/btn_next_month"
+        <ImageView
+            android:id="@+id/img_close_dialog"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:background="@drawable/ic_right_arrow"
-            android:padding="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_close" />
 
-    <GridView
-        android:id="@+id/grid_view_month"
+    </RelativeLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:numColumns="4" />
+        android:background="@color/white"
+        android:orientation="vertical">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="20dp">
+
+            <View
+                android:id="@+id/btn_previous_month"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/selector_left_arrow"
+                android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_view_year"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="2020"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_next_month"
+                app:layout_constraintStart_toEndOf="@+id/btn_previous_month"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/btn_next_month"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/selector_right_arrow"
+                android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <GridView
+            android:id="@+id/grid_view_month"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="4" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@drawable/dialog_bottom"
+        android:orientation="vertical" />
 </LinearLayout>

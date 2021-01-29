@@ -3,6 +3,8 @@ package com.vinh.moneymanager.fragments;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,7 +28,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.activities.AddEditCategoryActivity;
 import com.vinh.moneymanager.activities.AddEditFinanceActivity;
-import com.vinh.moneymanager.adapters.ExpandableListFinanceAdapter;
+import com.vinh.moneymanager.adapters.ExpandCategoryFinanceAdapter;
+import com.vinh.moneymanager.adapters.ExpandTimeFinanceAdapter;
 import com.vinh.moneymanager.adapters.GridCategoryAdapter;
 import com.vinh.moneymanager.adapters.RecyclerWeekAdapter;
 import com.vinh.moneymanager.components.SingleChoice;
@@ -50,6 +54,11 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
     private static ExpenseFragment instance;
 
+    private final int MODE_CATEGORY = 0;
+    private final int MODE_TIME = 1;
+
+    private int mode = MODE_CATEGORY;
+
     // GridView hiển thị các danh mục chi tiêu và số tiền đã chi tiêu
     private GridView gridViewCategories;
     private GridCategoryAdapter categoryAdapter;
@@ -57,7 +66,8 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
     // Expand List hiển thị các khoản chi tiêu theo danh mục và thời gian
     private ExpandableListView expandableListCategoryFinance;
-    private ExpandableListFinanceAdapter financeAdapter;
+    private ExpandCategoryFinanceAdapter expandFinanceAdapter;
+    private ExpandTimeFinanceAdapter expandTimeAdapter;
 //    private FinanceViewModel financeViewModel;
 
 
@@ -176,7 +186,23 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() != mode) {
+                    mode = tab.getPosition();
 
+                    int size = 0;
+
+                    if (mode == MODE_CATEGORY) {
+                        expandableListCategoryFinance.setAdapter(expandFinanceAdapter);
+                        size = expandFinanceAdapter.getGroupCount();
+                    } else if (mode == MODE_TIME) {
+                        expandableListCategoryFinance.setAdapter(expandTimeAdapter);
+                        size = expandTimeAdapter.getGroupCount();
+                    }
+
+                    for (int i = 0; i < size; i++) {
+                        expandableListCategoryFinance.expandGroup(i);
+                    }
+                }
             }
 
             @Override
@@ -203,47 +229,87 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     private void initExpandListFinances(View view) {
 
         expandableListCategoryFinance = view.findViewById(R.id.expandable_list_category_finance);
-        financeAdapter = new ExpandableListFinanceAdapter(this.getContext(), new ArrayList<Category>(), new TreeMap<Category, List<Finance>>());
-        expandableListCategoryFinance.setAdapter(financeAdapter);
+        expandFinanceAdapter = new ExpandCategoryFinanceAdapter(this.getContext(), new ArrayList<>(), new TreeMap<>());
+        expandTimeAdapter = new ExpandTimeFinanceAdapter(this.getContext(), new ArrayList<>(), new TreeMap<>(), new ArrayList<>());
+
+        if (mode == MODE_CATEGORY) {
+            expandableListCategoryFinance.setAdapter(expandFinanceAdapter);
+        } else if (mode == MODE_TIME) {
+            expandableListCategoryFinance.setAdapter(expandTimeAdapter);
+        }
 
         expandableListCategoryFinance.setOnGroupExpandListener(groupPosition -> {
 
         });
 
         expandableListCategoryFinance.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-            System.out.println(mViewModel.getMapFinance().getValue().get(mViewModel.getCategories().getValue().get(groupPosition)).get(childPosition).getDetail());
+            if (mode == MODE_CATEGORY) {
+                System.out.println(mViewModel.getMapCategoryFinance().getValue().get(mViewModel.getCategories().getValue().get(groupPosition)).get(childPosition).getDetail());
 
-            Category c = mViewModel.getCategories().getValue().get(groupPosition);
-            Finance f = mViewModel.getMapFinance().getValue().get(c).get(childPosition);
-            Intent intent = new Intent(getActivity(), AddEditFinanceActivity.class);
+                Category c = mViewModel.getCategories().getValue().get(groupPosition);
+                Finance f = mViewModel.getMapCategoryFinance().getValue().get(c).get(childPosition);
+                Intent intent = new Intent(getActivity(), AddEditFinanceActivity.class);
 
-            intent.putExtra(Helper.FINANCE_ID, f.getId());
-            intent.putExtra(Helper.CATEGORY_ID, c.getId());
-            intent.putExtra(Helper.CATEGORY_NAME, c.getName());
+                intent.putExtra(Helper.FINANCE_ID, f.getId());
+                intent.putExtra(Helper.CATEGORY_ID, c.getId());
+                intent.putExtra(Helper.CATEGORY_NAME, c.getName());
 
-            intent.putExtra(Helper.ACCOUNT_ID, 1);
-            intent.putExtra(Helper.ACCOUNT_NAME, "Tiền mặt");
+                intent.putExtra(Helper.ACCOUNT_ID, 1);
+                intent.putExtra(Helper.ACCOUNT_NAME, "Tiền mặt");
 
-            intent.putExtra(Helper.FINANCE_DATETIME, f.getDateTime());
-            intent.putExtra(Helper.FINANCE_COST, f.getCost());
-            intent.putExtra(Helper.FINANCE_DETAIL, f.getDetail());
+                intent.putExtra(Helper.FINANCE_DATETIME, f.getDateTime());
+                intent.putExtra(Helper.FINANCE_COST, f.getCost());
+                intent.putExtra(Helper.FINANCE_DETAIL, f.getDetail());
 
-            startActivityForResult(intent, Helper.REQUEST_EDIT_FINANCE);
+                startActivityForResult(intent, Helper.REQUEST_EDIT_FINANCE);
+            } else if (mode == MODE_TIME) {
+                List<String> times = new ArrayList<>(mViewModel.getMapTimeFinance().getValue().keySet());
+                Finance f = mViewModel.getMapTimeFinance().getValue().get(times.get(groupPosition)).get(childPosition);
+                Category c = null;
+                for (Category category : mViewModel.getCategories().getValue()) {
+                    if (category.getId() == f.getCategoryId()) {
+                        c = category;
+                        break;
+                    }
+                }
+
+                assert (c != null);
+                Intent intent = new Intent(getActivity(), AddEditFinanceActivity.class);
+
+                intent.putExtra(Helper.FINANCE_ID, f.getId());
+                intent.putExtra(Helper.CATEGORY_ID, c.getId());
+                intent.putExtra(Helper.CATEGORY_NAME, c.getName());
+
+                intent.putExtra(Helper.ACCOUNT_ID, 1);
+                intent.putExtra(Helper.ACCOUNT_NAME, "Tiền mặt");
+
+                intent.putExtra(Helper.FINANCE_DATETIME, f.getDateTime());
+                intent.putExtra(Helper.FINANCE_COST, f.getCost());
+                intent.putExtra(Helper.FINANCE_DETAIL, f.getDetail());
+
+                startActivityForResult(intent, Helper.REQUEST_EDIT_FINANCE);
+            }
+
             return false;
         });
     }
 
     private void initGridCategories(View view) {
         gridViewCategories = view.findViewById(R.id.grid_view_category);
-        categoryAdapter = new GridCategoryAdapter(this.getContext(), new TreeMap<Category, List<Finance>>(), this, this);
+        categoryAdapter = new GridCategoryAdapter(this.getContext(), new TreeMap<>(), this, this);
         gridViewCategories.setAdapter(categoryAdapter);
 
         mViewModel.getCategories().observe(this.getViewLifecycleOwner(), categories -> {
-            //categoryAdapter.setCategories(categories);
+            expandTimeAdapter.setCategories(categories);
         });
-        mViewModel.getMapFinance().observe(this.getViewLifecycleOwner(), categoryListMap -> {
-            financeAdapter.setMapFinance(categoryListMap);
+
+        mViewModel.getMapCategoryFinance().observe(this.getViewLifecycleOwner(), categoryListMap -> {
+            expandFinanceAdapter.setMapFinance(categoryListMap);
             categoryAdapter.setMapFinance(categoryListMap);
+        });
+
+        mViewModel.getMapTimeFinance().observe(this.getViewLifecycleOwner(), stringListMap -> {
+            expandTimeAdapter.setMapFinance(stringListMap);
         });
 
     }
@@ -264,6 +330,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
             case DateRange.MODE_WEEK:
                 int week = calendar.get(Calendar.WEEK_OF_YEAR);
+                if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) week--;
                 range.setWeek(week, calendar.get(Calendar.YEAR));
                 break;
 
@@ -305,7 +372,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
     @Override
     public void onGridItemLongClick(int position, boolean isCategory) {
-        if(isCategory){
+        if (isCategory) {
             Intent intent = new Intent(getActivity(), AddEditCategoryActivity.class);
             intent.putExtra(Helper.CATEGORY_ID, mViewModel.getCategories().getValue().get(position).getId());
             intent.putExtra(Helper.CATEGORY_TYPE, mViewModel.getCategories().getValue().get(position).getType());
@@ -327,7 +394,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
                 mViewModel.categoryViewModel.insert(inputCategory);
             }
-        } else if(requestCode == Helper.REQUEST_EDIT_CATEGORY){
+        } else if (requestCode == Helper.REQUEST_EDIT_CATEGORY) {
             if (resultCode == RESULT_OK) {
                 Category updateCategory = new Category(data.getStringExtra(Helper.CATEGORY_NAME),
                         data.getIntExtra(Helper.CATEGORY_TYPE, 0),
@@ -336,7 +403,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
                 mViewModel.categoryViewModel.update(updateCategory);
             }
-        }else if (requestCode == Helper.REQUEST_ADD_FINANCE) {
+        } else if (requestCode == Helper.REQUEST_ADD_FINANCE) {
             if (resultCode == RESULT_OK) {
                 Finance inputFinance = new Finance(data.getLongExtra(Helper.FINANCE_COST, 0),
                         data.getStringExtra(Helper.FINANCE_DATETIME),
@@ -363,8 +430,6 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     }
 
 
-
-
     public class DateHandlerClick {
 
         public void onDateClick(View v) {
@@ -375,6 +440,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
                     dialogChooseDay(range);
                     break;
                 case DateRange.MODE_WEEK:
+                    dialogWeek.setMonthYear(range.getStartDate().getMonth(), range.getStartDate().getYear());
                     dialogWeek.showDialog();
                     break;
                 case DateRange.MODE_MONTH:
@@ -400,6 +466,20 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         private void dialogChooseMonth(DateRange range) {
             Dialog dialog = new Dialog(getContext());
             dialog.setContentView(R.layout.dialog_choose_month);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+            ImageView imgClose = dialog.findViewById(R.id.img_close_dialog);
+            imgClose.setOnClickListener(v -> dialog.cancel());
+
+            View btnChooseCurMonth = dialog.findViewById(R.id.tv_choose_current_month);
+            btnChooseCurMonth.setOnClickListener(v -> {
+                int year = Calendar.getInstance().get(Calendar.YEAR);
+                int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+                range.setStartDate(new DateRange.Date(1, month, year));
+                range.setEndDate(new DateRange.Date(range.getLastDay(month, year), month, year));
+                mViewModel.setDateRangeValue(range);
+                dialog.cancel();
+            });
 
             List<String> list = new ArrayList<>();
             for (int i = 1; i <= 12; i++) {
@@ -407,21 +487,21 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             }
 
             TextView tvYear = dialog.findViewById(R.id.text_view_year);
-            tvYear.setText(Calendar.getInstance().get(Calendar.YEAR) + "");
+            tvYear.setText(String.valueOf(range.getStartDate().getYear()));
 
             View btnPrevious = dialog.findViewById(R.id.btn_previous_month);
             View btnNext = dialog.findViewById(R.id.btn_next_month);
             btnPrevious.setOnClickListener((v) -> {
                 int year = Integer.parseInt(tvYear.getText().toString());
-                tvYear.setText((year - 1) + "");
+                tvYear.setText(String.valueOf(year - 1));
             });
             btnNext.setOnClickListener((v) -> {
                 int year = Integer.parseInt(tvYear.getText().toString());
-                tvYear.setText((year + 1) + "");
+                tvYear.setText(String.valueOf(year + 1));
             });
 
             GridView gridMonth = dialog.findViewById(R.id.grid_view_month);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(ExpenseFragment.this.getContext(), android.R.layout.simple_list_item_1, list);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(ExpenseFragment.this.getContext(), R.layout.item_text_center, list);
             gridMonth.setAdapter(adapter);
 
             gridMonth.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -429,7 +509,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     int year = Integer.parseInt(tvYear.getText().toString());
                     range.setStartDate(new DateRange.Date(1, position + 1, year));
-                    range.setEndDate(new DateRange.Date(range.getLastDay(position+1, year), position + 1, year));
+                    range.setEndDate(new DateRange.Date(range.getLastDay(position + 1, year), position + 1, year));
                     mViewModel.setDateRangeValue(range);
                     dialog.cancel();
                 }

@@ -1,26 +1,18 @@
 package com.vinh.moneymanager;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.vinh.moneymanager.activities.AddEditFinanceActivity;
 import com.vinh.moneymanager.fragments.ExpenseFragment;
-import com.vinh.moneymanager.fragments.IncomeFragment;
+import com.vinh.moneymanager.fragments.AccountFragment;
 import com.vinh.moneymanager.fragments.StatisticFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,12 +41,12 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment fragment;
             switch (item.getItemId()) {
-                case R.id.nav_expense:
+                case R.id.nav_finance:
                     fragment = ExpenseFragment.getInstance();
                     loadFragment(fragment);
                     return true;
-                case R.id.nav_income:
-                    fragment = new IncomeFragment();
+                case R.id.nav_account:
+                    fragment = new AccountFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.nav_statistic:

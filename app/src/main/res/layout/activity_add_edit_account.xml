@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AddEditAccountActivity">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_account_name_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_layout"
+        android:layout_marginLeft="@dimen/margin_left_title"
+        android:layout_marginTop="@dimen/margin_top_title"
+        android:minWidth="100dp"
+        android:text="Tên"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/ed_account_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/tv_account_name_title"
+        android:layout_marginRight="@dimen/default_margin_right"
+        android:layout_toRightOf="@id/tv_account_balance_title"
+        android:inputType="text"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_account_balance_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_account_name_title"
+        android:layout_marginLeft="@dimen/margin_left_title"
+        android:layout_marginTop="@dimen/margin_top_title"
+        android:minWidth="100dp"
+        android:text="Số tiền"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/ed_account_balance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/tv_account_balance_title"
+        android:layout_marginRight="@dimen/default_margin_right"
+        android:layout_toRightOf="@id/tv_account_balance_title"
+        android:inputType="number"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_account_description_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_account_balance_title"
+        android:layout_marginLeft="@dimen/margin_left_title"
+        android:layout_marginTop="@dimen/margin_top_title"
+        android:minWidth="100dp"
+        android:text="Mô tả"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/ed_account_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ed_account_balance"
+        android:layout_marginRight="@dimen/default_margin_right"
+        android:layout_toRightOf="@id/tv_account_balance_title"
+        android:inputType="textMultiLine"
+        android:lines="3"
+        android:minLines="1"
+        android:textSize="18sp" />
+
+    <Button
+        android:layout_below="@id/tv_account_description_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hoàn tất" />
+
+</RelativeLayout>

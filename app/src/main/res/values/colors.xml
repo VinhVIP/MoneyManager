@@ -8,9 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="colorPrimary">#7b4bff</color>
-    <color name="colorPrimaryDark">#6539ba</color>
-    <color name="colorAccent">#FF4081</color>
     <color name="bgBottomNavigation">#fe485a</color>
 
     <color name="bg_single_choice_highlight">#aa66cc</color>
@@ -22,5 +19,21 @@
     <color name="tab_border">#CD4848</color>
     <color name="tab_bg_selected">#0000ff</color>
     <color name="tab_bg_unselected">#E6D08F</color>
+
+    <color name="colorPrimaryDark">#659f38</color>
+    <color name="colorPrimary">#4caf50</color>
+    <color name="colorPrimaryLight">#dcedc8</color>
+    <color name="colorAccent">#7c4dff</color>
+
+    <color name="textColorPrimary">#212121</color>
+    <color name="textColorSecondary">#727272</color>
+    <color name="iconsTint">#ffffff</color>
+    <color name="divider">#b6b6b6</color>
+    <color name="windowBackground">#ffffff</color>
+    <color name="rowBackground">#f2f2f2</color>
+
+    <color name="colorSunday">#ff0000</color>
+    <color name="colorDayOfWeek">#0000ff</color>
+
 
 </resources>

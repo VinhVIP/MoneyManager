@@ -1,6 +1,7 @@
 package com.vinh.moneymanager.libs;
 
 import java.text.NumberFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class Helper {
@@ -42,6 +43,31 @@ public class Helper {
         if (res.startsWith(".")) res = res.substring(1);
         if (res.endsWith(".")) res = res.substring(0, res.length() - 1);
         return res;
+    }
+
+    public static String getDayOfWeek(DateRange.Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(date.year, date.month - 1, date.day);
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (dayOfWeek) {
+            case Calendar.MONDAY:
+                return "T2";
+            case Calendar.TUESDAY:
+                return "T3";
+            case Calendar.WEDNESDAY:
+                return "T4";
+            case Calendar.THURSDAY:
+                return "T5";
+            case Calendar.FRIDAY:
+                return "T6";
+            case Calendar.SATURDAY:
+                return "T7";
+            case Calendar.SUNDAY:
+                return "CN";
+        }
+        return "";
     }
 
 }

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/nav_expense"
+        android:id="@+id/nav_finance"
         android:icon="@drawable/ic_star"
-        android:title="Chi tiêu" />
+        android:title="Thu chi" />
 
     <item
-        android:id="@+id/nav_income"
+        android:id="@+id/nav_account"
         android:icon="@drawable/ic_star"
-        android:title="Thu nhập" />
+        android:title="Tài khoản" />
 
     <item
         android:id="@+id/nav_statistic"

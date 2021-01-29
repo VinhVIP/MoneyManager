@@ -10,27 +10,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vinh.moneymanager.R;
+import com.vinh.moneymanager.libs.DateRange;
 import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
 
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-public class ExpandableListFinanceAdapter extends BaseExpandableListAdapter {
+public class ExpandCategoryFinanceAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private List<Category> categories;
     private Map<Category, List<Finance>> mapFinance;
+
+
 
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
         super.registerDataSetObserver(observer);
     }
 
-    public ExpandableListFinanceAdapter(Context context, List<Category> categories, Map<Category, List<Finance>> mapFinance) {
+    public ExpandCategoryFinanceAdapter(Context context, List<Category> categories, Map<Category, List<Finance>> mapFinance) {
         this.context = context;
         this.categories = categories;
         this.mapFinance = mapFinance;
@@ -108,15 +109,25 @@ public class ExpandableListFinanceAdapter extends BaseExpandableListAdapter {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_item, null);
         }
-        TextView tvTime = convertView.findViewById(R.id.text_view_item_time);
-        TextView tvDate = convertView.findViewById(R.id.text_view_item_date);
+        TextView tvDay = convertView.findViewById(R.id.tv_calendar_day);
+        TextView tvMonthYear = convertView.findViewById(R.id.tv_calendar_month_year);
+        TextView tvDayOfWeek = convertView.findViewById(R.id.tv_calendar_day_of_week);
+
         TextView tvDetail = convertView.findViewById(R.id.text_view_item_detail);
         TextView tvCost = convertView.findViewById(R.id.text_view_item_price);
 
         String str = mapFinance.get(categories.get(groupPosition)).get(childPosition).getDateTime();
-        String[] dateTime = str.split("-");
-        tvDate.setText(dateTime[0].trim());
-        tvTime.setText(dateTime[1].trim());
+        String[] date = str.split("-")[0].split("/");
+
+        tvDay.setText(date[0].trim());
+        tvMonthYear.setText(String.format("%s.%s", date[1].trim(), date[2].trim()));
+        tvDayOfWeek.setText(Helper.getDayOfWeek(new DateRange.Date(Integer.parseInt(date[0].trim()), Integer.parseInt(date[1].trim()), Integer.parseInt(date[2].trim()))));
+        if (tvDayOfWeek.getText().toString().equalsIgnoreCase("CN")) {
+            tvDayOfWeek.setBackgroundResource(R.color.colorSunday);
+        } else {
+            tvDayOfWeek.setBackgroundResource(R.color.colorDayOfWeek);
+        }
+
         tvDetail.setText(mapFinance.get(categories.get(groupPosition)).get(childPosition).getDetail());
 
         long cost = mapFinance.get(categories.get(groupPosition)).get(childPosition).getCost();

@@ -14,7 +14,7 @@ import com.vinh.moneymanager.libs.DateRange;
 
 import java.util.List;
 
-public class RecyclerWeekAdapter extends RecyclerView.Adapter<RecyclerWeekAdapter.ViewHolder>{
+public class RecyclerWeekAdapter extends RecyclerView.Adapter<RecyclerWeekAdapter.ViewHolder> {
 
     private List<DateRange> list;
     private Context context;
@@ -36,10 +36,10 @@ public class RecyclerWeekAdapter extends RecyclerView.Adapter<RecyclerWeekAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DateRange dateRange = list.get(position);
-        holder.tvWeek.setText("Tuần "+dateRange.getWeekOfYear());
-        holder.tvDateRange.setText(dateRange.getDateString());
+        holder.tvWeek.setText("Tuần " + dateRange.getWeekOfYear());
+        holder.tvDateRange.setText(dateRange.getWeekString());
 
-        holder.itemView.setOnClickListener((v)->{
+        holder.itemView.setOnClickListener((v) -> {
             listener.onItemWeekClick(dateRange);
         });
     }
@@ -60,7 +60,7 @@ public class RecyclerWeekAdapter extends RecyclerView.Adapter<RecyclerWeekAdapte
         }
     }
 
-    public interface OnItemWeekClickListener{
+    public interface OnItemWeekClickListener {
         void onItemWeekClick(DateRange dateWeek);
     }
 }

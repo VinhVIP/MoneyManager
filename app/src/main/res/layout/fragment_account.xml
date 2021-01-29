@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragments.AccountFragment">
+
+    <data>
+
+        <import type="com.vinh.moneymanager.libs.Helper" />
+
+        <variable
+            name="viewModel"
+            type="com.vinh.moneymanager.viewmodels.AccountViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_account_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="4dp"
+            android:text="Tài khoản"
+            android:textColor="@color/text_view_color"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/tv_account_title"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_account_title"
+            android:layout_marginLeft="4dp"
+            android:text="Tổng tài sản:"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_view_total_asset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_account_title"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="4dp"
+            android:hint="200000"
+            android:lines="1"
+            android:maxLines="1"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="19sp" />
+
+        <Button
+            android:id="@+id/btn_transfer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_view_total_asset"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="4dp"
+            android:text="Chuyển khoản"
+            android:textAllCaps="false"
+            android:textSize="16sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_transfer"
+            android:layout_marginTop="6dp"
+            tools:listitem="@layout/item_account" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_add_white" />
+
+
+    </RelativeLayout>
+
+</layout>

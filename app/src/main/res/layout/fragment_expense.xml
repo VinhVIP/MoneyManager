@@ -37,7 +37,7 @@
                     android:id="@+id/btn_previous"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:background="@drawable/ic_left_arrow"
+                    android:background="@drawable/selector_left_arrow"
                     android:onClick="@{(v)->viewModel.previous()}"
                     android:padding="4dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -45,13 +45,14 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:background="@drawable/calendar_selector"
                     android:id="@+id/text_view_date"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:onClick="@{dateHandler::onDateClick}"
                     android:text="@{viewModel.dateRange.dateString}"
-                    android:textColor="@color/purple_700"
+                    android:textColor="@color/text_view_color"
                     android:textSize="17sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/btn_previous"
@@ -61,7 +62,7 @@
                     android:id="@+id/btn_next"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:background="@drawable/ic_right_arrow"
+                    android:background="@drawable/selector_right_arrow"
                     android:onClick="@{(v)->viewModel.next()}"
                     android:padding="4dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -147,7 +148,8 @@
             android:layout_marginTop="70dp"
             android:nestedScrollingEnabled="true">
 
-            <include layout="@layout/bottom_sheet" />
+            <include
+                layout="@layout/bottom_sheet" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

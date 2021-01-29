@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="3dp"
+    android:paddingLeft="28dp"
+    android:paddingRight="6dp">
+
+    <TextView
+        android:id="@+id/tv_bullet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginHorizontal="8dp"
+        android:text="•"
+        android:textColor="@color/textColorPrimary"
+        android:textSize="23sp" />
+
+    <TextView
+        android:id="@+id/text_view_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/tv_bullet"
+        android:text="11:30"
+        android:textColor="@color/textColorPrimary"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/text_view_item_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="120dp"
+        android:layout_toRightOf="@id/text_view_time"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Buy something"
+        android:textColor="@color/textColorSecondary"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/text_view_category_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_item_detail"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="120dp"
+        android:layout_toRightOf="@id/text_view_time"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Shopping"
+        android:textColor="@color/textColorPrimary"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+
+        android:id="@+id/text_view_item_price"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:gravity="right"
+        android:text="120.500.000"
+        android:textStyle="italic" />
+</RelativeLayout>
