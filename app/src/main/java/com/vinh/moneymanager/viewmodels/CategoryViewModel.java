@@ -1,7 +1,6 @@
 package com.vinh.moneymanager.viewmodels;
 
 import android.app.Application;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -16,15 +15,13 @@ public class CategoryViewModel extends AndroidViewModel {
 
     private CategoryRepository repository;
 
-    private LiveData<List<Category>> incomeCategories;
-    private LiveData<List<Category>> expenseCategories;
+    private LiveData<List<Category>> categories;
 
     public CategoryViewModel(@NonNull Application application) {
         super(application);
         repository = new CategoryRepository(application);
 
-        incomeCategories = repository.getIncomeCategories();
-        expenseCategories = repository.getExpenseCategories();
+        categories = repository.getCategories();
     }
 
     public void insert(Category category) {
@@ -39,11 +36,8 @@ public class CategoryViewModel extends AndroidViewModel {
         repository.delete(category);
     }
 
-    public LiveData<List<Category>> getIncomeCategories() {
-        return incomeCategories;
-    }
 
-    public LiveData<List<Category>> getExpenseCategories() {
-        return expenseCategories;
+    public LiveData<List<Category>> getCategories() {
+        return categories;
     }
 }

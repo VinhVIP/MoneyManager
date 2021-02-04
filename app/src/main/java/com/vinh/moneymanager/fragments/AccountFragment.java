@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.activities.AddEditAccountActivity;
 import com.vinh.moneymanager.adapters.RecyclerAccountAdapter;
+import com.vinh.moneymanager.databinding.FragmentAccountBinding;
 import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.viewmodels.AccountViewModel;
 
@@ -54,7 +56,9 @@ public class AccountFragment extends Fragment implements RecyclerAccountAdapter.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_account, container, false);
+        FragmentAccountBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false);
+        View view = binding.getRoot();
+        binding.setViewModel(mViewModel);
 
         initRecyclerAccount(view);
 
@@ -72,6 +76,14 @@ public class AccountFragment extends Fragment implements RecyclerAccountAdapter.
 
         mViewModel.getAccounts().observe(getViewLifecycleOwner(), accounts -> {
             accountAdapter.setAccounts(accounts);
+
+            long totalBalance = 0;
+            for(Account a:accounts){
+                totalBalance += a.getBalance();
+            }
+
+            mViewModel.totalBalance.set(totalBalance);
+            System.out.println("Balance: "+mViewModel.totalBalance.get());
         });
     }
 
@@ -87,6 +99,13 @@ public class AccountFragment extends Fragment implements RecyclerAccountAdapter.
 
     @Override
     public void onItemAccountClick(Account account) {
-        Toast.makeText(this.getContext(), "Account Clicked", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this.getActivity(), AddEditAccountActivity.class);
+
+        intent.putExtra("account_id", account.getId());
+        intent.putExtra("account_name", account.getAccountName());
+        intent.putExtra("account_balance", account.getBalance());
+        intent.putExtra("account_description", account.getDescription());
+
+        startActivity(intent);
     }
 }

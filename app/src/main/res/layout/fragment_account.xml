@@ -20,8 +20,9 @@
             android:id="@+id/tv_account_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
+            android:layout_marginLeft="18dp"
             android:layout_marginTop="4dp"
+            android:paddingVertical="10dp"
             android:text="Tài khoản"
             android:textColor="@color/text_view_color"
             android:textSize="20sp"
@@ -35,27 +36,29 @@
             android:background="?android:attr/listDivider" />
 
         <TextView
+            android:paddingVertical="6dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_account_title"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="6dp"
             android:text="Tổng tài sản:"
             android:textColor="@color/textColorPrimary"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
+            android:paddingVertical="6dp"
             android:id="@+id/text_view_total_asset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_account_title"
             android:layout_alignParentRight="true"
             android:layout_marginRight="4dp"
-            android:hint="200000"
             android:lines="1"
             android:maxLines="1"
+            android:text="@{Helper.formatCurrency(viewModel.totalBalance)}"
             android:textColor="@color/textColorPrimary"
-            android:textSize="19sp" />
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/btn_transfer"
@@ -71,7 +74,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_account"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@id/btn_transfer"
             android:layout_marginTop="6dp"
             tools:listitem="@layout/item_account" />

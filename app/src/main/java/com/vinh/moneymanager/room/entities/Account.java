@@ -16,10 +16,12 @@ public class Account {
 
     private long balance;
 
+    private String description;
 
-    public Account(String accountName, long balance) {
+    public Account(String accountName, long balance, String description) {
         this.accountName = accountName;
         this.balance = balance;
+        this.description = description;
     }
 
     public int getId() {
@@ -46,5 +48,11 @@ public class Account {
         this.balance = balance;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

@@ -15,15 +15,13 @@ public class CategoryRepository {
 
     private CategoryDao categoryDao;
 
-    private LiveData<List<Category>> incomeCategories;
-    private LiveData<List<Category>> expenseCategories;
+    private LiveData<List<Category>> categories;
 
     public CategoryRepository(Application application) {
         MoneyManagerDatabase database = MoneyManagerDatabase.getInstance(application);
         categoryDao = database.categoryDao();
 
-        incomeCategories = categoryDao.getIncomeCategories();
-        expenseCategories = categoryDao.getExpenseCategories();
+        categories = categoryDao.getCategories();
     }
 
     public void insert(Category category) {
@@ -38,12 +36,9 @@ public class CategoryRepository {
         new DeleteCategoryAsyncTask(categoryDao).execute(category);
     }
 
-    public LiveData<List<Category>> getIncomeCategories() {
-        return incomeCategories;
-    }
 
-    public LiveData<List<Category>> getExpenseCategories() {
-        return expenseCategories;
+    public LiveData<List<Category>> getCategories() {
+        return categories;
     }
 
     // AsyncTask

@@ -24,7 +24,7 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="90dp"
             android:background="@color/white"
             app:elevation="3dp">
 
@@ -45,10 +45,10 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:background="@drawable/calendar_selector"
                     android:id="@+id/text_view_date"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:background="@drawable/calendar_selector"
                     android:gravity="center"
                     android:onClick="@{dateHandler::onDateClick}"
                     android:text="@{viewModel.dateRange.dateString}"
@@ -81,28 +81,48 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_thu_chi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_marginVertical="3dp"
+                android:layout_marginLeft="6dp">
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:text="Tổng chi tiêu:"
-                    android:textColor="@color/purple_700"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/sw_thu"
+                        android:layout_width="70dp"
+                        android:layout_height="35dp"
+                        android:background="@{viewModel.switchExpenseIncome == 0 ? @drawable/switch_left_selected : @drawable/switch_left_unselected}"
+                        android:gravity="center"
+                        android:text="Thu"
+                        android:textColor="@{viewModel.switchExpenseIncome == 0 ? @color/white : @color/colorAccent}"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/sw_chi"
+                        android:layout_width="70dp"
+                        android:layout_height="35dp"
+                        android:background="@{viewModel.switchExpenseIncome == 1 ? @drawable/switch_right_selected : @drawable/switch_right_unselected}"
+                        android:gravity="center"
+                        android:text="Chi"
+                        android:textColor="@{viewModel.switchExpenseIncome == 1 ? @color/white : @color/colorSunday}"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
 
                 <TextView
-                    android:paddingRight="6dp"
                     android:id="@+id/text_view_total_cost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingRight="6dp"
                     android:text="@{Helper.formatCurrency(viewModel.totalCost)}"
                     android:textColor="@color/black"
                     android:textSize="17sp"
@@ -148,8 +168,7 @@
             android:layout_marginTop="70dp"
             android:nestedScrollingEnabled="true">
 
-            <include
-                layout="@layout/bottom_sheet" />
+            <include layout="@layout/bottom_sheet" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

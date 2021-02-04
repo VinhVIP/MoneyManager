@@ -11,6 +11,7 @@ import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.room.entities.Finance;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class AccountRepository {
 
@@ -35,6 +36,18 @@ public class AccountRepository {
 
     public void delete(Account account) {
         new DeleteAccountAsyncTask(accountDao).execute(account);
+    }
+
+    public Account search(int accountId){
+        SearchAccountAsyncTask asyncTask = new SearchAccountAsyncTask(accountDao);
+        try {
+            return asyncTask.execute(accountId).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public LiveData<List<Account>> getAccounts(){
@@ -83,6 +96,19 @@ public class AccountRepository {
         protected Void doInBackground(Account... accounts) {
             accountDao.update(accounts[0]);
             return null;
+        }
+    }
+
+    private static class SearchAccountAsyncTask extends AsyncTask<Integer, Void, Account>{
+        private AccountDao accountDao;
+
+        private SearchAccountAsyncTask(AccountDao accountDao) {
+            this.accountDao = accountDao;
+        }
+
+        @Override
+        protected Account doInBackground(Integer... integers) {
+            return accountDao.search(integers[0]);
         }
     }
 }

@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:paddingLeft="10dp"
-    android:paddingRight="6dp"
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
     android:paddingVertical="6dp"
-    android:layout_height="wrap_content">
+    android:paddingLeft="10dp"
+    android:paddingRight="6dp">
 
     <ImageView
         android:id="@+id/img_account"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_centerVertical="true"
-        android:layout_width="48dp"
         android:scaleType="fitXY"
-        android:layout_height="48dp"
         android:src="@drawable/ic_star" />
 
     <TextView
-        android:paddingLeft="6dp"
-        android:layout_marginBottom="4dp"
         android:id="@+id/tv_account_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:layout_toRightOf="@id/img_account"
+        android:paddingLeft="6dp"
         android:text="Thẻ BIDV"
         android:textColor="@color/textColorPrimary"
         android:textSize="17sp" />
 
     <TextView
-        android:paddingLeft="6dp"
         android:id="@+id/tv_asset"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_account_name"
         android:layout_toRightOf="@id/img_account"
+        android:paddingLeft="6dp"
         android:text="2000000d" />
 </RelativeLayout>

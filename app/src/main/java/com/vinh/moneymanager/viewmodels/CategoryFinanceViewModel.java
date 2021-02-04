@@ -1,6 +1,8 @@
 package com.vinh.moneymanager.viewmodels;
 
+import androidx.databinding.ObservableByte;
 import androidx.databinding.ObservableField;
+import androidx.databinding.ObservableInt;
 import androidx.databinding.ObservableLong;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
@@ -21,6 +23,7 @@ public class CategoryFinanceViewModel {
 
     public FinanceViewModel financeViewModel;
     public CategoryViewModel categoryViewModel;
+    public AccountViewModel accountViewModel;
 
     private List<Category> allCategories;
     private Map<Category, List<Finance>> allFinances;
@@ -34,10 +37,15 @@ public class CategoryFinanceViewModel {
 
     public ObservableField<DateRange> dateRange = new ObservableField<>();
     public ObservableLong totalCost = new ObservableLong();
+    public ObservableInt switchExpenseIncome = new ObservableInt();
+
 
     public CategoryFinanceViewModel(ViewModelStoreOwner owner, LifecycleOwner lifecycleOwner) {
         financeViewModel = new ViewModelProvider(owner).get(FinanceViewModel.class);
         categoryViewModel = new ViewModelProvider(owner).get(CategoryViewModel.class);
+        accountViewModel = new ViewModelProvider(owner).get(AccountViewModel.class);
+
+        switchExpenseIncome.set(1);
 
         categories = new MutableLiveData<>();
         mapCategoryFinance = new MutableLiveData<>();
@@ -45,7 +53,7 @@ public class CategoryFinanceViewModel {
         dates = new MutableLiveData<>();
         mapTimeFinance = new MutableLiveData<>();
 
-        categoryViewModel.getExpenseCategories().observe(lifecycleOwner, allCategories -> {
+        categoryViewModel.getCategories().observe(lifecycleOwner, allCategories -> {
             this.categories.setValue(allCategories);
             this.allCategories = allCategories;
 
@@ -94,7 +102,6 @@ public class CategoryFinanceViewModel {
             return d1.compare(d2);
         });
 
-        long totalCost = 0;
 
         for (Category c : allFinances.keySet()) {
             mapRange.put(c, new ArrayList<>());
@@ -108,7 +115,6 @@ public class CategoryFinanceViewModel {
 
                     mapTime.get(strDate).add(f);
                     mapRange.get(c).add(f);
-                    totalCost += f.getCost();
                 }
             }
         }
@@ -117,7 +123,6 @@ public class CategoryFinanceViewModel {
         this.mapCategoryFinance.setValue(mapRange);
         this.mapTimeFinance.setValue(mapTime);
 
-        this.totalCost.set(totalCost);
     }
 
     public void setDateRangeValue(DateRange rangeValue) {

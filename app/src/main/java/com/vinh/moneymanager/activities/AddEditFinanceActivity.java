@@ -23,25 +23,31 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.vinh.moneymanager.R;
+import com.vinh.moneymanager.databinding.ActivityAddEditFinanceBinding;
 import com.vinh.moneymanager.libs.DateRange;
 import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.viewmodels.AccountViewModel;
+import com.vinh.moneymanager.viewmodels.AddEditFinanceViewModel;
 import com.vinh.moneymanager.viewmodels.CategoryViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class AddEditFinanceActivity extends AppCompatActivity {
+public class AddEditFinanceActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private AddEditFinanceViewModel mViewModel;
 
     private TextView tvCategory, tvDay, tvTime, tvAccount;
     private EditText edCost, edDetail;
     private Button btnSubmit;
+    private TextView swIncome, swExpense, swTransfer;
 
     private CategoryViewModel categoryViewModel;
     private List<Category> mCategories = new ArrayList<>();
@@ -51,16 +57,22 @@ public class AddEditFinanceActivity extends AppCompatActivity {
 
 
     private int selectedCategoryId, selectedAccountId;
-    private int financeIdUpdate;
+    private int financeIdUpdate, categoryType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ActivityAddEditFinanceBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_add_edit_finance);
+
+        mViewModel = new AddEditFinanceViewModel();
+
+        binding.setViewModel(mViewModel);
+
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_add_edit_finance);
 
         tvCategory = findViewById(R.id.tv_category_name);
         tvDay = findViewById(R.id.tv_day_finance);
@@ -69,6 +81,13 @@ public class AddEditFinanceActivity extends AppCompatActivity {
         edCost = findViewById(R.id.ed_cost_finance);
         edDetail = findViewById(R.id.ed_note_finance);
         btnSubmit = findViewById(R.id.btn_submit_finance);
+        swIncome = findViewById(R.id.sw_finance_income);
+        swExpense = findViewById(R.id.sw_finance_expense);
+        swTransfer = findViewById(R.id.sw_finance_transfer);
+
+        swIncome.setOnClickListener(this);
+        swExpense.setOnClickListener(this);
+        swTransfer.setOnClickListener(this);
 
         tvDay.setOnClickListener((v) -> showDialogChooseDay(new DateRange.Date(tvDay.getText().toString())));
         tvTime.setOnClickListener((v) -> showDialogChooseTime(tvTime.getText().toString()));
@@ -123,7 +142,7 @@ public class AddEditFinanceActivity extends AppCompatActivity {
 
             getSupportActionBar().setTitle("Chỉnh sửa");
         } else {
-            tvDay.setText(String.format("%02d/%02d/%02d", calendar.get(Calendar.DAY_OF_MONTH),
+            tvDay.setText(String.format("%02d/%02d/%d", calendar.get(Calendar.DAY_OF_MONTH),
                     calendar.get(Calendar.MONTH) + 1,
                     calendar.get(Calendar.YEAR)));
             tvTime.setText(String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)));
@@ -132,6 +151,7 @@ public class AddEditFinanceActivity extends AppCompatActivity {
         }
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -153,7 +173,7 @@ public class AddEditFinanceActivity extends AppCompatActivity {
 
     private void selectCategory() {
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        categoryViewModel.getExpenseCategories().observe(this, categories -> mCategories = categories);
+        categoryViewModel.getCategories().observe(this, categories -> mCategories = categories);
 
         tvCategory.setOnClickListener((v) -> showDialogSelectCategory());
     }
@@ -287,5 +307,25 @@ public class AddEditFinanceActivity extends AppCompatActivity {
 
         }, h, m, true);
         timePickerDialog.show();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.sw_finance_income:
+                mViewModel.categoryType.set(0);
+                break;
+            case R.id.sw_finance_expense:
+                mViewModel.categoryType.set(1);
+
+                break;
+            case R.id.sw_finance_transfer:
+                mViewModel.categoryType.set(2);
+
+                break;
+        }
+
+
     }
 }

@@ -23,7 +23,7 @@
                 android:layout_centerHorizontal="true"
                 android:text="27"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -33,7 +33,7 @@
                 android:layout_below="@id/tv_calendar_day"
                 android:text="12.2020"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="11sp" />
+                android:textSize="10sp" />
         </RelativeLayout>
 
 
@@ -48,7 +48,7 @@
             android:padding="3dp"
             android:text="T7"
             android:textColor="@color/white"
-            android:textSize="10sp" />
+            android:textSize="9sp" />
     </RelativeLayout>
 
 
