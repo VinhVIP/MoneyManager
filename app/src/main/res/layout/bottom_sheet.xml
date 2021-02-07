@@ -31,12 +31,12 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="30dp"
+        android:layout_marginHorizontal="2dp"
         android:background="@color/colorPrimaryLight"
         app:tabBackground="@drawable/tab_selector"
         app:tabGravity="center"
         app:tabIndicator="@null"
         app:tabInlineLabel="true"
-        android:layout_marginHorizontal="2dp"
         app:tabMode="fixed"
         app:tabPaddingEnd="10dp"
         app:tabPaddingStart="10dp"
@@ -48,13 +48,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/single_choice_bg_left_highlight"
-            android:text="Category" />
+            android:text="Danh mục" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_item_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time" />
+            android:text="Thời gian" />
     </com.google.android.material.tabs.TabLayout>
 
     <ExpandableListView

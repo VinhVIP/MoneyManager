@@ -30,6 +30,17 @@ public class Helper {
         return currencyVN.format(cost);
     }
 
+    public static String clearDotInText(String text){
+        return text.replace(".", "");
+    }
+
+    public static String formatCurrencyWithoutSymbol(String cost){
+        if(cost == null || cost.isEmpty()) return "";
+
+        cost = clearDotInText(cost);
+        return formatCurrentWithoutSymbol(Long.parseLong(cost));
+    }
+
     public static String formatCurrentWithoutSymbol(long cost) {
         String s = String.valueOf(cost);
         String res = "";

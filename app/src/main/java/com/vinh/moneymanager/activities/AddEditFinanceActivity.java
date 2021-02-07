@@ -44,20 +44,19 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
 
     private AddEditFinanceViewModel mViewModel;
 
-    private TextView tvCategory, tvDay, tvTime, tvAccount;
+    private AccountViewModel accountViewModel;
+    private CategoryViewModel categoryViewModel;
+
+
+    private TextView tvCategory, tvDay, tvTime, tvAccount, tvAccountIn;
     private EditText edCost, edDetail;
     private Button btnSubmit;
     private TextView swIncome, swExpense, swTransfer;
 
-    private CategoryViewModel categoryViewModel;
-    private List<Category> mCategories = new ArrayList<>();
+    private List<Category> mCategories = new ArrayList<>(), allCategories = new ArrayList<>();
+    private List<Account> allAccounts = new ArrayList<>();
 
-    private AccountViewModel accountViewModel;
-    private List<Account> mAccounts = new ArrayList<>();
-
-
-    private int selectedCategoryId, selectedAccountId;
-    private int financeIdUpdate, categoryType;
+    private int financeIdUpdate;    // Sử dụng khi update finance
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +65,6 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         ActivityAddEditFinanceBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_add_edit_finance);
 
         mViewModel = new AddEditFinanceViewModel();
-
         binding.setViewModel(mViewModel);
 
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -78,6 +76,7 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         tvDay = findViewById(R.id.tv_day_finance);
         tvTime = findViewById(R.id.tv_time_finance);
         tvAccount = findViewById(R.id.tv_account_finance);
+        tvAccountIn = findViewById(R.id.tv_account_finance_in);
         edCost = findViewById(R.id.ed_cost_finance);
         edDetail = findViewById(R.id.ed_note_finance);
         btnSubmit = findViewById(R.id.btn_submit_finance);
@@ -95,11 +94,16 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         btnSubmit.setOnClickListener((v) -> {
             if (edCost.getText().toString().length() > 0) {
                 Intent dataReturn = new Intent();
-                dataReturn.putExtra(Helper.CATEGORY_ID, selectedCategoryId);
+
+                dataReturn.putExtra(Helper.CATEGORY_ID, mViewModel.category.get().getId());
+
                 dataReturn.putExtra(Helper.FINANCE_DATETIME, tvDay.getText() + " - " + tvTime.getText());
-                dataReturn.putExtra(Helper.ACCOUNT_ID, selectedAccountId);
-                dataReturn.putExtra(Helper.FINANCE_COST, Long.parseLong(edCost.getText().toString()));
+
+                dataReturn.putExtra(Helper.ACCOUNT_ID, mViewModel.account.get().getId());
+
+                dataReturn.putExtra(Helper.FINANCE_COST, Long.parseLong(Helper.clearDotInText(edCost.getText().toString())));
                 dataReturn.putExtra(Helper.FINANCE_DETAIL, edDetail.getText().toString().trim());
+
                 dataReturn.putExtra(Helper.FINANCE_ID, financeIdUpdate);
 
                 setResult(RESULT_OK, dataReturn);
@@ -120,14 +124,15 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_white);
 
         getData();
+
     }
 
     private void getData() {
         Intent data = getIntent();
         Calendar calendar = Calendar.getInstance();
 
-        selectedCategoryId = data.getIntExtra(Helper.CATEGORY_ID, 0);
-        selectedAccountId = data.getIntExtra(Helper.ACCOUNT_ID, 0);
+
+        mViewModel.categoryType.set(data.getIntExtra(Helper.CATEGORY_TYPE, 0));
         financeIdUpdate = data.getIntExtra(Helper.FINANCE_ID, -1);
 
         tvCategory.setText(data.getStringExtra(Helper.CATEGORY_NAME));
@@ -137,7 +142,7 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
             String[] datetime = data.getStringExtra(Helper.FINANCE_DATETIME).split("-");
             tvDay.setText(datetime[0].trim());
             tvTime.setText(datetime[1].trim());
-            edCost.setText(String.valueOf(data.getLongExtra(Helper.FINANCE_COST, 0)));
+            mViewModel.setBalance(String.valueOf(data.getLongExtra(Helper.FINANCE_COST, 0)));
             edDetail.setText(data.getStringExtra(Helper.FINANCE_DETAIL));
 
             getSupportActionBar().setTitle("Chỉnh sửa");
@@ -173,9 +178,50 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
 
     private void selectCategory() {
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        categoryViewModel.getCategories().observe(this, categories -> mCategories = categories);
+        categoryViewModel.getCategories().observe(this, categories -> {
+            allCategories = categories;
+
+            int selectedCategoryId = getIntent().getIntExtra(Helper.CATEGORY_ID, 0);
+            mViewModel.category.set(getCategory(selectedCategoryId));
+
+            updateCategoriesSelect();
+        });
+
 
         tvCategory.setOnClickListener((v) -> showDialogSelectCategory());
+    }
+
+    /*
+    Cập nhật lại danh sách danh mục theo menu "Thu nhập" hoặc "Chi tiêu"
+     */
+    private void updateCategoriesSelect() {
+        mCategories.clear();
+        for (Category c : allCategories) {
+            if (c.getType() == mViewModel.categoryType.get()) {
+                mCategories.add(c);
+            }
+        }
+
+        Category currentCategorySelected = mViewModel.category.get();
+        if (currentCategorySelected == null) return;
+
+        assert (currentCategorySelected != null);
+
+        if (currentCategorySelected.getType() != mViewModel.categoryType.get()) {
+            if (!mCategories.isEmpty()) {
+                mViewModel.category.set(mCategories.get(0));
+
+//                selectedCategoryId = mCategories.get(0).getId();
+//                tvCategory.setText(mCategories.get(0).getName());
+            }
+        }
+    }
+
+    private Category getCategory(int categoryId) {
+        for (Category c : allCategories) {
+            if (c.getId() == categoryId) return c;
+        }
+        return null;
     }
 
     private void showDialogSelectCategory() {
@@ -220,8 +266,10 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         });
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            selectedCategoryId = mCategories.get(position).getId();
-            tvCategory.setText(mCategories.get(position).getName());
+            mViewModel.category.set(mCategories.get(position));
+
+//            selectedCategoryId = mCategories.get(position).getId();
+//            tvCategory.setText(mCategories.get(position).getName());
             dialog.cancel();
         });
         dialog.show();
@@ -229,12 +277,25 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
 
     private void selectAccount() {
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-        accountViewModel.getAccounts().observe(this, accounts -> mAccounts = accounts);
+        accountViewModel.getAccounts().observe(this, accounts -> {
+            allAccounts = accounts;
 
-        tvAccount.setOnClickListener((v) -> showDialogSelectAccount());
+            int selectedAccountId = getIntent().getIntExtra(Helper.ACCOUNT_ID, 0);
+            mViewModel.account.set(getAccount(selectedAccountId));
+        });
+
+        tvAccount.setOnClickListener((v) -> showDialogSelectAccount(false));
+        tvAccountIn.setOnClickListener((v) -> showDialogSelectAccount(true));
     }
 
-    private void showDialogSelectAccount() {
+    private Account getAccount(int accountId) {
+        for (Account a : allAccounts) {
+            if (a.getId() == accountId) return a;
+        }
+        return null;
+    }
+
+    private void showDialogSelectAccount(boolean isAccountIn) {
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_list);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -249,17 +310,17 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         listView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return mAccounts.size();
+                return allAccounts.size();
             }
 
             @Override
             public Object getItem(int position) {
-                return mAccounts.get(position);
+                return allAccounts.get(position);
             }
 
             @Override
             public long getItemId(int position) {
-                return mAccounts.get(position).getId();
+                return allAccounts.get(position).getId();
             }
 
             @Override
@@ -269,15 +330,16 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
                     ImageView imageView = convertView.findViewById(R.id.image_view);
                     TextView tvName = convertView.findViewById(R.id.text_view);
 
-                    tvName.setText(mAccounts.get(position).getAccountName());
+                    tvName.setText(allAccounts.get(position).getAccountName());
                 }
                 return convertView;
             }
         });
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            selectedAccountId = mAccounts.get(position).getId();
-            tvAccount.setText(mAccounts.get(position).getAccountName());
+            if (isAccountIn) mViewModel.accountIn.set(allAccounts.get(position));
+            else mViewModel.account.set(allAccounts.get(position));
+
             dialog.cancel();
         });
         dialog.show();
@@ -314,14 +376,23 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
 
         switch (v.getId()) {
             case R.id.sw_finance_income:
-                mViewModel.categoryType.set(0);
+                if (mViewModel.categoryType.get() != 0) {
+                    mViewModel.categoryType.set(0);
+                    updateCategoriesSelect();
+                }
+
                 break;
             case R.id.sw_finance_expense:
-                mViewModel.categoryType.set(1);
+                if (mViewModel.categoryType.get() != 1) {
+                    mViewModel.categoryType.set(1);
+                    updateCategoriesSelect();
+                }
 
                 break;
             case R.id.sw_finance_transfer:
-                mViewModel.categoryType.set(2);
+                if (mViewModel.categoryType.get() != 2) {
+                    mViewModel.categoryType.set(2);
+                }
 
                 break;
         }

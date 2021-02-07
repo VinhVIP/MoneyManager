@@ -328,6 +328,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
                 intent.putExtra(Helper.FINANCE_ID, f.getId());
                 intent.putExtra(Helper.CATEGORY_ID, c.getId());
                 intent.putExtra(Helper.CATEGORY_NAME, c.getName());
+                intent.putExtra(Helper.CATEGORY_TYPE, c.getType());
 
                 intent.putExtra(Helper.ACCOUNT_ID, 1);
                 intent.putExtra(Helper.ACCOUNT_NAME, "Tiền mặt");
@@ -354,6 +355,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
                 intent.putExtra(Helper.FINANCE_ID, f.getId());
                 intent.putExtra(Helper.CATEGORY_ID, c.getId());
                 intent.putExtra(Helper.CATEGORY_NAME, c.getName());
+                intent.putExtra(Helper.CATEGORY_TYPE, c.getType());
 
                 intent.putExtra(Helper.ACCOUNT_ID, 1);
                 intent.putExtra(Helper.ACCOUNT_NAME, "Tiền mặt");
@@ -468,6 +470,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             Intent intent = new Intent(getActivity(), AddEditFinanceActivity.class);
             intent.putExtra(Helper.CATEGORY_ID, currentCategories.get(position).getId());
             intent.putExtra(Helper.CATEGORY_NAME, currentCategories.get(position).getName());
+            intent.putExtra(Helper.CATEGORY_TYPE, currentCategories.get(position).getType());
 
             intent.putExtra(Helper.ACCOUNT_ID, 1);
             intent.putExtra(Helper.ACCOUNT_NAME, "Tiền mặt");

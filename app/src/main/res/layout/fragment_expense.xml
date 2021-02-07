@@ -140,6 +140,13 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="@{viewModel.switchExpenseIncome==0?@string/add_income:@string/add_expense}"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_view_grid"

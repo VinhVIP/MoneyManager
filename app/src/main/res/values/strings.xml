@@ -2,4 +2,10 @@
     <string name="app_name">MoneyManager</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_expense">Thêm khoản chi tiêu</string>
+    <string name="add_income">Thêm khoản thu nhập</string>
+    <string name="account_out">Xuất</string>
+    <string name="account_in">Nhập</string>
+    <string name="account">Tài khoản</string>
+
 </resources>

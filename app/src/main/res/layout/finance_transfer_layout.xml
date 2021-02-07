@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_toRightOf="@+id/tv_day"
-                android:text="Mua sắm"
+                android:text="@{viewModel.category.name}"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -112,7 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Tiền mặt"
+                android:text="@{viewModel.account.accountName}"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -138,7 +138,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="BIDV"
+                android:hint="..."
+                android:text="@{viewModel.accountIn.accountName}"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -196,8 +197,9 @@
                 android:background="@null"
                 android:inputType="number"
                 android:maxLines="1"
+                android:hint="0"
                 android:singleLine="true"
-                android:text="@={viewModel.balance}"
+                android:text="@={viewModel.transferFee}"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
         </LinearLayout>

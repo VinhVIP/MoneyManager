@@ -30,6 +30,5 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:gravity="right"
-        android:text="120.500.000"
-        android:textStyle="italic" />
+        android:text="120.500.000" />
 </RelativeLayout>
