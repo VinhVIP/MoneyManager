@@ -319,10 +319,12 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
         expandableListCategoryFinance.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
             if (mode == MODE_CATEGORY) {
-                System.out.println(mViewModel.getMapCategoryFinance().getValue().get(mViewModel.getCategories().getValue().get(groupPosition)).get(childPosition).getDetail());
+                // System.out.println(mViewModel.getMapCategoryFinance().getValue().get(mViewModel.getCategories().getValue().get(groupPosition)).get(childPosition).getDetail());
 
                 Category c = mViewModel.getCategories().getValue().get(groupPosition);
                 Finance f = mViewModel.getMapCategoryFinance().getValue().get(c).get(childPosition);
+
+
                 Intent intent = new Intent(getActivity(), AddEditFinanceActivity.class);
 
                 intent.putExtra(Helper.FINANCE_ID, f.getId());
@@ -330,8 +332,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
                 intent.putExtra(Helper.CATEGORY_NAME, c.getName());
                 intent.putExtra(Helper.CATEGORY_TYPE, c.getType());
 
-                intent.putExtra(Helper.ACCOUNT_ID, 1);
-                intent.putExtra(Helper.ACCOUNT_NAME, "Tiền mặt");
+                intent.putExtra(Helper.ACCOUNT_ID, f.getAccountId());
 
                 intent.putExtra(Helper.FINANCE_DATETIME, f.getDateTime());
                 intent.putExtra(Helper.FINANCE_COST, f.getCost());
@@ -357,8 +358,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
                 intent.putExtra(Helper.CATEGORY_NAME, c.getName());
                 intent.putExtra(Helper.CATEGORY_TYPE, c.getType());
 
-                intent.putExtra(Helper.ACCOUNT_ID, 1);
-                intent.putExtra(Helper.ACCOUNT_NAME, "Tiền mặt");
+                intent.putExtra(Helper.ACCOUNT_ID, f.getAccountId());
 
                 intent.putExtra(Helper.FINANCE_DATETIME, f.getDateTime());
                 intent.putExtra(Helper.FINANCE_COST, f.getCost());
@@ -472,8 +472,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             intent.putExtra(Helper.CATEGORY_NAME, currentCategories.get(position).getName());
             intent.putExtra(Helper.CATEGORY_TYPE, currentCategories.get(position).getType());
 
-            intent.putExtra(Helper.ACCOUNT_ID, 1);
-            intent.putExtra(Helper.ACCOUNT_NAME, "Tiền mặt");
+            intent.putExtra(Helper.ACCOUNT_ID, -1);
 
             startActivityForResult(intent, Helper.REQUEST_ADD_FINANCE);
         } else {

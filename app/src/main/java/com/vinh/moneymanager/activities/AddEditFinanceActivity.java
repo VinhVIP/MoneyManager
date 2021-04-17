@@ -32,9 +32,11 @@ import com.vinh.moneymanager.libs.DateRange;
 import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.room.entities.Category;
+import com.vinh.moneymanager.room.entities.Finance;
 import com.vinh.moneymanager.viewmodels.AccountViewModel;
 import com.vinh.moneymanager.viewmodels.AddEditFinanceViewModel;
 import com.vinh.moneymanager.viewmodels.CategoryViewModel;
+import com.vinh.moneymanager.viewmodels.FinanceViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,17 +48,18 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
 
     private AccountViewModel accountViewModel;
     private CategoryViewModel categoryViewModel;
+    private FinanceViewModel financeViewModel;
 
 
     private TextView tvCategory, tvDay, tvTime, tvAccount, tvAccountIn;
-    private EditText edCost, edDetail;
+    private EditText edCost, edTransferFee, edDetail;
     private Button btnSubmit;
     private TextView swIncome, swExpense, swTransfer;
 
     private List<Category> mCategories = new ArrayList<>(), allCategories = new ArrayList<>();
     private List<Account> allAccounts = new ArrayList<>();
 
-    private int financeIdUpdate;    // Sử dụng khi update finance
+    private Finance currentFinance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,7 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         tvAccount = findViewById(R.id.tv_account_finance);
         tvAccountIn = findViewById(R.id.tv_account_finance_in);
         edCost = findViewById(R.id.ed_cost_finance);
+        edTransferFee = findViewById(R.id.ed_transfer_fee);
         edDetail = findViewById(R.id.ed_note_finance);
         btnSubmit = findViewById(R.id.btn_submit_finance);
         swIncome = findViewById(R.id.sw_finance_income);
@@ -92,24 +96,10 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         tvTime.setOnClickListener((v) -> showDialogChooseTime(tvTime.getText().toString()));
 
         btnSubmit.setOnClickListener((v) -> {
-            if (edCost.getText().toString().length() > 0) {
-                Intent dataReturn = new Intent();
-
-                dataReturn.putExtra(Helper.CATEGORY_ID, mViewModel.category.get().getId());
-
-                dataReturn.putExtra(Helper.FINANCE_DATETIME, tvDay.getText() + " - " + tvTime.getText());
-
-                dataReturn.putExtra(Helper.ACCOUNT_ID, mViewModel.account.get().getId());
-
-                dataReturn.putExtra(Helper.FINANCE_COST, Long.parseLong(Helper.clearDotInText(edCost.getText().toString())));
-                dataReturn.putExtra(Helper.FINANCE_DETAIL, edDetail.getText().toString().trim());
-
-                dataReturn.putExtra(Helper.FINANCE_ID, financeIdUpdate);
-
-                setResult(RESULT_OK, dataReturn);
-                finish();
+            if (mViewModel.categoryType.get() == 2) {
+                transfer();
             } else {
-                Toast.makeText(this, "Chưa nhập số tiền", Toast.LENGTH_SHORT).show();
+                finance();
             }
         });
 
@@ -131,19 +121,19 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         Intent data = getIntent();
         Calendar calendar = Calendar.getInstance();
 
+        int financeId = data.getIntExtra(Helper.FINANCE_ID, -1);
+        int categoryId = data.getIntExtra(Helper.CATEGORY_TYPE, -1);
+        int accountId = -1;
+        String dateTime = "", detail = "";
+        long cost = 0;
 
-        mViewModel.categoryType.set(data.getIntExtra(Helper.CATEGORY_TYPE, 0));
-        financeIdUpdate = data.getIntExtra(Helper.FINANCE_ID, -1);
-
-        tvCategory.setText(data.getStringExtra(Helper.CATEGORY_NAME));
-        tvAccount.setText(data.getStringExtra(Helper.ACCOUNT_NAME));
 
         if (data.hasExtra(Helper.FINANCE_DATETIME)) {
-            String[] datetime = data.getStringExtra(Helper.FINANCE_DATETIME).split("-");
-            tvDay.setText(datetime[0].trim());
-            tvTime.setText(datetime[1].trim());
-            mViewModel.setBalance(String.valueOf(data.getLongExtra(Helper.FINANCE_COST, 0)));
-            edDetail.setText(data.getStringExtra(Helper.FINANCE_DETAIL));
+            accountId = data.getIntExtra(Helper.ACCOUNT_ID, -1);
+
+            dateTime = data.getStringExtra(Helper.FINANCE_DATETIME);
+            cost = data.getLongExtra(Helper.FINANCE_COST, 0);
+            detail = data.getStringExtra(Helper.FINANCE_DETAIL);
 
             getSupportActionBar().setTitle("Chỉnh sửa");
         } else {
@@ -152,11 +142,125 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
                     calendar.get(Calendar.YEAR)));
             tvTime.setText(String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)));
 
-            getSupportActionBar().setTitle("Thêm khoản chi tiêu");
+            getSupportActionBar().setTitle("Thêm");
         }
+
+        currentFinance = new Finance(cost, dateTime, detail, categoryId, accountId);
+        currentFinance.setId(financeId);
+
+
+        setupDataPreview();
 
     }
 
+    private void setupDataPreview() {
+        mViewModel.categoryType.set(getIntent().getIntExtra(Helper.CATEGORY_TYPE, 0));
+
+//        tvCategory.setText(getIntent().getStringExtra(Helper.CATEGORY_NAME));
+//        tvAccount.setText(getIntent().getStringExtra(Helper.ACCOUNT_NAME));
+
+        if (currentFinance.getDateTime().length() > 0) {
+            String[] dateTimeArray = currentFinance.getDateTime().split("-");
+            tvDay.setText(dateTimeArray[0].trim());
+            tvTime.setText(dateTimeArray[1].trim());
+        }
+
+
+        if (currentFinance.getCost() > 0)
+            mViewModel.setBalance(String.valueOf(currentFinance.getCost()));
+
+        edDetail.setText(currentFinance.getDetail());
+
+    }
+
+    private void transfer() {
+        Account accountOut = mViewModel.account.get();
+        Account accountIn = mViewModel.accountIn.get();
+
+        if (accountIn != null && accountOut != null) {
+            if (edCost.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Chưa nhập số tiền", Toast.LENGTH_SHORT).show();
+            } else {
+                long cost = Long.parseLong(Helper.clearDotInText(edCost.getText().toString()));
+                long fee = 0;
+
+                if (!edTransferFee.getText().toString().isEmpty()) {
+                    fee = Long.parseLong(Helper.clearDotInText(edTransferFee.getText().toString()));
+                }
+
+                accountOut.setBalance(accountOut.getBalance() - cost - fee);
+                accountIn.setBalance(accountIn.getBalance() + cost);
+
+                accountViewModel.update(accountOut);
+                accountViewModel.update(accountIn);
+
+                finish();
+            }
+
+        } else {
+            Toast.makeText(this, "Vui lòng chọn tài khoản xuất và nhập", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void finance() {
+        if (edCost.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Chưa nhập số tiền", Toast.LENGTH_SHORT).show();
+        } else {
+            financeViewModel = new ViewModelProvider(this).get(FinanceViewModel.class);
+
+            long cost = Long.parseLong(Helper.clearDotInText(edCost.getText().toString()));
+            String dateTime = tvDay.getText() + " - " + tvTime.getText();
+            String detail = edDetail.getText().toString().trim();
+            int categoryId = mViewModel.category.get().getId();
+            int accountId = mViewModel.account.get().getId();
+
+            Finance finance = new Finance(cost, dateTime, detail, categoryId, accountId);
+
+            if (currentFinance.getId() != -1) {
+                // Chỉnh sửa finance có sẵn
+
+                finance.setId(currentFinance.getId());
+                financeViewModel.update(finance);
+
+                // accountBefore là tài khoản sử dụng trong đợt chi tiêu trước đó, mà bây giờ muốn chỉnh sửa
+                Account accountBefore = getAccount(currentFinance.getAccountId());
+                assert (accountBefore != null);
+
+                Category categoryBefore = getCategory(currentFinance.getCategoryId());
+                if (categoryBefore.getType() == 0) {
+                    // Thu => Trừ đi số tiền đã thu
+                    accountBefore.setBalance(accountBefore.getBalance() - currentFinance.getCost());
+                } else if (categoryBefore.getType() == 1) {
+                    // Chi => Cộng (hồi phục) lại số tiền đã chi tiêu
+                    accountBefore.setBalance(accountBefore.getBalance() + currentFinance.getCost());
+                }
+
+                // Cập nhật lại accountBefore
+                accountViewModel.update(accountBefore);
+
+            } else {
+                // Thêm mởi finance
+                financeViewModel.insert(finance);
+            }
+
+            Account accountNow = mViewModel.account.get();
+            assert (accountNow != null);
+
+            Category categoryNow = getCategory(finance.getCategoryId());
+            if (categoryNow.getType() == 0) {
+                // Thu => Cộng vào số tiền thu nhập
+                accountNow.setBalance(accountNow.getBalance() + finance.getCost());
+            } else if (categoryNow.getType() == 1) {
+                // Chi => Trừ đi số tiền đã chi tiêu
+                accountNow.setBalance(accountNow.getBalance() - finance.getCost());
+            }
+
+            // Cập nhật lại accountNow
+            accountViewModel.update(accountNow);
+
+            finish();
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -280,8 +384,8 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         accountViewModel.getAccounts().observe(this, accounts -> {
             allAccounts = accounts;
 
-            int selectedAccountId = getIntent().getIntExtra(Helper.ACCOUNT_ID, 0);
-            mViewModel.account.set(getAccount(selectedAccountId));
+            int selectedAccountId = getIntent().getIntExtra(Helper.ACCOUNT_ID, -1);
+            if (selectedAccountId != -1) mViewModel.account.set(getAccount(selectedAccountId));
         });
 
         tvAccount.setOnClickListener((v) -> showDialogSelectAccount(false));

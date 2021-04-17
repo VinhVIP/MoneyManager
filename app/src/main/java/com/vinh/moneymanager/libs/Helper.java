@@ -47,8 +47,6 @@ public class Helper {
         int i = s.length();
         for (; i >= 0; i -= 3) {
             final String substring = s.substring(Math.max(0, i - 3), i);
-            System.out.println(substring);
-
             res = substring + "." + res;
         }
         if (res.startsWith(".")) res = res.substring(1);
