@@ -22,6 +22,9 @@ public interface FinanceDao {
     @Delete
     void delete(Finance finance);
 
+    @Query("DELETE FROM finance WHERE finance_id = :financeId")
+    void delete(int financeId);
+
     @Query("SELECT * FROM finance WHERE category_id = :categoryId")
     LiveData<List<Finance>> getFinances(int categoryId);
 

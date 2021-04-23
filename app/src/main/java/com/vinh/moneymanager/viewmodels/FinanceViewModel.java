@@ -34,7 +34,7 @@ public class FinanceViewModel extends AndroidViewModel {
     }
 
     public void delete(Finance finance) {
-        repository.update(finance);
+        repository.delete(finance);
     }
 
     public LiveData<List<Finance>> getAllFinances(){

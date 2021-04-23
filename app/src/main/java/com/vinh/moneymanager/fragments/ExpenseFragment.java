@@ -338,6 +338,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
         });
 
+
         expandableListCategoryFinance.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
             if (mode == MODE_CATEGORY) {
                 // System.out.println(mViewModel.getMapCategoryFinance().getValue().get(mViewModel.getCategories().getValue().get(groupPosition)).get(childPosition).getDetail());
@@ -360,6 +361,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
                 intent.putExtra(Helper.FINANCE_DETAIL, f.getDetail());
 
                 startActivityForResult(intent, Helper.REQUEST_EDIT_FINANCE);
+
             } else if (mode == MODE_TIME) {
                 List<String> times = new ArrayList<>(mViewModel.getMapTimeFinance().getValue().keySet());
                 Finance f = mViewModel.getMapTimeFinance().getValue().get(times.get(groupPosition)).get(childPosition);

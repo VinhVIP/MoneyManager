@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +72,11 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         mViewModel = new AddEditFinanceViewModel();
         binding.setViewModel(mViewModel);
 
+        financeViewModel = new ViewModelProvider(this).get(FinanceViewModel.class);
+        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+
+
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -115,6 +122,39 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
 
         getData();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.finance_activity_menu, menu);
+        if (!getIntent().hasExtra(Helper.FINANCE_DATETIME)){
+            menu.getItem(0).setVisible(false);
+        }
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.action_delete_finance:
+                deleteFinance();
+                return true;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteFinance() {
+        if (currentFinance != null && currentFinance.getId() != -1) {
+            financeViewModel.delete(currentFinance);
+            Log.d("MM", "Finance Deleted: " + currentFinance.getId());
+            finish();
+        }
     }
 
     private void getData() {
@@ -206,7 +246,6 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         if (edCost.getText().toString().isEmpty()) {
             Toast.makeText(this, "Chưa nhập số tiền", Toast.LENGTH_SHORT).show();
         } else {
-            financeViewModel = new ViewModelProvider(this).get(FinanceViewModel.class);
 
             long cost = Long.parseLong(Helper.clearDotInText(edCost.getText().toString()));
             String dateTime = tvDay.getText() + " - " + tvTime.getText();
@@ -262,17 +301,6 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onBackPressed() {
@@ -281,7 +309,6 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
     }
 
     private void selectCategory() {
-        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         categoryViewModel.getCategories().observe(this, categories -> {
             allCategories = categories;
 
@@ -380,7 +407,6 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
     }
 
     private void selectAccount() {
-        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         accountViewModel.getAccounts().observe(this, accounts -> {
             allAccounts = accounts;
 
