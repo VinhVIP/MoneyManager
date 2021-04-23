@@ -35,5 +35,6 @@
     <color name="colorSunday">#ff0000</color>
     <color name="colorDayOfWeek">#0000ff</color>
 
+    <color name="colorBackground">#F8EEEE</color>
 
 </resources>
