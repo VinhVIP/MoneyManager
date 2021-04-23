@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -10,7 +10,7 @@
             type="com.vinh.moneymanager.viewmodels.AddEditFinanceViewModel" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -22,13 +22,15 @@
             android:visibility="@{viewModel.categoryType==2?View.GONE:View.VISIBLE}">
 
             <TextView
+                android:gravity="center"
                 android:id="@+id/tv_category_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:minWidth="@dimen/title_width"
                 android:text="Danh mục"
+                android:background="#f49e73"
                 android:textSize="18sp" />
 
             <TextView
@@ -37,6 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_toRightOf="@+id/tv_day"
+                android:fontFamily="@font/alfa_slab_one"
                 android:text="Mua sắm"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />

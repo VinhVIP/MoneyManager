@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
@@ -24,6 +25,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.activities.AddEditCategoryActivity;
@@ -87,6 +89,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     BottomSheetBehavior sheetBehavior;
 
     TabLayout tabLayout;
+    private FloatingActionButton fabListFinances;
 
     public ExpenseFragment() {
         calendar = Calendar.getInstance();
@@ -220,38 +223,56 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         mainLayout = view.findViewById(R.id.main_layout);
         layoutBottomSheet = view.findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
-        viewControlBottomSheet = view.findViewById(R.id.icon_control_bottom_sheet);
+        sheetBehavior.setDraggable(false);
+//        viewControlBottomSheet = view.findViewById(R.id.icon_control_bottom_sheet);
 
-        viewControlBottomSheet.setOnClickListener((v) -> {
+
+        // FAB click to open bottomsheet
+        fabListFinances = view.findViewById(R.id.fab_list_finance);
+        fabListFinances.setOnClickListener(v -> {
+//            fabListFinances.startAnimation(AnimationUtils.loadAnimation(this.getContext(), R.anim.zoom_out));
+
             if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                sheetBehavior.setDraggable(true);
-                viewControlBottomSheet.setBackgroundResource(R.drawable.ic_line);
+                fabListFinances.setImageResource(R.drawable.ic_fab_list);
+//                viewControlBottomSheet.setBackgroundResource(R.drawable.ic_line);
             } else if (sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
                 sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                sheetBehavior.setDraggable(false);
-                viewControlBottomSheet.setBackgroundResource(R.drawable.ic_close);
+                fabListFinances.setImageResource(R.drawable.ic_close);
+//                viewControlBottomSheet.setBackgroundResource(R.drawable.ic_close);
             }
         });
 
-        sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                        viewControlBottomSheet.setBackgroundResource(R.drawable.ic_line);
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        sheetBehavior.setDraggable(false);
-                        viewControlBottomSheet.setBackgroundResource(R.drawable.ic_close);
-                        break;
-                }
-            }
+//        viewControlBottomSheet.setOnClickListener((v) -> {
+//            if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+//                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//                sheetBehavior.setDraggable(true);
+//                viewControlBottomSheet.setBackgroundResource(R.drawable.ic_line);
+//            } else if (sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+//                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//                sheetBehavior.setDraggable(false);
+//                viewControlBottomSheet.setBackgroundResource(R.drawable.ic_close);
+//            }
+//        });
 
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-            }
-        });
+//        sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+//                switch (newState) {
+//                    case BottomSheetBehavior.STATE_COLLAPSED:
+////                        viewControlBottomSheet.setBackgroundResource(R.drawable.ic_line);
+//                        break;
+//                    case BottomSheetBehavior.STATE_EXPANDED:
+//                        sheetBehavior.setDraggable(false);
+////                        viewControlBottomSheet.setBackgroundResource(R.drawable.ic_close);
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+//            }
+//        });
         initTabLayout(view);
     }
 
