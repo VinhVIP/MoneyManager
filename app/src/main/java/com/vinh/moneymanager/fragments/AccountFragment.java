@@ -12,10 +12,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.activities.AddEditAccountActivity;
+import com.vinh.moneymanager.adapters.FragmentAccountStateAdapter;
 import com.vinh.moneymanager.adapters.RecyclerAccountAdapter;
 import com.vinh.moneymanager.databinding.FragmentAccountBinding;
 import com.vinh.moneymanager.room.entities.Account;
@@ -24,7 +29,7 @@ import com.vinh.moneymanager.viewmodels.AccountViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountFragment extends Fragment implements RecyclerAccountAdapter.OnItemAccountClickListener {
+public class AccountFragment extends Fragment  {
 
     private static AccountFragment instance;
 
@@ -34,6 +39,13 @@ public class AccountFragment extends Fragment implements RecyclerAccountAdapter.
     private RecyclerView recyclerAccount;
     private RecyclerAccountAdapter accountAdapter;
 
+    private ViewPager2 viewPager;
+    private FragmentStateAdapter pagerAdapter;
+
+    private ChipGroup chipGroup;
+    private Chip chipAccount, chipTransfer;
+
+    private int currentPage = 0;
 
     public AccountFragment() {
 
@@ -59,52 +71,56 @@ public class AccountFragment extends Fragment implements RecyclerAccountAdapter.
         View view = binding.getRoot();
         binding.setViewModel(mViewModel);
 
-        initRecyclerAccount(view);
+        viewPager = view.findViewById(R.id.view_pager_account);
+        pagerAdapter = new FragmentAccountStateAdapter(this);
+        viewPager.setAdapter(pagerAdapter);
 
-        initFloatingActionButton(view);
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                ((Chip) (chipGroup.getChildAt(position))).setChecked(true);
+                currentPage = position;
+            }
+        });
+
+
+        chipGroup = view.findViewById(R.id.chip_group_account);
+        chipAccount = view.findViewById(R.id.chip_list_account);
+        chipTransfer = view.findViewById(R.id.chip_list_transfer);
+
+        chipAccount.setOnClickListener(v -> {
+            if (currentPage != 0) {
+                currentPage = 0;
+                viewPager.setCurrentItem(0, true);
+            }
+            chipAccount.setChecked(true);
+        });
+        chipTransfer.setOnClickListener(v -> {
+            if (currentPage != 1) {
+                currentPage = 1;
+                viewPager.setCurrentItem(1, true);
+            }
+            chipTransfer.setChecked(true);
+        });
+
+        updateBalance();
 
         return view;
     }
 
-    private void initRecyclerAccount(View view) {
-        recyclerAccount = view.findViewById(R.id.recycler_account);
-        accounts = new ArrayList<>();
-        accountAdapter = new RecyclerAccountAdapter(new ArrayList<>(), this);
-        recyclerAccount.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        recyclerAccount.setAdapter(accountAdapter);
-
+    private void updateBalance() {
         mViewModel.getAccounts().observe(getViewLifecycleOwner(), accounts -> {
-            accountAdapter.setAccounts(accounts);
 
             long totalBalance = 0;
-            for(Account a:accounts){
+            for (Account a : accounts) {
                 totalBalance += a.getBalance();
             }
 
             mViewModel.totalBalance.set(totalBalance);
-            System.out.println("Balance: "+mViewModel.totalBalance.get());
-        });
-    }
-
-    private void initFloatingActionButton(View view) {
-        FloatingActionButton fab = view.findViewById(R.id.fab_account);
-
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(this.getActivity(), AddEditAccountActivity.class);
-            startActivity(intent);
+            System.out.println("Balance: " + mViewModel.totalBalance.get());
         });
     }
 
 
-    @Override
-    public void onItemAccountClick(Account account) {
-        Intent intent = new Intent(this.getActivity(), AddEditAccountActivity.class);
-
-        intent.putExtra("account_id", account.getAccountId());
-        intent.putExtra("account_name", account.getAccountName());
-        intent.putExtra("account_balance", account.getBalance());
-        intent.putExtra("account_description", account.getDescription());
-
-        startActivity(intent);
-    }
 }

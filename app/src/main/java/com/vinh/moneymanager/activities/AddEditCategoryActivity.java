@@ -1,7 +1,9 @@
 package com.vinh.moneymanager.activities;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -48,7 +50,14 @@ public class AddEditCategoryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_white);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        toolbar.setNavigationOnClickListener(v -> {
+            finish();
+            Toast.makeText(this, "DDDD", Toast.LENGTH_SHORT).show();
+            onBackPressed();
+        });
+
         getData();
     }
 
@@ -120,9 +129,16 @@ public class AddEditCategoryActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                finish();
+                Toast.makeText(this, "DM", Toast.LENGTH_SHORT).show();
                 onBackPressed();
                 return true;
             default:

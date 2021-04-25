@@ -22,6 +22,8 @@ public class Helper {
     public static final String CATEGORY_DESCRIPTION = "category_description";
     public static final String ACCOUNT_ID = "account_id";
     public static final String ACCOUNT_NAME = "account_name";
+    public static final String ACCOUNT_BALANCE = "account_balance";
+    public static final String ACCOUNT_DESCRIPTION = "account_description";
     public static final String FINANCE_DAY = "f_day";
     public static final String FINANCE_TIME = "f_time";
     public static final String FINANCE_COST = "f_cost";
@@ -36,6 +38,7 @@ public class Helper {
     public static final String ADD_FINANCE = "add_category";
     public static final String EDIT_FINANCE = "edit_finance";
     public static final String EDIT_TRANSFER = "edit_transfer";
+    public static final String ADD_TRANSFER = "add_transfer";
 
     public static String formatCurrency(long cost) {
         Locale localeVN = new Locale("vi", "VN");

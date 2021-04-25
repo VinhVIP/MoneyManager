@@ -23,7 +23,7 @@ public interface TransferDao {
     @Delete
     void delete(Transfer transfer);
 
-    @Query("SELECT * FROM transfer ORDER BY t_id ASC")
+    @Query("SELECT * FROM transfer ORDER BY t_id DESC")
     LiveData<List<Transfer>> getTransfers();
 
 }

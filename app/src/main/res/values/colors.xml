@@ -37,4 +37,6 @@
 
     <color name="colorBackground">#F8EEEE</color>
 
+    <color name="textColorTransferFee">#ff0000</color>
+
 </resources>

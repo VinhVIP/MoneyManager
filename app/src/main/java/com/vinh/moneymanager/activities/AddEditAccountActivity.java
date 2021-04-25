@@ -1,6 +1,5 @@
 package com.vinh.moneymanager.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,24 +43,24 @@ public class AddEditAccountActivity extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btn_submit_account);
         btnSubmit.setOnClickListener(v -> {
             Toast.makeText(this, "Chua lam", Toast.LENGTH_SHORT).show();
-//            if (checkAccountName()) {
-//                Account account = new Account(edAccountName.getText().toString().trim(),
-//                        getBalanceInput(),
-//                        edAccountDescription.getText().toString().trim());
-//
-//                // Thêm account mới
-//                if (accountId == -1) {
-//                    viewModel.insert(account);
-//                    System.out.println("Thêm account thành công!");
-//                    finish();
-//                } else {
-//                    // Update account
-//                    account.setAccountId(accountId);
-//                    viewModel.update(account);
-//                    System.out.println("Update account thành công!");
-//                    finish();
-//                }
-//            }
+            if (checkAccountName()) {
+                Account account = new Account(edAccountName.getText().toString().trim(),
+                        getBalanceInput(),
+                        edAccountDescription.getText().toString().trim());
+
+                // Thêm account mới
+                if (accountId == 0) {
+                    viewModel.insert(account);
+                    System.out.println("Thêm account thành công!");
+                    finish();
+                } else {
+                    // Update account
+                    account.setAccountId(accountId);
+                    viewModel.update(account);
+                    System.out.println("Update account thành công!");
+                    finish();
+                }
+            }
         });
 
         // Get data from intent
@@ -70,15 +69,15 @@ public class AddEditAccountActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        if(getIntent().hasExtra(Helper.EDIT_ACCOUNT)){
+        if (getIntent().hasExtra(Helper.EDIT_ACCOUNT)) {
             Bundle data = getIntent().getBundleExtra(Helper.EDIT_ACCOUNT);
-            accountId = data.getInt("account_id", -1);
+            accountId = data.getInt("account_id", 0);
             edAccountName.setText(data.getString("account_name"));
             edAccountBalance.setText(String.valueOf(data.getLong("account_balance", 0)));
             edAccountDescription.setText(data.getString("account_description"));
 
             getSupportActionBar().setTitle("Chỉnh sửa tài khoản");
-        }else{
+        } else {
             getSupportActionBar().setTitle("Thêm tài khoản");
         }
     }
