@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
@@ -25,6 +25,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.vinh.moneymanager.R;
@@ -153,25 +155,35 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     }
 
     private void thuChi(View view) {
-        TextView swThu = view.findViewById(R.id.sw_thu);
-        TextView swChi = view.findViewById(R.id.sw_chi);
+        ChipGroup chipGroup = view.findViewById(R.id.chipGroup);
 
-        swThu.setOnClickListener(v -> {
-            if (mViewModel.switchExpenseIncome.get() != 0) {
-                mViewModel.switchExpenseIncome.set(0);
-
-                updateAdapter();
+        chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                Chip chip = group.findViewById(checkedId);
+                switch (checkedId) {
+                    case R.id.chipIncome:
+                        if (chip.isChecked()) {
+                            if (mViewModel.switchExpenseIncome.get() != Helper.TYPE_INCOME) {
+                                mViewModel.switchExpenseIncome.set(Helper.TYPE_INCOME);
+                                updateAdapter();
+                            }
+                        } else if (mViewModel.switchExpenseIncome.get() == Helper.TYPE_INCOME) {
+                            chip.setChecked(true);
+                        }
+                        break;
+                    case R.id.chipExpense:
+                        if (chip.isChecked()) {
+                            if (mViewModel.switchExpenseIncome.get() != Helper.TYPE_EXPENSE) {
+                                mViewModel.switchExpenseIncome.set(Helper.TYPE_EXPENSE);
+                                updateAdapter();
+                            }
+                        } else if (mViewModel.switchExpenseIncome.get() == Helper.TYPE_EXPENSE) {
+                            chip.setChecked(true);
+                        }
+                        break;
+                }
             }
-
-        });
-
-        swChi.setOnClickListener(v -> {
-            if (mViewModel.switchExpenseIncome.get() != 1) {
-                mViewModel.switchExpenseIncome.set(1);
-
-                updateAdapter();
-            }
-
         });
 
     }
@@ -191,7 +203,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
                 List<Finance> financeList = mapAll.get(c);
                 mapCategoryFinances.put(c, financeList);
                 for (Finance f : financeList) {
-                    totalCost += f.getCost();
+                    totalCost += f.getMoney();
                 }
             }
         }
@@ -243,36 +255,6 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             }
         });
 
-//        viewControlBottomSheet.setOnClickListener((v) -> {
-//            if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-//                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-//                sheetBehavior.setDraggable(true);
-//                viewControlBottomSheet.setBackgroundResource(R.drawable.ic_line);
-//            } else if (sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-//                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                sheetBehavior.setDraggable(false);
-//                viewControlBottomSheet.setBackgroundResource(R.drawable.ic_close);
-//            }
-//        });
-
-//        sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-//            @Override
-//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-//                switch (newState) {
-//                    case BottomSheetBehavior.STATE_COLLAPSED:
-////                        viewControlBottomSheet.setBackgroundResource(R.drawable.ic_line);
-//                        break;
-//                    case BottomSheetBehavior.STATE_EXPANDED:
-//                        sheetBehavior.setDraggable(false);
-////                        viewControlBottomSheet.setBackgroundResource(R.drawable.ic_close);
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-//            }
-//        });
         initTabLayout(view);
     }
 
@@ -334,60 +316,50 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             expandableListCategoryFinance.setAdapter(expandTimeAdapter);
         }
 
+        // ------------ Group Click -----------------
         expandableListCategoryFinance.setOnGroupExpandListener(groupPosition -> {
 
         });
 
 
+        // ------------ Child Click -----------------
         expandableListCategoryFinance.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+            Category c = null;
+            Finance f = null;
+
             if (mode == MODE_CATEGORY) {
-                // System.out.println(mViewModel.getMapCategoryFinance().getValue().get(mViewModel.getCategories().getValue().get(groupPosition)).get(childPosition).getDetail());
-
-                Category c = mViewModel.getCategories().getValue().get(groupPosition);
-                Finance f = mViewModel.getMapCategoryFinance().getValue().get(c).get(childPosition);
-
-
-                Intent intent = new Intent(getActivity(), AddEditFinanceActivity.class);
-
-                intent.putExtra(Helper.FINANCE_ID, f.getId());
-                intent.putExtra(Helper.CATEGORY_ID, c.getId());
-                intent.putExtra(Helper.CATEGORY_NAME, c.getName());
-                intent.putExtra(Helper.CATEGORY_TYPE, c.getType());
-
-                intent.putExtra(Helper.ACCOUNT_ID, f.getAccountId());
-
-                intent.putExtra(Helper.FINANCE_DATETIME, f.getDateTime());
-                intent.putExtra(Helper.FINANCE_COST, f.getCost());
-                intent.putExtra(Helper.FINANCE_DETAIL, f.getDetail());
-
-                startActivityForResult(intent, Helper.REQUEST_EDIT_FINANCE);
+                c = currentCategories.get(groupPosition);
+                f = mapCategoryFinances.get(c).get(childPosition);
 
             } else if (mode == MODE_TIME) {
-                List<String> times = new ArrayList<>(mViewModel.getMapTimeFinance().getValue().keySet());
-                Finance f = mViewModel.getMapTimeFinance().getValue().get(times.get(groupPosition)).get(childPosition);
-                Category c = null;
+                List<String> times = new ArrayList<>(mapTime.keySet());
+                f = mapTime.get(times.get(groupPosition)).get(childPosition);
                 for (Category category : mViewModel.getCategories().getValue()) {
-                    if (category.getId() == f.getCategoryId()) {
+                    if (category.getCategoryId() == f.getCategoryId()) {
                         c = category;
                         break;
                     }
                 }
+            }
 
-                assert (c != null);
+            if (c != null && f != null) {
+                Bundle dataSend = new Bundle();
+
+                dataSend.putInt(Helper.FINANCE_ID, f.getFinanceId());
+                dataSend.putInt(Helper.CATEGORY_ID, c.getCategoryId());
+                dataSend.putString(Helper.CATEGORY_NAME, c.getName());
+                dataSend.putInt(Helper.CATEGORY_TYPE, c.getType());
+                dataSend.putInt(Helper.ACCOUNT_ID, f.getAccountId());
+                dataSend.putString(Helper.FINANCE_DATETIME, f.getDateTime());
+                dataSend.putLong(Helper.FINANCE_COST, f.getMoney());
+                dataSend.putString(Helper.FINANCE_DETAIL, f.getDetail());
+
                 Intent intent = new Intent(getActivity(), AddEditFinanceActivity.class);
-
-                intent.putExtra(Helper.FINANCE_ID, f.getId());
-                intent.putExtra(Helper.CATEGORY_ID, c.getId());
-                intent.putExtra(Helper.CATEGORY_NAME, c.getName());
-                intent.putExtra(Helper.CATEGORY_TYPE, c.getType());
-
-                intent.putExtra(Helper.ACCOUNT_ID, f.getAccountId());
-
-                intent.putExtra(Helper.FINANCE_DATETIME, f.getDateTime());
-                intent.putExtra(Helper.FINANCE_COST, f.getCost());
-                intent.putExtra(Helper.FINANCE_DETAIL, f.getDetail());
+                intent.putExtra(Helper.EDIT_FINANCE, dataSend);
 
                 startActivityForResult(intent, Helper.REQUEST_EDIT_FINANCE);
+            } else {
+                Log.d("MM", "Finance or Category Null");
             }
 
             return false;
@@ -397,7 +369,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     private void initGridCategories(View view) {
         gridViewCategories = view.findViewById(R.id.grid_view_category);
         // init map category for grid view
-        mapCategoryFinances = new TreeMap<>((c1, c2) -> c1.getId() - c2.getId());
+        mapCategoryFinances = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
 
         mapTimeAll = new TreeMap<>((o1, o2) -> {
             DateRange.Date d1 = new DateRange.Date(o1);
@@ -442,7 +414,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
     private Category getCategory(int categoryId) {
         for (Category c : allCategories) {
-            if (c.getId() == categoryId) return c;
+            if (c.getCategoryId() == categoryId) return c;
         }
         return null;
     }
@@ -489,17 +461,25 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     @Override
     public void onGridItemClick(int position, boolean isCategory) {
         if (isCategory) {
+            // Thêm finance mới
+            Bundle bundle = new Bundle();
+            bundle.putInt(Helper.CATEGORY_ID, currentCategories.get(position).getCategoryId());
+            bundle.putString(Helper.CATEGORY_NAME, currentCategories.get(position).getName());
+            bundle.putInt(Helper.CATEGORY_TYPE, currentCategories.get(position).getType());
+            bundle.putInt(Helper.ACCOUNT_ID, 0);
 
             Intent intent = new Intent(getActivity(), AddEditFinanceActivity.class);
-            intent.putExtra(Helper.CATEGORY_ID, currentCategories.get(position).getId());
-            intent.putExtra(Helper.CATEGORY_NAME, currentCategories.get(position).getName());
-            intent.putExtra(Helper.CATEGORY_TYPE, currentCategories.get(position).getType());
-
-            intent.putExtra(Helper.ACCOUNT_ID, -1);
+            intent.putExtra(Helper.ADD_FINANCE, bundle);
 
             startActivityForResult(intent, Helper.REQUEST_ADD_FINANCE);
         } else {
+            // Thêm danh mục mới
+            Bundle bundle = new Bundle();
+            bundle.putInt(Helper.CATEGORY_TYPE, mViewModel.switchExpenseIncome.get());
+
             Intent intent = new Intent(getActivity(), AddEditCategoryActivity.class);
+            intent.putExtra(Helper.ADD_CATEGORY, bundle);
+
             startActivityForResult(intent, Helper.REQUEST_ADD_CATEGORY);
         }
     }
@@ -507,11 +487,14 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     @Override
     public void onGridItemLongClick(int position, boolean isCategory) {
         if (isCategory) {
+            Bundle bundle = new Bundle();
+            bundle.putInt(Helper.CATEGORY_ID, currentCategories.get(position).getCategoryId());
+            bundle.putInt(Helper.CATEGORY_TYPE, currentCategories.get(position).getType());
+            bundle.putString(Helper.CATEGORY_NAME, currentCategories.get(position).getName());
+            bundle.putString(Helper.CATEGORY_DESCRIPTION, currentCategories.get(position).getDescription());
+
             Intent intent = new Intent(getActivity(), AddEditCategoryActivity.class);
-            intent.putExtra(Helper.CATEGORY_ID, currentCategories.get(position).getId());
-            intent.putExtra(Helper.CATEGORY_TYPE, currentCategories.get(position).getType());
-            intent.putExtra(Helper.CATEGORY_NAME, currentCategories.get(position).getName());
-            intent.putExtra(Helper.CATEGORY_DESCRIPTION, currentCategories.get(position).getDescription());
+            intent.putExtra(Helper.EDIT_CATEGORY, bundle);
 
             startActivityForResult(intent, Helper.REQUEST_EDIT_CATEGORY);
         }
@@ -520,25 +503,61 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (data == null) {
+            Log.e("MM", "Intent data return null");
+            return;
+        }
+
         if (requestCode == Helper.REQUEST_ADD_CATEGORY) {
-            if (resultCode == RESULT_OK) {
-                Category inputCategory = new Category(data.getStringExtra(Helper.CATEGORY_NAME),
-                        data.getIntExtra(Helper.CATEGORY_TYPE, 0),
-                        data.getStringExtra(Helper.CATEGORY_DESCRIPTION));
+//            if (resultCode == RESULT_OK) {
+//                Bundle bundle = data.getBundleExtra(Helper.ADD_CATEGORY);
+//                assert bundle != null;
+//
+//                Category inputCategory = new Category(
+//                        bundle.getString(Helper.CATEGORY_NAME),
+//                        bundle.getInt(Helper.CATEGORY_TYPE),
+//                        bundle.getString(Helper.CATEGORY_DESCRIPTION)
+//                );
 
-                mViewModel.categoryViewModel.insert(inputCategory);
-            }
+//                Category inputCategory = new Category(data.getStringExtra(Helper.CATEGORY_NAME),
+//                        data.getIntExtra(Helper.CATEGORY_TYPE, 0),
+//                        data.getStringExtra(Helper.CATEGORY_DESCRIPTION));
+
+//                mViewModel.categoryViewModel.insert(inputCategory);
+//            }
         } else if (requestCode == Helper.REQUEST_EDIT_CATEGORY) {
-            if (resultCode == RESULT_OK) {
-                Category updateCategory = new Category(data.getStringExtra(Helper.CATEGORY_NAME),
-                        data.getIntExtra(Helper.CATEGORY_TYPE, 0),
-                        data.getStringExtra(Helper.CATEGORY_DESCRIPTION));
-                updateCategory.setId(data.getIntExtra(Helper.CATEGORY_ID, -1));
-
-                mViewModel.categoryViewModel.update(updateCategory);
-            }
+//            if (resultCode == RESULT_OK) {
+//                Bundle bundle = data.getBundleExtra(Helper.EDIT_CATEGORY);
+//                assert bundle != null;
+//
+//                Category updateCategory = new Category(
+//                        bundle.getString(Helper.CATEGORY_NAME),
+//                        bundle.getInt(Helper.CATEGORY_TYPE),
+//                        bundle.getString(Helper.CATEGORY_DESCRIPTION)
+//                );
+//                updateCategory.setCategoryId(bundle.getInt(Helper.CATEGORY_ID));
+//
+////                Category updateCategory = new Category(data.getStringExtra(Helper.CATEGORY_NAME),
+////                        data.getIntExtra(Helper.CATEGORY_TYPE, 0),
+////                        data.getStringExtra(Helper.CATEGORY_DESCRIPTION));
+////                updateCategory.setCategoryId(data.getIntExtra(Helper.CATEGORY_ID, -1));
+//
+//                mViewModel.categoryViewModel.update(updateCategory);
+//            }
         } else if (requestCode == Helper.REQUEST_ADD_FINANCE) {
             if (resultCode == RESULT_OK) {
+                Bundle bundle = data.getBundleExtra(Helper.ADD_CATEGORY);
+                assert bundle != null;
+
+//                Finance inputFinance = new Finance(
+//                        bundle.getLong(Helper.FINANCE_COST),
+//                        bundle.getString(Helper.FINANCE_DATETIME),
+//                        bundle.getString(Helper.FINANCE_DETAIL),
+//                        bundle.getInt(Helper.CATEGORY_ID),
+//                        bundle.getInt(Helper.ACCOUNT_ID)
+//                );
+
                 Finance inputFinance = new Finance(data.getLongExtra(Helper.FINANCE_COST, 0),
                         data.getStringExtra(Helper.FINANCE_DATETIME),
                         data.getStringExtra(Helper.FINANCE_DETAIL),
@@ -565,8 +584,8 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
                         data.getStringExtra(Helper.FINANCE_DETAIL),
                         data.getIntExtra(Helper.CATEGORY_ID, 0),
                         data.getIntExtra(Helper.ACCOUNT_ID, 0));
-                updateFinance.setId(data.getIntExtra(Helper.FINANCE_ID, -1));
-                System.out.println("ID Finance: " + updateFinance.getId());
+                updateFinance.setFinanceId(data.getIntExtra(Helper.FINANCE_ID, -1));
+                System.out.println("ID Finance: " + updateFinance.getFinanceId());
                 mViewModel.financeViewModel.update(updateFinance);
                 System.out.println("Cap nhat khoan chi tieu thanh cong!");
             }

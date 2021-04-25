@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -101,7 +100,7 @@ public class AccountFragment extends Fragment implements RecyclerAccountAdapter.
     public void onItemAccountClick(Account account) {
         Intent intent = new Intent(this.getActivity(), AddEditAccountActivity.class);
 
-        intent.putExtra("account_id", account.getId());
+        intent.putExtra("account_id", account.getAccountId());
         intent.putExtra("account_name", account.getAccountName());
         intent.putExtra("account_balance", account.getBalance());
         intent.putExtra("account_description", account.getDescription());

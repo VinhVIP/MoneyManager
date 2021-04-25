@@ -19,7 +19,6 @@ public class AddEditFinanceViewModel extends BaseObservable {
 
     public ObservableField<Account> account = new ObservableField<>();
     public ObservableField<Account> accountIn = new ObservableField<>();
-
     public ObservableField<Category> category = new ObservableField<>();
 
     private String balance;

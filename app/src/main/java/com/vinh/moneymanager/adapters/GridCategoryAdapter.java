@@ -80,7 +80,7 @@ public class GridCategoryAdapter extends BaseAdapter {
             holder.categoryImage.setImageResource(R.drawable.icon);
             long totalCost = 0;
             for (Finance f : mapFinance.get(categories.get(position))) {
-                totalCost += f.getCost();
+                totalCost += f.getMoney();
             }
             holder.categoryTotal.setText(Helper.formatCurrentWithoutSymbol(totalCost));
         } else {

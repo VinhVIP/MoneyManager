@@ -1,9 +1,7 @@
 package com.vinh.moneymanager.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.DataSetObserver;
-import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -11,9 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.libs.DateRange;
@@ -106,7 +102,7 @@ public class ExpandCategoryFinanceAdapter extends BaseExpandableListAdapter {
 
         long totalCost = 0;
         for (Finance f : mapFinance.get(categories.get(groupPosition))) {
-            totalCost += f.getCost();
+            totalCost += f.getMoney();
         }
 
         holder.bindData(R.drawable.ic_star, category.getName(), totalCost);
@@ -213,7 +209,7 @@ public class ExpandCategoryFinanceAdapter extends BaseExpandableListAdapter {
 
             tvDetail.setText(finance.getDetail());
 
-            long cost = finance.getCost();
+            long cost = finance.getMoney();
 
             tvCost.setText(Helper.formatCurrency(cost));
         }

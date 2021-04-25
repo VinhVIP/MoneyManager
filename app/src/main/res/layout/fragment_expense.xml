@@ -95,26 +95,35 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/sw_thu"
-                        android:layout_width="70dp"
-                        android:layout_height="35dp"
-                        android:background="@{viewModel.switchExpenseIncome == 0 ? @drawable/switch_left_selected : @drawable/switch_left_unselected}"
-                        android:gravity="center"
-                        android:text="Thu"
-                        android:textColor="@{viewModel.switchExpenseIncome == 0 ? @color/white : @color/colorAccent}"
-                        android:textSize="15sp" />
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:singleLine="true"
+                        app:singleSelection="true">
 
-                    <TextView
-                        android:id="@+id/sw_chi"
-                        android:layout_width="70dp"
-                        android:layout_height="35dp"
-                        android:background="@{viewModel.switchExpenseIncome == 1 ? @drawable/switch_right_selected : @drawable/switch_right_unselected}"
-                        android:gravity="center"
-                        android:text="Chi"
-                        android:textColor="@{viewModel.switchExpenseIncome == 1 ? @color/white : @color/colorSunday}"
-                        android:textSize="15sp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipIncome"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Thu nhập"
+                            android:textColor="@color/chip_text_color"
+                            android:theme="@style/Theme.MaterialComponents.Light"
+                            app:chipBackgroundColor="@color/chip_bg_color" />
 
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipExpense"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="Chi tiêu"
+                            android:textColor="@color/chip_text_color"
+                            android:theme="@style/Theme.MaterialComponents.Light"
+                            app:chipBackgroundColor="@color/chip_bg_color" />
+
+                        </com.google.android.material.chip.ChipGroup>
                 </LinearLayout>
 
 

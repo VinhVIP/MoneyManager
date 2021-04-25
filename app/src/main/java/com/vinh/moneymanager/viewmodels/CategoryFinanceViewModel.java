@@ -1,6 +1,5 @@
 package com.vinh.moneymanager.viewmodels;
 
-import androidx.databinding.ObservableByte;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.databinding.ObservableLong;
@@ -11,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.vinh.moneymanager.libs.DateRange;
+import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
 
@@ -45,7 +45,7 @@ public class CategoryFinanceViewModel {
         categoryViewModel = new ViewModelProvider(owner).get(CategoryViewModel.class);
         accountViewModel = new ViewModelProvider(owner).get(AccountViewModel.class);
 
-        switchExpenseIncome.set(1);
+        switchExpenseIncome.set(Helper.TYPE_EXPENSE);
 
         categories = new MutableLiveData<>();
         mapCategoryFinance = new MutableLiveData<>();
@@ -58,7 +58,7 @@ public class CategoryFinanceViewModel {
             this.allCategories = allCategories;
 
             financeViewModel.getAllFinances().observe(lifecycleOwner, finances -> {
-                Map<Category, List<Finance>> map = new TreeMap<>((c1, c2) -> c1.getId() - c2.getId());
+                Map<Category, List<Finance>> map = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
 
                 for (Category c : allCategories) {
                     map.put(c, new ArrayList<>());
@@ -66,7 +66,7 @@ public class CategoryFinanceViewModel {
 
                 for (Finance f : finances) {
                     for (Category c : map.keySet()) {
-                        if (f.getCategoryId() == c.getId()) {
+                        if (f.getCategoryId() == c.getCategoryId()) {
                             map.get(c).add(f);
                         }
                     }
@@ -74,7 +74,7 @@ public class CategoryFinanceViewModel {
 
                 for (Category c : map.keySet()) {
                     for (Finance f : map.get(c)) {
-                        System.out.println(f.getId() + " " + f.getDetail());
+                        System.out.println(f.getFinanceId() + " " + f.getDetail());
                     }
                 }
 
@@ -95,7 +95,7 @@ public class CategoryFinanceViewModel {
     private void update() {
         DateRange rangeValue = dateRange.get();
 
-        Map<Category, List<Finance>> mapRange = new TreeMap<>((c1, c2) -> c1.getId() - c2.getId());
+        Map<Category, List<Finance>> mapRange = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
         Map<String, List<Finance>> mapTime = new TreeMap<>((o1, o2) -> {
             DateRange.Date d1 = new DateRange.Date(o1);
             DateRange.Date d2 = new DateRange.Date(o2);

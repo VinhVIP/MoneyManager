@@ -43,7 +43,7 @@ public class ExpandTimeFinanceAdapter extends BaseExpandableListAdapter {
 
     private Category getCategory(int categoryId) {
         for (Category c : categories) {
-            if (c.getId() == categoryId) return c;
+            if (c.getCategoryId() == categoryId) return c;
         }
         return null;
     }
@@ -115,7 +115,7 @@ public class ExpandTimeFinanceAdapter extends BaseExpandableListAdapter {
 
         long totalCost = 0;
         for (Finance f : mapFinance.get(strDate)) {
-            totalCost += f.getCost();
+            totalCost += f.getMoney();
         }
         tvTotal.setText(Helper.formatCurrency(totalCost));
 
@@ -139,7 +139,7 @@ public class ExpandTimeFinanceAdapter extends BaseExpandableListAdapter {
         tvTime.setText(finance.getTime());
         tvDetail.setText(finance.getDetail());
         tvCategoryName.setText(getCategory(finance.getCategoryId()).getName());
-        tvCost.setText(Helper.formatCurrency(finance.getCost()));
+        tvCost.setText(Helper.formatCurrency(finance.getMoney()));
 
         return convertView;
     }
