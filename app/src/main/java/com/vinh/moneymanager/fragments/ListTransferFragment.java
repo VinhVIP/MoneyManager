@@ -72,6 +72,20 @@ public class ListTransferFragment extends Fragment implements RecyclerTransferAd
 
     @Override
     public void onItemTransferClick(Transfer transfer, int position) {
-        Toast.makeText(getContext(), "Item clicked", Toast.LENGTH_SHORT).show();
+        Bundle bundle = new Bundle();
+
+        Log.e("MM", transfer.getDateTime() +" - "+transfer.getMoney());
+
+        bundle.putInt(Helper.TRANSFER_ID, transfer.getTransferId());
+        bundle.putString(Helper.TRANSFER_DATETIME, transfer.getDateTime());
+        bundle.putInt(Helper.TRANSFER_ACCOUNT_OUT_ID, transfer.getAccountOutId());
+        bundle.putInt(Helper.TRANSFER_ACCOUNT_IN_ID, transfer.getAccountInId());
+        bundle.putLong(Helper.TRANSFER_MONEY, transfer.getMoney());
+        bundle.putLong(Helper.TRANSFER_FEE, transfer.getFee());
+        bundle.putString(Helper.TRANSFER_DETAIL, transfer.getDetail());
+
+        Intent intent = new Intent(this.getActivity(), AddEditFinanceActivity.class);
+        intent.putExtra(Helper.EDIT_TRANSFER, bundle);
+        startActivity(intent);
     }
 }

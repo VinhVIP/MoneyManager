@@ -40,6 +40,15 @@ public class Helper {
     public static final String EDIT_TRANSFER = "edit_transfer";
     public static final String ADD_TRANSFER = "add_transfer";
 
+    public static final String TRANSFER_ID = "TRANSFER_ID";
+    public static final String TRANSFER_DATETIME = "TRANSFER_DATETIME";
+    public static final String TRANSFER_ACCOUNT_OUT_ID = "TRANSFER_ACCOUNT_OUT_ID";
+    public static final String TRANSFER_ACCOUNT_IN_ID = "TRANSFER_ACCOUNT_IN_ID";
+    public static final String TRANSFER_MONEY = "TRANSFER_MONEY";
+    public static final String TRANSFER_FEE = "TRANSFER_FEE";
+    public static final String TRANSFER_DETAIL = "TRANSFER_DETAIL";
+
+
     public static String formatCurrency(long cost) {
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);

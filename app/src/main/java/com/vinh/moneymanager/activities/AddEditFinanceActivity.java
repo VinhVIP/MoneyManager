@@ -64,6 +64,7 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
     private List<Account> allAccounts = new ArrayList<>();
 
     private Finance currentFinance;
+    private Transfer currentTransfer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,8 +188,6 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
             if (cost > 0)
                 mViewModel.setBalance(String.valueOf(cost));
 
-            edDetail.setText(currentFinance.getDetail());
-
         } else if (getIntent().hasExtra(Helper.ADD_FINANCE)) {
             // Thêm mới finance
             Log.d("MM", "Add Finance");
@@ -203,6 +202,19 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
             Log.d("MM", "Edit Transfer");
             mViewModel.categoryType.set(Helper.TYPE_TRANSFER);
 
+            Bundle data = getIntent().getBundleExtra(Helper.EDIT_TRANSFER);
+
+            int transferId = data.getInt(Helper.TRANSFER_ID);
+            String datetime = data.getString(Helper.TRANSFER_DATETIME);
+            int accountOutId = data.getInt(Helper.TRANSFER_ACCOUNT_OUT_ID);
+            int accountInId = data.getInt(Helper.TRANSFER_ACCOUNT_IN_ID);
+            long money = data.getLong(Helper.TRANSFER_MONEY);
+            long fee = data.getLong(Helper.TRANSFER_FEE);
+            String detail = data.getString(Helper.TRANSFER_DETAIL);
+
+            currentTransfer = new Transfer(money, fee, datetime, detail, accountOutId, accountInId);
+            currentTransfer.setTransferId(transferId);
+
         } else if (getIntent().hasExtra(Helper.ADD_TRANSFER)) {
             Log.d("MM", "Add Transfer");
             mViewModel.categoryType.set(Helper.TYPE_TRANSFER);
@@ -215,7 +227,7 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
     private void previewData() {
         Calendar calendar = Calendar.getInstance();
 
-        if (currentFinance == null) {
+        if (currentFinance == null && currentTransfer == null) {
             getSupportActionBar().setTitle("Thêm");
 
             tvDay.setText(String.format("%02d/%02d/%d",
@@ -226,7 +238,9 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
                     calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE)));
 
-        } else {
+            return;
+        }
+        if (currentFinance != null) {
             getSupportActionBar().setTitle("Chỉnh sửa");
 
             String[] dateTimeArray = currentFinance.getDateTime().split("-");
@@ -236,6 +250,19 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
 
             // Cập nhật số tiền theo định dạng
             mViewModel.setBalance(String.valueOf(currentFinance.getMoney()));
+            return;
+        }
+        if (currentTransfer != null) {
+            Log.e("MM", "Load transfer");
+
+            String[] dateTimeArray = currentTransfer.getDateTime().split("-");
+            tvDay.setText(dateTimeArray[0]);
+            tvTime.setText(dateTimeArray[1]);
+            edDetail.setText(currentTransfer.getDetail());
+
+            // Cập nhật số tiền theo định dạng
+            mViewModel.setBalance(String.valueOf(currentTransfer.getMoney()));
+            mViewModel.setTransferFee(String.valueOf(currentTransfer.getFee()));
         }
 
     }
