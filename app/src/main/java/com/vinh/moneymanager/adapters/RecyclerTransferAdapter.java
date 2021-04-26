@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,7 +32,7 @@ public class RecyclerTransferAdapter extends RecyclerView.Adapter<RecyclerTransf
         this.accountViewModel = accountViewModel;
     }
 
-    public void setAdapter(List<Transfer> transfers){
+    public void setAdapter(List<Transfer> transfers) {
         this.transfers = transfers;
         notifyDataSetChanged();
     }
@@ -45,10 +46,11 @@ public class RecyclerTransferAdapter extends RecyclerView.Adapter<RecyclerTransf
 
     @Override
     public void onBindViewHolder(@NonNull TransferHolder holder, int position) {
-        Log.e("MM", "bind "+position);
+        Log.e("MM", "bind " + position);
         Transfer transfer = transfers.get(position);
         holder.bindData(transfer);
         holder.itemView.setOnClickListener(v -> listener.onItemTransferClick(transfer, position));
+        holder.imgDelete.setOnClickListener(v -> listener.onItemDelete(transfer, position));
     }
 
     @Override
@@ -56,11 +58,17 @@ public class RecyclerTransferAdapter extends RecyclerView.Adapter<RecyclerTransf
         return transfers.size();
     }
 
+    public void deleteTransfer(int position){
+        transfers.remove(position);
+        notifyItemRemoved(position);
+    }
+
     // ---------------- Holder --------------------
     class TransferHolder extends RecyclerView.ViewHolder {
 
         TextView tvAccountOut, tvAccountIn, tvMoney, tvFee;
         TextView tvDay, tvMonthYear, tvDayOfWeek;
+        ImageView imgDelete;
 
         public TransferHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,6 +82,7 @@ public class RecyclerTransferAdapter extends RecyclerView.Adapter<RecyclerTransf
             tvMonthYear = itemView.findViewById(R.id.tv_calendar_month_year);
             tvDayOfWeek = itemView.findViewById(R.id.tv_calendar_day_of_week);
 
+            imgDelete = itemView.findViewById(R.id.img_delete_transfer);
         }
 
         public void bindData(Transfer transfer) {
@@ -97,6 +106,8 @@ public class RecyclerTransferAdapter extends RecyclerView.Adapter<RecyclerTransf
 
     public interface OnItemTransferListener {
         void onItemTransferClick(Transfer transfer, int position);
+
+        void onItemDelete(Transfer transfer, int position);
     }
 
 }

@@ -13,7 +13,7 @@
         android:layout_height="40dp"
         android:layout_centerVertical="true"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_star" />
+        android:src="@drawable/icons_credit" />
 
     <TextView
         android:id="@+id/tv_account_name"
@@ -33,5 +33,8 @@
         android:layout_below="@id/tv_account_name"
         android:layout_toRightOf="@id/img_account"
         android:paddingLeft="6dp"
-        android:text="2000000d" />
+        android:text="2000000d"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
+
 </RelativeLayout>

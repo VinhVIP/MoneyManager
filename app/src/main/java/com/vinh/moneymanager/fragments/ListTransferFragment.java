@@ -88,4 +88,9 @@ public class ListTransferFragment extends Fragment implements RecyclerTransferAd
         intent.putExtra(Helper.EDIT_TRANSFER, bundle);
         startActivity(intent);
     }
+
+    @Override
+    public void onItemDelete(Transfer transfer, int position) {
+
+    }
 }

@@ -19,7 +19,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/icon" />
+            android:src="@drawable/bagicon" />
 
         <TextView
             android:gravity="center"
@@ -35,7 +35,7 @@
             android:maxLines="2"
             android:ellipsize="end"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/text_view_category_total"

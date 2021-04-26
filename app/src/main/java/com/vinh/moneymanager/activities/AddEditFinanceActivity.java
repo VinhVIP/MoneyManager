@@ -284,14 +284,36 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
                     fee = Long.parseLong(Helper.clearDotInText(edTransferFee.getText().toString()));
                 }
 
-                accountOut.setBalance(accountOut.getBalance() - cost - fee);
-                accountIn.setBalance(accountIn.getBalance() + cost);
+                if (currentTransfer == null) {
+                    // Them moi transfer
+                    accountOut.setBalance(accountOut.getBalance() - cost - fee);
+                    accountIn.setBalance(accountIn.getBalance() + cost);
 
-                accountViewModel.update(accountOut);
-                accountViewModel.update(accountIn);
+                    accountViewModel.update(accountOut);
+                    accountViewModel.update(accountIn);
 
-                Transfer transfer = new Transfer(cost, fee, dateTime, detail, accountOut.getAccountId(), accountIn.getAccountId());
-                transferViewModel.insert(transfer);
+                    Transfer transfer = new Transfer(cost, fee, dateTime, detail, accountOut.getAccountId(), accountIn.getAccountId());
+                    transferViewModel.insert(transfer);
+                } else {
+                    // Update transfer
+                    Account oldAccountOut = getAccount(currentTransfer.getAccountOutId());
+                    Account oldAccountIn = getAccount(currentTransfer.getAccountInId());
+
+                    // Khoi phuc lai so tien giao dich cho 2 tai khoan
+                    oldAccountOut.setBalance(oldAccountOut.getBalance() + currentTransfer.getMoney() + currentTransfer.getFee());
+                    oldAccountIn.setBalance(oldAccountIn.getBalance() - currentTransfer.getMoney());
+
+                    accountOut.setBalance(accountOut.getBalance() - cost - fee);
+                    accountIn.setBalance(accountIn.getBalance() + cost);
+
+                    accountViewModel.update(oldAccountOut);
+                    accountViewModel.update(oldAccountIn);
+
+                    Transfer transfer = new Transfer(cost, fee, dateTime, detail, accountOut.getAccountId(), accountIn.getAccountId());
+                    transfer.setTransferId(currentTransfer.getTransferId());
+                    transferViewModel.update(transfer);
+                }
+
 
                 finish();
             }
@@ -470,11 +492,22 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         accountViewModel.getAccounts().observe(this, accounts -> {
             allAccounts = accounts;
 
-            int selectedAccountId = 1;
             if (getIntent().hasExtra(Helper.EDIT_FINANCE)) {
-                selectedAccountId = getIntent().getBundleExtra(Helper.EDIT_FINANCE).getInt(Helper.ACCOUNT_ID);
+                int selectedAccountId = getIntent().getBundleExtra(Helper.EDIT_FINANCE).getInt(Helper.ACCOUNT_ID);
+                mViewModel.account.set(getAccount(selectedAccountId));
+            } else if (getIntent().hasExtra(Helper.ADD_FINANCE)) {
+//                mViewModel.account.set(getAccount(selectedAccountId));
+            } else if (getIntent().hasExtra(Helper.EDIT_TRANSFER)) {
+                int selectedAccountOutId = getIntent().getBundleExtra(Helper.EDIT_TRANSFER).getInt(Helper.TRANSFER_ACCOUNT_OUT_ID);
+                int selectedAccountInId = getIntent().getBundleExtra(Helper.EDIT_TRANSFER).getInt(Helper.TRANSFER_ACCOUNT_IN_ID);
+                mViewModel.account.set(getAccount(selectedAccountOutId));
+                mViewModel.accountIn.set(getAccount(selectedAccountInId));
+
+                Log.e("MM", "select account: " + selectedAccountOutId + " - " + selectedAccountInId);
+
+            } else if (getIntent().hasExtra(Helper.ADD_TRANSFER)) {
+//                selectedAccountId = getIntent().getBundleExtra(Helper.ADD_TRANSFER).getInt(Helper.ACCOUNT_ID);
             }
-            mViewModel.account.set(getAccount(selectedAccountId));
 
         });
 

@@ -19,7 +19,7 @@
         android:layout_marginLeft="@dimen/margin_left_title"
         android:layout_marginTop="@dimen/margin_top_title"
         android:minWidth="100dp"
-        android:text="Tên"
+        android:text="Loại TK"
         android:textSize="18sp" />
 
     <EditText

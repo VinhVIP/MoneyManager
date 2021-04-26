@@ -20,10 +20,10 @@
         android:layout_gravity="bottom"
         android:foreground="?attr/selectableItemBackground"
         android:foregroundTint="@color/colorAccent"
-        app:itemBackground="@color/rowBackground"
+        app:itemBackground="@color/colorPrimaryLight"
         app:itemHorizontalTranslationEnabled="false"
-        app:itemIconTint="@color/colorPrimary"
-        app:itemTextColor="@color/colorPrimary"
+        app:itemTextColor="#0D31FB"
+        app:itemIconTint="@color/bottom_nav_color"
         app:labelVisibilityMode="selected"
         app:menu="@menu/navigation" />
 

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
+        <item>@font/advent_pro_medium</item>
+        <item>@font/alegreya_sans</item>
         <item>@font/alfa_slab_one</item>
+        <item>@font/antic</item>
     </array>
 </resources>

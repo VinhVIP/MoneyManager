@@ -77,7 +77,7 @@ public class GridCategoryAdapter extends BaseAdapter {
             Category category = categories.get(position);
             holder.categoryName.setText(category.getName());
             // TODO: set image category
-            holder.categoryImage.setImageResource(R.drawable.icon);
+            holder.categoryImage.setImageResource(R.drawable.bagicon);
             long totalCost = 0;
             for (Finance f : mapFinance.get(categories.get(position))) {
                 totalCost += f.getMoney();
