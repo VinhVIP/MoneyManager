@@ -23,6 +23,8 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.chip.Chip;
@@ -34,6 +36,8 @@ import com.vinh.moneymanager.activities.AddEditCategoryActivity;
 import com.vinh.moneymanager.activities.AddEditFinanceActivity;
 import com.vinh.moneymanager.adapters.ExpandCategoryFinanceAdapter;
 import com.vinh.moneymanager.adapters.ExpandTimeFinanceAdapter;
+import com.vinh.moneymanager.adapters.FragmentAccountStateAdapter;
+import com.vinh.moneymanager.adapters.FragmentFinanceStateAdapter;
 import com.vinh.moneymanager.adapters.GridCategoryAdapter;
 import com.vinh.moneymanager.adapters.RecyclerWeekAdapter;
 import com.vinh.moneymanager.components.SingleChoice;
@@ -66,8 +70,9 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     private int mode = MODE_CATEGORY;
 
     // GridView hiển thị các danh mục chi tiêu và số tiền đã chi tiêu
-    private GridView gridViewCategories;
-    private GridCategoryAdapter categoryAdapter;
+//    private GridView gridViewCategories;
+//    private GridCategoryAdapter categoryAdapter;
+
     private Map<Category, List<Finance>> mapCategoryFinances, mapAll;
 
     private List<Category> allCategories, currentCategories;
@@ -93,6 +98,14 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     TabLayout tabLayout;
     private FloatingActionButton fabListFinances;
 
+    private ViewPager2 viewPager;
+    private FragmentFinanceStateAdapter pagerAdapter;
+
+    private ChipGroup chipGroup;
+    private Chip chipIncome, chipExpense;
+
+    private int currentPage = 1;
+
     public ExpenseFragment() {
         calendar = Calendar.getInstance();
     }
@@ -108,7 +121,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mViewModel = new CategoryFinanceViewModel(this, this);
+        mViewModel = new ViewModelProvider(this).get(CategoryFinanceViewModel.class);
 
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
@@ -119,6 +132,9 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
                 new DateRange.Date(DateRange.getLastDay(month, year), month, year));
 
         mViewModel.dateRange.set(range);
+
+        mViewModel.initLiveData(this, this);
+
         dateHandlerClick = new DateHandlerClick();
         dialogWeek = new DialogWeek(getContext(), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR), this);
 
@@ -145,48 +161,87 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         binding.setViewModel(mViewModel);
 
         initExpandListFinances(view);
-        initGridCategories(view);
+//        initGridCategories(view);
+        initViewPager(view);
         setLayoutBottomSheet(view);
 
         // TODO: Need remake
-        thuChi(view);
+//        thuChi(view);
 
         return view;
     }
 
-    private void thuChi(View view) {
-        ChipGroup chipGroup = view.findViewById(R.id.chipGroup);
+    private void initViewPager(View view){
+        viewPager = view.findViewById(R.id.view_pager_expense_income);
+        pagerAdapter = new FragmentFinanceStateAdapter(this);
+        viewPager.setAdapter(pagerAdapter);
 
-        chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
-            public void onCheckedChanged(ChipGroup group, int checkedId) {
-                Chip chip = group.findViewById(checkedId);
-                switch (checkedId) {
-                    case R.id.chipIncome:
-                        if (chip.isChecked()) {
-                            if (mViewModel.switchExpenseIncome.get() != Helper.TYPE_INCOME) {
-                                mViewModel.switchExpenseIncome.set(Helper.TYPE_INCOME);
-                                updateAdapter();
-                            }
-                        } else if (mViewModel.switchExpenseIncome.get() == Helper.TYPE_INCOME) {
-                            chip.setChecked(true);
-                        }
-                        break;
-                    case R.id.chipExpense:
-                        if (chip.isChecked()) {
-                            if (mViewModel.switchExpenseIncome.get() != Helper.TYPE_EXPENSE) {
-                                mViewModel.switchExpenseIncome.set(Helper.TYPE_EXPENSE);
-                                updateAdapter();
-                            }
-                        } else if (mViewModel.switchExpenseIncome.get() == Helper.TYPE_EXPENSE) {
-                            chip.setChecked(true);
-                        }
-                        break;
-                }
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                ((Chip) (chipGroup.getChildAt(position))).setChecked(true);
+                currentPage = position;
             }
         });
 
+
+        chipGroup = view.findViewById(R.id.chipGroup);
+        chipIncome = view.findViewById(R.id.chipIncome);
+        chipExpense = view.findViewById(R.id.chipExpense);
+
+        chipIncome.setOnClickListener(v -> {
+            if (currentPage != 0) {
+                currentPage = 0;
+                viewPager.setCurrentItem(0, true);
+                pagerAdapter.notifyItemChanged(0);
+            }
+            chipIncome.setChecked(true);
+        });
+        chipExpense.setOnClickListener(v -> {
+            if (currentPage != 1) {
+                currentPage = 1;
+                viewPager.setCurrentItem(1, true);
+                pagerAdapter.notifyItemChanged(1);
+            }
+            chipExpense.setChecked(true);
+        });
     }
+
+//    private void thuChi(View view) {
+//        ChipGroup chipGroup = view.findViewById(R.id.chipGroup);
+//
+//        chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(ChipGroup group, int checkedId) {
+//                Chip chip = group.findViewById(checkedId);
+//                switch (checkedId) {
+//                    case R.id.chipIncome:
+//                        if (chip.isChecked()) {
+//                            if (mViewModel.switchExpenseIncome.get() != Helper.TYPE_INCOME) {
+//                                mViewModel.switchExpenseIncome.set(Helper.TYPE_INCOME);
+//                                updateAdapter();
+//                            }
+//                        } else if (mViewModel.switchExpenseIncome.get() == Helper.TYPE_INCOME) {
+//                            chip.setChecked(true);
+//                        }
+//                        break;
+//                    case R.id.chipExpense:
+//                        if (chip.isChecked()) {
+//                            if (mViewModel.switchExpenseIncome.get() != Helper.TYPE_EXPENSE) {
+//                                mViewModel.switchExpenseIncome.set(Helper.TYPE_EXPENSE);
+//                                updateAdapter();
+//                            }
+//                        } else if (mViewModel.switchExpenseIncome.get() == Helper.TYPE_EXPENSE) {
+//                            chip.setChecked(true);
+//                        }
+//                        break;
+//                }
+//            }
+//        });
+//
+//    }
 
     private void updateAdapter() {
         updateCategoryAdapter();
@@ -208,7 +263,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             }
         }
         mViewModel.totalCost.set(totalCost);
-        categoryAdapter.setMapFinance(mapCategoryFinances);
+//        categoryAdapter.setMapFinance(mapCategoryFinances);
         expandFinanceAdapter.setMapFinance(mapCategoryFinances);
 
         currentCategories.clear();
@@ -366,51 +421,51 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         });
     }
 
-    private void initGridCategories(View view) {
-        gridViewCategories = view.findViewById(R.id.grid_view_category);
-        // init map category for grid view
-        mapCategoryFinances = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
-
-        mapTimeAll = new TreeMap<>((o1, o2) -> {
-            DateRange.Date d1 = new DateRange.Date(o1);
-            DateRange.Date d2 = new DateRange.Date(o2);
-            return d1.compare(d2);
-        });
-
-        mapTime = new TreeMap<>((o1, o2) -> {
-            DateRange.Date d1 = new DateRange.Date(o1);
-            DateRange.Date d2 = new DateRange.Date(o2);
-            return d1.compare(d2);
-        });
-
-        categoryAdapter = new GridCategoryAdapter(this.getContext(), mapCategoryFinances, this, this);
-        gridViewCategories.setAdapter(categoryAdapter);
-
-
-        mViewModel.getMapCategoryFinance().observe(this.getViewLifecycleOwner(), categoryListMap -> {
-            mapAll = categoryListMap;
-
-            allCategories.clear();
-            allCategories.addAll(mapAll.keySet());
-
-            updateCategoryAdapter();
-
-        });
-
-
-        // Adapter for expandable list view in bottom sheet
-
-        mViewModel.getCategories().observe(this.getViewLifecycleOwner(), categories -> {
-            expandTimeAdapter.setCategories(categories);
-        });
-
-        mViewModel.getMapTimeFinance().observe(this.getViewLifecycleOwner(), stringListMap -> {
-            mapTimeAll = stringListMap;
-
-            updateTimeAdapter();
-        });
-
-    }
+//    private void initGridCategories(View view) {
+//        gridViewCategories = view.findViewById(R.id.grid_view_category);
+//        // init map category for grid view
+//        mapCategoryFinances = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
+//
+//        mapTimeAll = new TreeMap<>((o1, o2) -> {
+//            DateRange.Date d1 = new DateRange.Date(o1);
+//            DateRange.Date d2 = new DateRange.Date(o2);
+//            return d1.compare(d2);
+//        });
+//
+//        mapTime = new TreeMap<>((o1, o2) -> {
+//            DateRange.Date d1 = new DateRange.Date(o1);
+//            DateRange.Date d2 = new DateRange.Date(o2);
+//            return d1.compare(d2);
+//        });
+//
+//        categoryAdapter = new GridCategoryAdapter(this.getContext(), mapCategoryFinances, this, this);
+//        gridViewCategories.setAdapter(categoryAdapter);
+//
+//
+//        mViewModel.getMapCategoryFinance().observe(this, categoryListMap -> {
+//            mapAll = categoryListMap;
+//
+//            allCategories.clear();
+//            allCategories.addAll(mapAll.keySet());
+//
+//            updateCategoryAdapter();
+//
+//        });
+//
+//
+//        // Adapter for expandable list view in bottom sheet
+//
+//        mViewModel.getCategories().observe(this.getViewLifecycleOwner(), categories -> {
+//            expandTimeAdapter.setCategories(categories);
+//        });
+//
+//        mViewModel.getMapTimeFinance().observe(this.getViewLifecycleOwner(), stringListMap -> {
+//            mapTimeAll = stringListMap;
+//
+//            updateTimeAdapter();
+//        });
+//
+//    }
 
     private Category getCategory(int categoryId) {
         for (Category c : allCategories) {

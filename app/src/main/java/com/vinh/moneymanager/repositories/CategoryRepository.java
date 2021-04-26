@@ -17,6 +17,9 @@ public class CategoryRepository {
 
     private LiveData<List<Category>> categories;
 
+    private LiveData<List<Category>> incomeCategories;
+    private LiveData<List<Category>> expenseCategories;
+
     public CategoryRepository(Application application) {
         MoneyManagerDatabase database = MoneyManagerDatabase.getInstance(application);
         categoryDao = database.categoryDao();
@@ -49,7 +52,16 @@ public class CategoryRepository {
         return categories;
     }
 
-    // AsyncTask
+    public LiveData<List<Category>> getIncomeCategories() {
+        return incomeCategories;
+    }
+
+    public LiveData<List<Category>> getExpenseCategories() {
+        return expenseCategories;
+    }
+
+
+    // --------------- AsyncTask -------------------
     private static class InsertCategoryAsyncTask extends AsyncTask<Category, Void, Void> {
         private CategoryDao categoryDao;
 

@@ -27,6 +27,9 @@ public interface CategoryDao {
     @Query("SELECT * FROM category WHERE type_id = " + Helper.TYPE_INCOME + " ORDER BY c_id ASC")
     LiveData<List<Category>> getIncomeCategories();
 
+    @Query("SELECT * FROM category WHERE type_id = " + Helper.TYPE_EXPENSE + " ORDER BY c_id ASC")
+    LiveData<List<Category>> getExpenseCategories();
+
     @Query("SELECT * FROM category ORDER BY c_id ASC")
     LiveData<List<Category>> getCategories();
 

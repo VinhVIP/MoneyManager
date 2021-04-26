@@ -35,10 +35,6 @@ public class AccountFragment extends Fragment  {
 
     private AccountViewModel mViewModel;
 
-    private List<Account> accounts;
-    private RecyclerView recyclerAccount;
-    private RecyclerAccountAdapter accountAdapter;
-
     private ViewPager2 viewPager;
     private FragmentStateAdapter pagerAdapter;
 
