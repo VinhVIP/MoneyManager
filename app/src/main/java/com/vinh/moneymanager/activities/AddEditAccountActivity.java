@@ -42,7 +42,6 @@ public class AddEditAccountActivity extends AppCompatActivity {
 
         btnSubmit = findViewById(R.id.btn_submit_account);
         btnSubmit.setOnClickListener(v -> {
-            Toast.makeText(this, "Chua lam", Toast.LENGTH_SHORT).show();
             if (checkAccountName()) {
                 Account account = new Account(edAccountName.getText().toString().trim(),
                         getBalanceInput(),

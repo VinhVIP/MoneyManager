@@ -46,7 +46,6 @@ public class RecyclerTransferAdapter extends RecyclerView.Adapter<RecyclerTransf
 
     @Override
     public void onBindViewHolder(@NonNull TransferHolder holder, int position) {
-        Log.e("MM", "bind " + position);
         Transfer transfer = transfers.get(position);
         holder.bindData(transfer);
         holder.itemView.setOnClickListener(v -> listener.onItemTransferClick(transfer, position));
@@ -93,7 +92,7 @@ public class RecyclerTransferAdapter extends RecyclerView.Adapter<RecyclerTransf
 
             String[] dates = transfer.getDateTime().split("-")[0].split("/");
             tvDay.setText(dates[0]);
-            tvMonthYear.setText(String.format("%s/%s", dates[1], dates[2]));
+            tvMonthYear.setText(String.format("%s.%s", dates[1], dates[2]));
             tvDayOfWeek.setText(Helper.getDayOfWeek(new DateRange.Date(Integer.parseInt(dates[0]), Integer.parseInt(dates[1]), Integer.parseInt(dates[2]))));
             if (tvDayOfWeek.getText().toString().equalsIgnoreCase("CN")) {
                 tvDayOfWeek.setBackgroundResource(R.color.colorSunday);

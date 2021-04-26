@@ -39,6 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_toRightOf="@+id/tv_day"
+                android:hint="Chọn danh mục"
                 android:text="@{viewModel.category.name}"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -114,6 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:hint="Chọn tài khoản"
                 android:text="@{viewModel.account.accountName}"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -140,7 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="..."
+                android:hint="Chọn tài khoản"
                 android:text="@{viewModel.accountIn.accountName}"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -197,9 +199,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@null"
+                android:hint="0"
                 android:inputType="number"
                 android:maxLines="1"
-                android:hint="0"
                 android:singleLine="true"
                 android:text="@={viewModel.transferFee}"
                 android:textColor="@color/black"

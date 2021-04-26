@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +19,7 @@ import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.activities.AddEditFinanceActivity;
 import com.vinh.moneymanager.adapters.RecyclerTransferAdapter;
 import com.vinh.moneymanager.libs.Helper;
+import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.room.entities.Transfer;
 import com.vinh.moneymanager.viewmodels.AccountViewModel;
 import com.vinh.moneymanager.viewmodels.TransferViewModel;
@@ -38,6 +38,7 @@ public class ListTransferFragment extends Fragment implements RecyclerTransferAd
     private AccountViewModel accountViewModel;
 
     private FloatingActionButton fab;
+
 
     @Nullable
     @Override
@@ -74,7 +75,7 @@ public class ListTransferFragment extends Fragment implements RecyclerTransferAd
     public void onItemTransferClick(Transfer transfer, int position) {
         Bundle bundle = new Bundle();
 
-        Log.e("MM", transfer.getDateTime() +" - "+transfer.getMoney());
+        Log.e("MM", transfer.getDateTime() + " - " + transfer.getMoney());
 
         bundle.putInt(Helper.TRANSFER_ID, transfer.getTransferId());
         bundle.putString(Helper.TRANSFER_DATETIME, transfer.getDateTime());
@@ -91,6 +92,21 @@ public class ListTransferFragment extends Fragment implements RecyclerTransferAd
 
     @Override
     public void onItemDelete(Transfer transfer, int position) {
+        Log.d("MM", "Delete transfer: " + transfer.getTransferId());
+
+        Account accountOut = accountViewModel.search(transfer.getAccountOutId());
+        Account accountIn = accountViewModel.search(transfer.getAccountInId());
+
+        // Khôi phục lại số tiền trong tài khoản
+        accountOut.setBalance(accountOut.getBalance() + transfer.getMoney() + transfer.getFee());
+        accountIn.setBalance(accountIn.getBalance() - transfer.getMoney());
+
+        accountViewModel.update(accountOut);
+        accountViewModel.update(accountIn);
+
+        transferViewModel.delete(transfer);
+        adapter.deleteTransfer(position);
 
     }
+
 }
