@@ -5,6 +5,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.vinh.moneymanager.libs.Helper" />
+
         <variable
             name="viewModel"
             type="com.vinh.moneymanager.viewmodels.AddEditFinanceViewModel" />
@@ -19,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="@{viewModel.categoryType==2?View.GONE:View.VISIBLE}">
+            android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.GONE:View.VISIBLE}">
 
             <TextView
                 android:id="@+id/tv_category_title"
@@ -37,6 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_toRightOf="@+id/tv_day"
+                android:hint="Chọn danh mục"
                 android:text="@{viewModel.category.name}"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -104,7 +107,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
                 android:minWidth="@dimen/title_width"
-                android:text="@{viewModel.categoryType==2?@string/account_out:@string/account}"
+                android:text="@{viewModel.categoryType==Helper.TYPE_TRANSFER?@string/account_out:@string/account}"
                 android:textSize="18sp" />
 
             <TextView
@@ -112,6 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:hint="Chọn tài khoản"
                 android:text="@{viewModel.account.accountName}"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -121,7 +125,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="@{viewModel.categoryType==2?View.VISIBLE:View.GONE}">
+            android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.VISIBLE:View.GONE}">
 
             <TextView
                 android:id="@+id/tv_account_in"
@@ -130,7 +134,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
                 android:minWidth="@dimen/title_width"
-                android:text="@{viewModel.categoryType==2?@string/account_in:@string/account}"
+                android:text="@{viewModel.categoryType==Helper.TYPE_TRANSFER?@string/account_in:@string/account}"
                 android:textSize="18sp" />
 
             <TextView
@@ -138,7 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="..."
+                android:hint="Chọn tài khoản"
                 android:text="@{viewModel.accountIn.accountName}"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -177,7 +181,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="@{viewModel.categoryType==2?View.VISIBLE:View.GONE}">
+            android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.VISIBLE:View.GONE}">
 
             <TextView
                 android:id="@+id/tv_transfer_fee"
@@ -195,9 +199,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@null"
+                android:hint="0"
                 android:inputType="number"
                 android:maxLines="1"
-                android:hint="0"
                 android:singleLine="true"
                 android:text="@={viewModel.transferFee}"
                 android:textColor="@color/black"

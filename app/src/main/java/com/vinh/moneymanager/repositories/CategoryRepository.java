@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
-import com.vinh.moneymanager.room.daos.CategoryDao;
 import com.vinh.moneymanager.room.MoneyManagerDatabase;
+import com.vinh.moneymanager.room.daos.CategoryDao;
 import com.vinh.moneymanager.room.entities.Category;
 
 import java.util.List;
@@ -36,15 +36,24 @@ public class CategoryRepository {
         new DeleteCategoryAsyncTask(categoryDao).execute(category);
     }
 
+    public boolean isExists(String categoryName) {
+        return categoryDao.isExists(categoryName);
+    }
+
+    public Category getCategory(int categoryId){
+        return categoryDao.getCategory(categoryId);
+    }
+
 
     public LiveData<List<Category>> getCategories() {
         return categories;
     }
 
     // AsyncTask
-    private static class InsertCategoryAsyncTask extends AsyncTask<Category, Void, Void>{
+    private static class InsertCategoryAsyncTask extends AsyncTask<Category, Void, Void> {
         private CategoryDao categoryDao;
-        private InsertCategoryAsyncTask(CategoryDao categoryDao){
+
+        private InsertCategoryAsyncTask(CategoryDao categoryDao) {
             this.categoryDao = categoryDao;
         }
 
@@ -55,9 +64,10 @@ public class CategoryRepository {
         }
     }
 
-    private static class DeleteCategoryAsyncTask extends AsyncTask<Category, Void, Void>{
+    private static class DeleteCategoryAsyncTask extends AsyncTask<Category, Void, Void> {
         private CategoryDao categoryDao;
-        private DeleteCategoryAsyncTask(CategoryDao categoryDao){
+
+        private DeleteCategoryAsyncTask(CategoryDao categoryDao) {
             this.categoryDao = categoryDao;
         }
 
@@ -68,9 +78,10 @@ public class CategoryRepository {
         }
     }
 
-    private static class UpdateCategoryAsyncTask extends AsyncTask<Category, Void, Void>{
+    private static class UpdateCategoryAsyncTask extends AsyncTask<Category, Void, Void> {
         private CategoryDao categoryDao;
-        private UpdateCategoryAsyncTask(CategoryDao categoryDao){
+
+        private UpdateCategoryAsyncTask(CategoryDao categoryDao) {
             this.categoryDao = categoryDao;
         }
 

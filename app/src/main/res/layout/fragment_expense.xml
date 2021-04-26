@@ -87,7 +87,7 @@
                 android:layout_marginVertical="3dp"
                 android:layout_marginLeft="6dp">
 
-                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
@@ -95,26 +95,35 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/sw_thu"
-                        android:layout_width="70dp"
-                        android:layout_height="35dp"
-                        android:background="@{viewModel.switchExpenseIncome == 0 ? @drawable/switch_left_selected : @drawable/switch_left_unselected}"
-                        android:gravity="center"
-                        android:text="Thu"
-                        android:textColor="@{viewModel.switchExpenseIncome == 0 ? @color/white : @color/colorAccent}"
-                        android:textSize="15sp" />
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:singleLine="true"
+                        app:singleSelection="true">
 
-                    <TextView
-                        android:id="@+id/sw_chi"
-                        android:layout_width="70dp"
-                        android:layout_height="35dp"
-                        android:background="@{viewModel.switchExpenseIncome == 1 ? @drawable/switch_right_selected : @drawable/switch_right_unselected}"
-                        android:gravity="center"
-                        android:text="Chi"
-                        android:textColor="@{viewModel.switchExpenseIncome == 1 ? @color/white : @color/colorSunday}"
-                        android:textSize="15sp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipIncome"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Thu nhập"
+                            android:textColor="@color/chip_text_color"
+                            android:theme="@style/Theme.MaterialComponents.Light"
+                            app:chipBackgroundColor="@color/chip_bg_color" />
 
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipExpense"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="Chi tiêu"
+                            android:textColor="@color/chip_text_color"
+                            android:theme="@style/Theme.MaterialComponents.Light"
+                            app:chipBackgroundColor="@color/chip_bg_color" />
+
+                        </com.google.android.material.chip.ChipGroup>
                 </LinearLayout>
 
 
@@ -122,7 +131,7 @@
                     android:id="@+id/text_view_total_cost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingRight="6dp"
+                    android:paddingEnd="6dp"
                     android:text="@{Helper.formatCurrency(viewModel.totalCost)}"
                     android:textColor="@color/black"
                     android:textSize="17sp"
@@ -172,13 +181,23 @@
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="70dp"
-            android:nestedScrollingEnabled="true">
+            android:layout_marginTop="85dp">
 
             <include layout="@layout/bottom_sheet" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_list_finance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_fab_list"
+                android:translationX="-16dp"
+                android:translationY="-16dp"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </layout>

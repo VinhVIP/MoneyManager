@@ -1,10 +1,9 @@
 package com.vinh.moneymanager.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -13,26 +12,29 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.libs.Helper;
+import com.vinh.moneymanager.room.entities.Category;
+import com.vinh.moneymanager.viewmodels.CategoryViewModel;
 
 public class AddEditCategoryActivity extends AppCompatActivity {
+
+    private CategoryViewModel categoryViewModel;
 
     private RadioButton radioIncome, radioExpense;
     private EditText edName, edDescription;
     private Button btnSubmit;
 
-    private int categoryId = -1;
+    private int categoryId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_add_edit_category);
+
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
 
         radioIncome = findViewById(R.id.radio_income);
         radioExpense = findViewById(R.id.radio_expense);
@@ -41,47 +43,102 @@ public class AddEditCategoryActivity extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btn_submit_category);
 
         btnSubmit.setOnClickListener((v) -> {
-            if (edName.getText().toString().trim().length() > 0) {
-                Intent dataReturn = new Intent();
-                dataReturn.putExtra(Helper.CATEGORY_ID, categoryId);
-                dataReturn.putExtra(Helper.CATEGORY_TYPE, radioIncome.isChecked() ? 1 : 0);
-                dataReturn.putExtra(Helper.CATEGORY_NAME, edName.getText().toString().trim());
-                dataReturn.putExtra(Helper.CATEGORY_DESCRIPTION, edDescription.getText().toString().trim());
-                setResult(RESULT_OK, dataReturn);
-                finish();
-            } else {
-                Toast.makeText(this, "Tên danh mục không được để trống!", Toast.LENGTH_SHORT).show();
-            }
+            addEditCategory();
         });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_white);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        toolbar.setNavigationOnClickListener(v -> {
+            finish();
+            Toast.makeText(this, "DDDD", Toast.LENGTH_SHORT).show();
+            onBackPressed();
+        });
+
         getData();
     }
 
     private void getData() {
-        Intent data = getIntent();
-        if (data.hasExtra(Helper.CATEGORY_ID)) {
-            categoryId = data.getIntExtra(Helper.CATEGORY_ID, -1);
-            edName.setText(data.getStringExtra(Helper.CATEGORY_NAME));
-            edDescription.setText(data.getStringExtra(Helper.CATEGORY_DESCRIPTION));
-            int type = data.getIntExtra(Helper.CATEGORY_TYPE, 0);
-            if (type == 1) radioIncome.setChecked(true);
-            else radioExpense.setChecked(true);
+        int type = 1;
+
+        if (getIntent().hasExtra(Helper.EDIT_CATEGORY)) {
+            Bundle data = getIntent().getBundleExtra(Helper.EDIT_CATEGORY);
+
+            categoryId = data.getInt(Helper.CATEGORY_ID);
+            edName.setText(data.getString(Helper.CATEGORY_NAME));
+            edDescription.setText(data.getString(Helper.CATEGORY_DESCRIPTION));
+
+            type = data.getInt(Helper.CATEGORY_TYPE);
 
             getSupportActionBar().setTitle("Chỉnh sửa");
         } else {
+            Bundle data = getIntent().getBundleExtra(Helper.ADD_CATEGORY);
+            type = data.getInt(Helper.CATEGORY_TYPE);
+
             getSupportActionBar().setTitle("Thêm danh mục");
         }
+
+        if (type == Helper.TYPE_INCOME) radioIncome.setChecked(true);
+        else radioExpense.setChecked(true);
+    }
+
+    private void addEditCategory() {
+        String categoryName = edName.getText().toString().trim();
+
+        if (categoryName.isEmpty()) {
+            Toast.makeText(this, "Tên danh mục không được bỏ trống", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Category newCategory = new Category(categoryName,
+                radioIncome.isChecked() ? Helper.TYPE_INCOME : Helper.TYPE_EXPENSE,
+                edDescription.getText().toString().trim());
+
+        if (categoryId == 0) {
+            // Thêm 1 danh mục mới
+            if (categoryViewModel.isExists(categoryName)) {
+                Toast.makeText(this, "Tên danh mục đã tồn tại", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                categoryViewModel.insert(newCategory);
+            }
+        } else {
+            // Update 1 danh mục có sẵn theo ID
+
+            Category oldCategory = categoryViewModel.getCategory(categoryId);
+
+            if (categoryName.equals(oldCategory.getName())) {
+                // Nếu giữ nguyên tên danh mục thì tiến hành update như bth
+                newCategory.setCategoryId(categoryId);
+                categoryViewModel.update(newCategory);
+            } else if (categoryViewModel.isExists(categoryName)) {
+                // Tên danh mục thay đổi nhưng trùng tên với 1 danh mục khác
+                Toast.makeText(this, "Tên danh mục đã tồn tại", Toast.LENGTH_SHORT).show();
+                return;
+            }else{
+                newCategory.setCategoryId(categoryId);
+                categoryViewModel.update(newCategory);
+            }
+
+        }
+
+        finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                finish();
+                Toast.makeText(this, "DM", Toast.LENGTH_SHORT).show();
                 onBackPressed();
                 return true;
             default:

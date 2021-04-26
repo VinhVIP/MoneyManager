@@ -8,14 +8,16 @@ import androidx.room.PrimaryKey;
 public class Account {
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "account_id")
-    private int id;
+    @ColumnInfo(name = "a_id")
+    private int accountId;
 
-    @ColumnInfo(name = "name")
+    @ColumnInfo(name = "a_name")
     private String accountName;
 
+    @ColumnInfo(name = "a_balance")
     private long balance;
 
+    @ColumnInfo(name = "a_description")
     private String description;
 
     public Account(String accountName, long balance, String description) {
@@ -24,12 +26,12 @@ public class Account {
         this.description = description;
     }
 
-    public int getId() {
-        return id;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     public String getAccountName() {

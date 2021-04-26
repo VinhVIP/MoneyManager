@@ -1,6 +1,5 @@
 package com.vinh.moneymanager.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.vinh.moneymanager.R;
+import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.viewmodels.AccountViewModel;
 
@@ -21,7 +21,7 @@ public class AddEditAccountActivity extends AppCompatActivity {
 
     private AccountViewModel viewModel;
 
-    private int accountId = -1;
+    private int accountId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +42,19 @@ public class AddEditAccountActivity extends AppCompatActivity {
 
         btnSubmit = findViewById(R.id.btn_submit_account);
         btnSubmit.setOnClickListener(v -> {
-
             if (checkAccountName()) {
                 Account account = new Account(edAccountName.getText().toString().trim(),
                         getBalanceInput(),
                         edAccountDescription.getText().toString().trim());
 
                 // Thêm account mới
-                if (accountId == -1) {
+                if (accountId == 0) {
                     viewModel.insert(account);
                     System.out.println("Thêm account thành công!");
                     finish();
                 } else {
                     // Update account
-                    account.setId(accountId);
+                    account.setAccountId(accountId);
                     viewModel.update(account);
                     System.out.println("Update account thành công!");
                     finish();
@@ -69,17 +68,15 @@ public class AddEditAccountActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        Intent data = getIntent();
-        accountId = -1;
-
-        if (data != null && data.hasExtra("account_id")) {
-            accountId = data.getIntExtra("account_id", -1);
-            edAccountName.setText(data.getStringExtra("account_name"));
-            edAccountBalance.setText(String.valueOf(data.getLongExtra("account_balance", 0)));
-            edAccountDescription.setText(data.getStringExtra("account_description"));
+        if (getIntent().hasExtra(Helper.EDIT_ACCOUNT)) {
+            Bundle data = getIntent().getBundleExtra(Helper.EDIT_ACCOUNT);
+            accountId = data.getInt("account_id", 0);
+            edAccountName.setText(data.getString("account_name"));
+            edAccountBalance.setText(String.valueOf(data.getLong("account_balance", 0)));
+            edAccountDescription.setText(data.getString("account_description"));
 
             getSupportActionBar().setTitle("Chỉnh sửa tài khoản");
-        }else{
+        } else {
             getSupportActionBar().setTitle("Thêm tài khoản");
         }
     }

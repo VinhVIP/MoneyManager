@@ -9,65 +9,58 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "finance",
         foreignKeys = {
                 @ForeignKey(entity = Category.class,
-                        parentColumns = "category_id",
-                        childColumns = "category_id",
+                        parentColumns = "c_id",
+                        childColumns = "c_id",
                         onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = Account.class,
-                        parentColumns = "account_id",
-                        childColumns = "account_id",
+                        parentColumns = "a_id",
+                        childColumns = "a_id",
                         onDelete = ForeignKey.CASCADE)
         })
 
 public class Finance {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "finance_id")
-    private int id;
+    @ColumnInfo(name = "f_id")
+    private int financeId;
 
-    @ColumnInfo(name = "cost")
-    private long cost;
+    @ColumnInfo(name = "f_money")
+    private long money;
 
-    @ColumnInfo(name = "date_time")
+    @ColumnInfo(name = "f_date_time")
     private String dateTime;
 
-    @ColumnInfo(name = "detail")
+    @ColumnInfo(name = "f_detail")
     private String detail;
 
-    @ColumnInfo(name = "category_id")
+    @ColumnInfo(name = "c_id")
     private int categoryId;
 
-    public int getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
-    }
-
-    @ColumnInfo(name = "account_id")
+    @ColumnInfo(name = "a_id")
     private int accountId;
 
-    public Finance(long cost, String dateTime, String detail, int categoryId, int accountId) {
-        this.cost = cost;
+    public Finance(long money, String dateTime, String detail, int categoryId, int accountId) {
+        this.money = money;
         this.dateTime = dateTime;
         this.detail = detail;
         this.categoryId = categoryId;
         this.accountId = accountId;
     }
 
-    public int getId() {
-        return id;
+
+    public int getFinanceId() {
+        return financeId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setFinanceId(int financeId) {
+        this.financeId = financeId;
     }
 
-    public long getCost() {
-        return cost;
+    public long getMoney() {
+        return money;
     }
 
-    public void setCost(long cost) {
-        this.cost = cost;
+    public void setMoney(long money) {
+        this.money = money;
     }
 
     public String getDateTime() {
@@ -96,5 +89,13 @@ public class Finance {
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 }

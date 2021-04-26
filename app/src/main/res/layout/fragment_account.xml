@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragments.AccountFragment">
 
@@ -17,76 +18,64 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/tv_account_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginTop="4dp"
-            android:paddingVertical="10dp"
-            android:text="Tài khoản"
-            android:textColor="@color/text_view_color"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/tv_account_title"
-            android:background="?android:attr/listDivider" />
-
-        <TextView
+            android:layout_marginStart="8dp"
             android:paddingVertical="6dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_account_title"
-            android:layout_marginLeft="6dp"
-            android:text="Tổng tài sản:"
+            android:text="Tổng số dư:"
             android:textColor="@color/textColorPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
-            android:paddingVertical="6dp"
-            android:id="@+id/text_view_total_asset"
+            android:id="@+id/tv_total_balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_account_title"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="4dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="4dp"
             android:lines="1"
             android:maxLines="1"
+            android:paddingVertical="6dp"
             android:text="@{Helper.formatCurrency(viewModel.totalBalance)}"
             android:textColor="@color/textColorPrimary"
             android:textSize="18sp" />
 
-        <Button
-            android:id="@+id/btn_transfer"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/text_view_total_asset"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="4dp"
-            android:text="Chuyển khoản"
-            android:textAllCaps="false"
-            android:textSize="16sp" />
+            android:layout_below="@+id/tv_total_balance"
+            android:layout_marginStart="8dp"
+            app:singleLine="true"
+            app:singleSelection="true">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_account"
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_list_account"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Tài khoản"
+                android:textColor="@color/chip_text_color"
+                android:theme="@style/Theme.MaterialComponents.Light"
+                app:chipBackgroundColor="@color/chip_bg_color" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_list_transfer"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chuyển khoản"
+                android:textColor="@color/chip_text_color"
+                android:theme="@style/Theme.MaterialComponents.Light"
+                app:chipBackgroundColor="@color/chip_bg_color" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager_account"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/btn_transfer"
-            android:layout_marginTop="6dp"
-            tools:listitem="@layout/item_account" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_account"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_add_white" />
+            android:layout_below="@+id/chip_group_account" />
 
 
     </RelativeLayout>

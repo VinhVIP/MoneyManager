@@ -5,10 +5,16 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class Helper {
+    public static final int TYPE_INCOME = 1;
+    public static final int TYPE_EXPENSE = 2;
+    public static final int TYPE_TRANSFER = 3;
+
     public static final int REQUEST_ADD_CATEGORY = 102;
     public static final int REQUEST_EDIT_CATEGORY = 103;
     public static final int REQUEST_ADD_FINANCE = 201;
     public static final int REQUEST_EDIT_FINANCE = 202;
+
+
 
     public static final String CATEGORY_NAME = "category_name";
     public static final String CATEGORY_ID = "category_id";
@@ -16,6 +22,8 @@ public class Helper {
     public static final String CATEGORY_DESCRIPTION = "category_description";
     public static final String ACCOUNT_ID = "account_id";
     public static final String ACCOUNT_NAME = "account_name";
+    public static final String ACCOUNT_BALANCE = "account_balance";
+    public static final String ACCOUNT_DESCRIPTION = "account_description";
     public static final String FINANCE_DAY = "f_day";
     public static final String FINANCE_TIME = "f_time";
     public static final String FINANCE_COST = "f_cost";
@@ -23,6 +31,23 @@ public class Helper {
     public static final String FINANCE_ID = "f_id";
 
     public static final String FINANCE_DATETIME = "f_datetime";
+
+    public static final String ADD_CATEGORY = "add_category";
+    public static final String EDIT_CATEGORY = "edit_category";
+    public static final String EDIT_ACCOUNT = "edit_account";
+    public static final String ADD_FINANCE = "add_category";
+    public static final String EDIT_FINANCE = "edit_finance";
+    public static final String EDIT_TRANSFER = "edit_transfer";
+    public static final String ADD_TRANSFER = "add_transfer";
+
+    public static final String TRANSFER_ID = "TRANSFER_ID";
+    public static final String TRANSFER_DATETIME = "TRANSFER_DATETIME";
+    public static final String TRANSFER_ACCOUNT_OUT_ID = "TRANSFER_ACCOUNT_OUT_ID";
+    public static final String TRANSFER_ACCOUNT_IN_ID = "TRANSFER_ACCOUNT_IN_ID";
+    public static final String TRANSFER_MONEY = "TRANSFER_MONEY";
+    public static final String TRANSFER_FEE = "TRANSFER_FEE";
+    public static final String TRANSFER_DETAIL = "TRANSFER_DETAIL";
+
 
     public static String formatCurrency(long cost) {
         Locale localeVN = new Locale("vi", "VN");

@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:titleTextColor="@color/white"
+        app:navigationIcon="@drawable/ic_back_white"
         android:minHeight="?attr/actionBarSize" />
 
 

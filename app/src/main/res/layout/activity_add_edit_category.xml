@@ -32,15 +32,14 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/radio_expense"
+            android:id="@+id/radio_income"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="30dp"
-            android:checked="true"
             android:text="Thu" />
 
         <RadioButton
-            android:id="@+id/radio_income"
+            android:id="@+id/radio_expense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Chi" />

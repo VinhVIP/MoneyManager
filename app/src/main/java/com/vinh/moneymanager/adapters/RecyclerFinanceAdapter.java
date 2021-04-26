@@ -64,7 +64,7 @@ public class RecyclerFinanceAdapter extends RecyclerView.Adapter {
 
                 childHolder.tvTime.setText(finance.getDateTime());
                 childHolder.tvDetail.setText(finance.getDetail());
-                childHolder.tvCost.setText(finance.getCost()+"đ");
+                childHolder.tvCost.setText(finance.getMoney()+"đ");
                 break;
         }
     }

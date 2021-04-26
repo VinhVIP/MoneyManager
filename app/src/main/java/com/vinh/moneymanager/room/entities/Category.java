@@ -2,20 +2,30 @@ package com.vinh.moneymanager.room.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "category")
+@Entity(tableName = "category",
+        foreignKeys = {
+                @ForeignKey(entity = Type.class,
+                        parentColumns = "type_id",
+                        childColumns = "type_id",
+                        onDelete = ForeignKey.CASCADE)
+        })
 public class Category {
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "category_id")
-    private int id;
+    @ColumnInfo(name = "c_id")
+    private int categoryId;
 
+    @ColumnInfo(name = "c_name")
     private String name;
 
+    @ColumnInfo(name = "type_id")
     private int type;
 
+    @ColumnInfo(name = "c_description")
     private String description;
 
     @Ignore
@@ -27,12 +37,12 @@ public class Category {
         this.description = description;
     }
 
-    public int getId() {
-        return id;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getName() {

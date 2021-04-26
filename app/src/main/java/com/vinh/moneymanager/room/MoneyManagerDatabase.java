@@ -9,21 +9,28 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.room.daos.AccountDao;
 import com.vinh.moneymanager.room.daos.CategoryDao;
 import com.vinh.moneymanager.room.daos.FinanceDao;
+import com.vinh.moneymanager.room.daos.TransferDao;
+import com.vinh.moneymanager.room.daos.TypeDao;
 import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
+import com.vinh.moneymanager.room.entities.Transfer;
+import com.vinh.moneymanager.room.entities.Type;
 
-@Database(entities = {Category.class, Finance.class, Account.class}, version = 1)
+@Database(entities = {Type.class, Category.class, Finance.class, Account.class, Transfer.class}, version = 1)
 public abstract class MoneyManagerDatabase extends RoomDatabase {
 
     private static MoneyManagerDatabase instance;
 
+    public abstract TypeDao typeDao();
     public abstract CategoryDao categoryDao();
     public abstract AccountDao accountDao();
     public abstract FinanceDao financeDao();
+    public abstract TransferDao transferDao();
 
     public static synchronized MoneyManagerDatabase getInstance(Context context) {
         if (instance == null) {
@@ -47,11 +54,13 @@ public abstract class MoneyManagerDatabase extends RoomDatabase {
 
     private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void> {
 
+        private TypeDao typeDao;
         private CategoryDao categoryDao;
         private FinanceDao financeDao;
         private AccountDao accountDao;
 
         private PopulateDBAsyncTask(MoneyManagerDatabase database) {
+            typeDao = database.typeDao();
             categoryDao = database.categoryDao();
             financeDao = database.financeDao();
             accountDao = database.accountDao();
@@ -59,8 +68,14 @@ public abstract class MoneyManagerDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            categoryDao.insert(new Category("Ăn uống", 1, "Bao gồm ăn vặt và ăn bữa chính"));
-            categoryDao.insert(new Category("Mua sắm", 1, "Mua các vật dụng cá nhân"));
+            typeDao.insert(new Type(Helper.TYPE_INCOME, "Thu nhập"));
+            typeDao.insert(new Type(Helper.TYPE_EXPENSE, "Chi tiêu"));
+            typeDao.insert(new Type(Helper.TYPE_TRANSFER, "Chuyển khoản"));
+
+            categoryDao.insert(new Category("Ăn uống", Helper.TYPE_EXPENSE, "Bao gồm ăn vặt và ăn bữa chính"));
+            categoryDao.insert(new Category("Mua sắm", Helper.TYPE_EXPENSE, "Mua các vật dụng cá nhân"));
+
+            categoryDao.insert(new Category("Lương", Helper.TYPE_INCOME, "Mua các vật dụng cá nhân"));
 
             accountDao.insert(new Account("Tiền mặt", 5000000, "Tiền mặt"));
             accountDao.insert(new Account("Thẻ BIDV", 8000000, "Tiền trong thẻ ngân hàng"));

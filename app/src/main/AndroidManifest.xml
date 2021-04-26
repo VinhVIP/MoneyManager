@@ -3,14 +3,16 @@
     package="com.vinh.moneymanager">
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.MoneyManager">
         <activity android:name=".activities.AddEditAccountActivity"></activity>
-        <activity android:name=".activities.AddEditCategoryActivity" />
+        <activity
+            android:name=".activities.AddEditCategoryActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".activities.AddEditFinanceActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -19,6 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
