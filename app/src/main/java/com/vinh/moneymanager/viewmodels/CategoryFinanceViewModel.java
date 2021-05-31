@@ -1,5 +1,7 @@
 package com.vinh.moneymanager.viewmodels;
 
+import android.util.Log;
+
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.databinding.ObservableLong;
@@ -36,7 +38,10 @@ public class CategoryFinanceViewModel extends ViewModel {
 
 
     public ObservableField<DateRange> dateRange = new ObservableField<>();
-    public ObservableLong totalCost = new ObservableLong();
+
+    public ObservableLong totalCostIncome = new ObservableLong();
+    public ObservableLong totalCostExpense = new ObservableLong();
+
     public ObservableInt switchExpenseIncome = new ObservableInt();
 
     public void initLiveData(ViewModelStoreOwner owner, LifecycleOwner lifecycleOwner) {
@@ -102,7 +107,6 @@ public class CategoryFinanceViewModel extends ViewModel {
             return d1.compare(d2);
         });
 
-
         for (Category c : allFinances.keySet()) {
             mapRange.put(c, new ArrayList<>());
 
@@ -116,9 +120,11 @@ public class CategoryFinanceViewModel extends ViewModel {
                     mapTime.get(strDate).add(f);
                     mapRange.get(c).add(f);
                 }
+
             }
         }
 
+        Log.e("MMM", "update");
 
         this.mapCategoryFinance.setValue(mapRange);
         this.mapTimeFinance.setValue(mapTime);
@@ -152,7 +158,7 @@ public class CategoryFinanceViewModel extends ViewModel {
         return mapCategoryFinance;
     }
 
-    public MutableLiveData<Map<String, List<Finance>>> getMapTimeFinance() {
+    public LiveData<Map<String, List<Finance>>> getMapTimeFinance() {
         return mapTimeFinance;
     }
 }

@@ -11,23 +11,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.libs.Helper;
+import com.vinh.moneymanager.listeners.OnItemCategoryListener;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
 
 import java.util.List;
 import java.util.Map;
 
-public class RecyclerExpenseAdapter extends RecyclerView.Adapter<RecyclerExpenseAdapter.ViewHolder> {
+public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCategoryAdapter.ViewHolder> {
 
     private List<Category> categories;
     private Map<Category, List<Finance>> mapFinance;
+    private OnItemCategoryListener listener;
 
-    public RecyclerExpenseAdapter(List<Category> categories, Map<Category, List<Finance>> mapFinance) {
+    public RecyclerCategoryAdapter(List<Category> categories, Map<Category, List<Finance>> mapFinance, OnItemCategoryListener listener) {
         this.categories = categories;
         this.mapFinance = mapFinance;
+        this.listener = listener;
     }
 
-    public void setAdapter(List<Category> categories, Map<Category, List<Finance>> mapFinance){
+    public void setAdapter(List<Category> categories, Map<Category, List<Finance>> mapFinance) {
         this.categories = categories;
         this.mapFinance = mapFinance;
         notifyDataSetChanged();
@@ -54,8 +57,16 @@ public class RecyclerExpenseAdapter extends RecyclerView.Adapter<RecyclerExpense
             }
 
             holder.bindData(R.drawable.bagicon, category.getName(), Helper.formatCurrentWithoutSymbol(totalCost));
+
+            holder.itemView.setOnClickListener(v -> listener.onCategoryClick(category, position));
+            holder.itemView.setOnLongClickListener(v -> {
+                listener.onCategoryLongClick(category, position);
+                return false;
+            });
         } else {
             holder.bindData(R.drawable.ic_add_circle_outline, "Thêm", "");
+
+            holder.itemView.setOnClickListener(v -> listener.onCategoryAdd());
         }
     }
 

@@ -6,9 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".fragments.ListExpenseFragment">
+    tools:context=".fragments.ListCategoryFragment">
 
     <TextView
+        android:id="@+id/tv_title_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="8dp"

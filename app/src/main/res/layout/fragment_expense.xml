@@ -132,7 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingEnd="6dp"
-                    android:text="@{Helper.formatCurrency(viewModel.totalCost)}"
+                    android:text="@{Helper.formatCurrency(viewModel.switchExpenseIncome==Helper.TYPE_INCOME?viewModel.totalCostIncome:viewModel.totalCostExpense)}"
                     android:textColor="@color/black"
                     android:textSize="17sp"
                     android:textStyle="bold"

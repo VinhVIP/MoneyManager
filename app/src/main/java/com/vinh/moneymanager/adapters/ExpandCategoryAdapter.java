@@ -2,9 +2,7 @@ package com.vinh.moneymanager.adapters;
 
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -14,23 +12,27 @@ import android.widget.TextView;
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.libs.DateRange;
 import com.vinh.moneymanager.libs.Helper;
+import com.vinh.moneymanager.listeners.OnItemFinanceListener;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
 
 import java.util.List;
 import java.util.Map;
 
-public class ExpandCategoryFinanceAdapter extends BaseExpandableListAdapter {
+public class ExpandCategoryAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private List<Category> categories;
     private Map<Category, List<Finance>> mapFinance;
 
+    private OnItemFinanceListener listener;
 
-    public ExpandCategoryFinanceAdapter(Context context, List<Category> categories, Map<Category, List<Finance>> mapFinance) {
+
+    public ExpandCategoryAdapter(Context context, List<Category> categories, Map<Category, List<Finance>> mapFinance, OnItemFinanceListener listener) {
         this.context = context;
         this.categories = categories;
         this.mapFinance = mapFinance;
+        this.listener = listener;
     }
 
     @Override
@@ -113,8 +115,7 @@ public class ExpandCategoryFinanceAdapter extends BaseExpandableListAdapter {
 
     private class GroupHolder {
         ImageView imgView;
-        TextView tvTitle;
-        TextView tvTotal;
+        TextView tvTitle, tvTotal;
 
         public GroupHolder(View view) {
             imgView = view.findViewById(R.id.image_view_list_group);
@@ -140,58 +141,28 @@ public class ExpandCategoryFinanceAdapter extends BaseExpandableListAdapter {
             holder = (ChildHolder) convertView.getTag();
         }
 
-        holder.bindData(getChild(groupPosition, childPosition));
+        Finance finance = getChild(groupPosition, childPosition);
+        holder.bindData(finance);
+
+        holder.view.setOnClickListener(v -> listener.onFinanceClick(finance, getGroup(groupPosition)));
 
         convertView.setTag(holder);
         return convertView;
     }
 
     private class ChildHolder {
-        TextView tvDay;
-        TextView tvMonthYear;
-        TextView tvDayOfWeek;
-        TextView tvDetail;
-        TextView tvCost;
-
+        View view;
+        TextView tvDay, tvMonthYear, tvDayOfWeek, tvDetail, tvCost;
         ImageView imgDelete;
 
         public ChildHolder(View view) {
+            this.view = view;
+
             tvDay = view.findViewById(R.id.tv_calendar_day);
             tvMonthYear = view.findViewById(R.id.tv_calendar_month_year);
             tvDayOfWeek = view.findViewById(R.id.tv_calendar_day_of_week);
             tvDetail = view.findViewById(R.id.text_view_item_detail);
             tvCost = view.findViewById(R.id.text_view_item_price);
-
-
-
-//            view.setOnTouchListener(new OnSwipeTouchListener(context){
-//                @Override
-//                public void onSwipeLeft() {
-//                    Toast.makeText(context, "Swipe left", Toast.LENGTH_SHORT).show();
-//                    float dip = 40f;
-//                    Resources r = context.getResources();
-//                    float px = TypedValue.applyDimension(
-//                            TypedValue.COMPLEX_UNIT_DIP,
-//                            dip,
-//                            r.getDisplayMetrics()
-//                    );
-//                    view.setTranslationX(-px);
-//                    imgDelete.getLayoutParams().width = (int) px;
-//                    imgDelete.requestLayout();
-//                }
-//
-//                @Override
-//                public void onClick() {
-//                    Toast.makeText(context, "Tapped", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                @Override
-//                public void onLongClick() {
-//                    Toast.makeText(context, "Long click", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-
-
         }
 
         public void bindData(Finance finance) {
@@ -213,97 +184,6 @@ public class ExpandCategoryFinanceAdapter extends BaseExpandableListAdapter {
 
             tvCost.setText(Helper.formatCurrency(cost));
         }
-    }
-
-
-
-    // ---------- OnTouch Event ----------------
-    public class OnSwipeTouchListener implements View.OnTouchListener {
-
-        private final GestureDetector gestureDetector;
-
-        public OnSwipeTouchListener(Context ctx) {
-            gestureDetector = new GestureDetector(ctx, new GestureListener());
-        }
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            return gestureDetector.onTouchEvent(event);
-        }
-
-        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
-
-            private static final int SWIPE_THRESHOLD = 100;
-            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
-
-            @Override
-            public boolean onDown(MotionEvent e) {
-                return true;
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                onClick();
-                return true;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-                onLongClick();
-                super.onLongPress(e);
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                boolean result = false;
-                try {
-                    float diffY = e2.getY() - e1.getY();
-                    float diffX = e2.getX() - e1.getX();
-                    if (Math.abs(diffX) > Math.abs(diffY)) {
-                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                            if (diffX > 0) {
-                                onSwipeRight();
-                            } else {
-                                onSwipeLeft();
-                            }
-                            result = true;
-                        }
-                    } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffY > 0) {
-                            onSwipeBottom();
-                        } else {
-                            onSwipeTop();
-                        }
-                        result = true;
-                    }
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-                return result;
-            }
-        }
-
-        public void onLongClick(){
-        }
-
-        public void onClick(){
-        }
-
-        public void onSwipeRight() {
-        }
-
-        public void onSwipeLeft() {
-        }
-
-        public void onSwipeTop() {
-        }
-
-        public void onSwipeBottom() {
-        }
-    }
-
-    public interface OnItemChildListener{
-        void onTap(int groupPosition, int childPosition);
     }
 
 }

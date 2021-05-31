@@ -1,13 +1,10 @@
 package com.vinh.moneymanager.adapters;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.vinh.moneymanager.fragments.ListExpenseFragment;
-import com.vinh.moneymanager.fragments.ListIncomeFragment;
+import com.vinh.moneymanager.fragments.ListCategoryFragment;
 
 public class FragmentFinanceStateAdapter extends FragmentStateAdapter {
 
@@ -20,9 +17,11 @@ public class FragmentFinanceStateAdapter extends FragmentStateAdapter {
     public FragmentFinanceStateAdapter(@NonNull Fragment fragment) {
         super(fragment);
         this.parentFragment = fragment;
+    }
 
-        incomeFragment = new ListIncomeFragment(parentFragment);
-        expenseFragment = new ListExpenseFragment(parentFragment);
+    public void setFragment(Fragment incomeFragment, Fragment expenseFragment){
+        this.incomeFragment = incomeFragment;
+        this.expenseFragment = expenseFragment;
     }
 
 
@@ -31,11 +30,9 @@ public class FragmentFinanceStateAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                Log.e("MMM", "create income fragment");
-                return ListIncomeFragment.getInstance(parentFragment);
+                return incomeFragment;
             case 1:
-                Log.e("MMM", "create expense fragment");
-                return ListExpenseFragment.getInstance(parentFragment);
+                return expenseFragment;
             default:
                 return null;
         }
