@@ -1,11 +1,14 @@
 package com.vinh.moneymanager.viewmodels;
 
+import android.util.Log;
+
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.databinding.ObservableLong;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
@@ -19,28 +22,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class CategoryFinanceViewModel {
+public class CategoryFinanceViewModel extends ViewModel {
 
     public FinanceViewModel financeViewModel;
     public CategoryViewModel categoryViewModel;
     public AccountViewModel accountViewModel;
 
-    private List<Category> allCategories;
     private Map<Category, List<Finance>> allFinances;
 
-    private final MutableLiveData<List<Category>> categories;
-    private final MutableLiveData<Map<Category, List<Finance>>> mapCategoryFinance;
+    private MutableLiveData<List<Category>> categories;
+    private MutableLiveData<Map<Category, List<Finance>>> mapCategoryFinance;
 
-    private final MutableLiveData<List<DateRange.Date>> dates;
-    private final MutableLiveData<Map<String, List<Finance>>> mapTimeFinance;
+    private MutableLiveData<List<DateRange.Date>> dates;
+    private MutableLiveData<Map<String, List<Finance>>> mapTimeFinance;
 
 
     public ObservableField<DateRange> dateRange = new ObservableField<>();
-    public ObservableLong totalCost = new ObservableLong();
+
+    public ObservableLong totalCostIncome = new ObservableLong();
+    public ObservableLong totalCostExpense = new ObservableLong();
+
     public ObservableInt switchExpenseIncome = new ObservableInt();
 
-
-    public CategoryFinanceViewModel(ViewModelStoreOwner owner, LifecycleOwner lifecycleOwner) {
+    public void initLiveData(ViewModelStoreOwner owner, LifecycleOwner lifecycleOwner) {
         financeViewModel = new ViewModelProvider(owner).get(FinanceViewModel.class);
         categoryViewModel = new ViewModelProvider(owner).get(CategoryViewModel.class);
         accountViewModel = new ViewModelProvider(owner).get(AccountViewModel.class);
@@ -55,7 +59,6 @@ public class CategoryFinanceViewModel {
 
         categoryViewModel.getCategories().observe(lifecycleOwner, allCategories -> {
             this.categories.setValue(allCategories);
-            this.allCategories = allCategories;
 
             financeViewModel.getAllFinances().observe(lifecycleOwner, finances -> {
                 Map<Category, List<Finance>> map = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
@@ -88,8 +91,10 @@ public class CategoryFinanceViewModel {
                 update();
             });
         });
+    }
 
 
+    public CategoryFinanceViewModel() {
     }
 
     private void update() {
@@ -101,7 +106,6 @@ public class CategoryFinanceViewModel {
             DateRange.Date d2 = new DateRange.Date(o2);
             return d1.compare(d2);
         });
-
 
         for (Category c : allFinances.keySet()) {
             mapRange.put(c, new ArrayList<>());
@@ -116,9 +120,11 @@ public class CategoryFinanceViewModel {
                     mapTime.get(strDate).add(f);
                     mapRange.get(c).add(f);
                 }
+
             }
         }
 
+        Log.d("MMM", "update on view model");
 
         this.mapCategoryFinance.setValue(mapRange);
         this.mapTimeFinance.setValue(mapTime);
@@ -152,7 +158,7 @@ public class CategoryFinanceViewModel {
         return mapCategoryFinance;
     }
 
-    public MutableLiveData<Map<String, List<Finance>>> getMapTimeFinance() {
+    public LiveData<Map<String, List<Finance>>> getMapTimeFinance() {
         return mapTimeFinance;
     }
 }

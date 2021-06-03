@@ -4,19 +4,24 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
+import com.vinh.moneymanager.room.daos.CategoryDao;
 import com.vinh.moneymanager.room.daos.FinanceDao;
 import com.vinh.moneymanager.room.MoneyManagerDatabase;
+import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
 
 import java.util.List;
+import java.util.Map;
 
 public class FinanceRepository {
 
     private FinanceDao financeDao;
 
+
     private LiveData<List<Finance>> finances;
-    private LiveData<List<Finance>> financesInCategory;
+
 
     public FinanceRepository(Application application) {
         MoneyManagerDatabase database = MoneyManagerDatabase.getInstance(application);
@@ -45,7 +50,7 @@ public class FinanceRepository {
         return financeDao.getFinances(categoryId);
     }
 
-    // AsyncTask
+    // ------------- AsyncTask --------------------
 
     private static class InsertFinanceAsyncTask extends AsyncTask<Finance, Void, Void>{
         private FinanceDao financeDao;

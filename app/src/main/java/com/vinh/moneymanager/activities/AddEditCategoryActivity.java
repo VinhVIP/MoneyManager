@@ -54,7 +54,6 @@ public class AddEditCategoryActivity extends AppCompatActivity {
 
         toolbar.setNavigationOnClickListener(v -> {
             finish();
-            Toast.makeText(this, "DDDD", Toast.LENGTH_SHORT).show();
             onBackPressed();
         });
 

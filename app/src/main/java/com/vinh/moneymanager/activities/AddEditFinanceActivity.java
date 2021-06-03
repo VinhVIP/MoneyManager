@@ -113,7 +113,6 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
             }
         });
 
-
         selectCategory();
         selectAccount();
 
@@ -173,7 +172,8 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
             Bundle data = getIntent().getBundleExtra(Helper.EDIT_FINANCE);
 
             int financeId = data.getInt(Helper.FINANCE_ID, 0);
-            int categoryId = data.getInt(Helper.CATEGORY_TYPE, 0);
+            int categoryType = data.getInt(Helper.CATEGORY_TYPE, 0);
+            int categoryId = data.getInt(Helper.CATEGORY_ID, 0);
             int accountId = data.getInt(Helper.ACCOUNT_ID, 0);
             String dateTime = data.getString(Helper.FINANCE_DATETIME);
             long cost = data.getLong(Helper.FINANCE_COST, 0);
@@ -184,19 +184,26 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
 
 
             // Cập nhật chế độ Danh mục
-            mViewModel.categoryType.set(categoryId);
+            mViewModel.categoryType.set(categoryType);
             if (cost > 0)
                 mViewModel.setBalance(String.valueOf(cost));
 
         } else if (getIntent().hasExtra(Helper.ADD_FINANCE)) {
             // Thêm mới finance
-            Log.d("MM", "Add Finance");
 
             Bundle data = getIntent().getBundleExtra(Helper.ADD_FINANCE);
-            int categoryId = data.getInt(Helper.CATEGORY_TYPE, 0);
+            int categoryType = data.getInt(Helper.CATEGORY_TYPE, 0);
+            int categoryId = data.getInt(Helper.CATEGORY_ID, 0);
+            String categoryName = data.getString(Helper.CATEGORY_NAME);
+
+            Category category = new Category(categoryName, categoryType, "");
+            category.setCategoryId(categoryId);
+
+            Log.d("MMM", "Add Finance Bef: " + categoryId + categoryName);
 
             // Cập nhật chế độ Danh mục
-            mViewModel.categoryType.set(categoryId);
+            mViewModel.categoryType.set(categoryType);
+
         } else if (getIntent().hasExtra(Helper.EDIT_TRANSFER)) {
             // Chỉnh sửa transfer
             Log.d("MM", "Edit Transfer");
@@ -396,8 +403,11 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
             int selectedCategoryId = 1;
             if (getIntent().hasExtra(Helper.EDIT_FINANCE)) {
                 selectedCategoryId = getIntent().getBundleExtra(Helper.EDIT_FINANCE).getInt(Helper.CATEGORY_ID);
+            } else if (getIntent().hasExtra(Helper.ADD_FINANCE)) {
+                selectedCategoryId = getIntent().getBundleExtra(Helper.ADD_FINANCE).getInt(Helper.CATEGORY_ID);
             }
 
+            System.out.println("Select category");
             mViewModel.category.set(getCategory(selectedCategoryId));
 
             updateCategoriesSelect();
@@ -410,6 +420,7 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
     Cập nhật lại danh sách danh mục theo menu "Thu nhập" hoặc "Chi tiêu"
      */
     private void updateCategoriesSelect() {
+        // TODO: Thay đổi tên danh mục khi mở thêm finance mới
         mCategories.clear();
         for (Category c : allCategories) {
             if (c.getType() == mViewModel.categoryType.get()) {
@@ -423,9 +434,6 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         if (currentCategorySelected.getType() != mViewModel.categoryType.get()) {
             if (!mCategories.isEmpty()) {
                 mViewModel.category.set(mCategories.get(0));
-
-//                selectedCategoryId = mCategories.get(0).getId();
-//                tvCategory.setText(mCategories.get(0).getName());
             }
         }
     }
