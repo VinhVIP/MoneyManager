@@ -124,7 +124,7 @@ public class CategoryFinanceViewModel extends ViewModel {
             }
         }
 
-        Log.e("MMM", "update");
+        Log.d("MMM", "update on view model");
 
         this.mapCategoryFinance.setValue(mapRange);
         this.mapTimeFinance.setValue(mapTime);

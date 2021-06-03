@@ -7,5 +7,7 @@
     <string name="account_out">Xuất</string>
     <string name="account_in">Nhập</string>
     <string name="account">Tài khoản</string>
+    <string name="statistic_income">Xem thống kê thu nhập</string>
+    <string name="statistic_expense">Xem thống kê chi tiêu</string>
 
 </resources>

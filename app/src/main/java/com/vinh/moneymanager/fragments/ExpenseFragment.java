@@ -664,15 +664,12 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(ExpenseFragment.this.getContext(), R.layout.item_text_center, list);
             gridMonth.setAdapter(adapter);
 
-            gridMonth.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    int year = Integer.parseInt(tvYear.getText().toString());
-                    range.setStartDate(new DateRange.Date(1, position + 1, year));
-                    range.setEndDate(new DateRange.Date(DateRange.getLastDay(position + 1, year), position + 1, year));
-                    mViewModel.setDateRangeValue(range);
-                    dialog.cancel();
-                }
+            gridMonth.setOnItemClickListener((parent, view, position, id) -> {
+                int year = Integer.parseInt(tvYear.getText().toString());
+                range.setStartDate(new DateRange.Date(1, position + 1, year));
+                range.setEndDate(new DateRange.Date(DateRange.getLastDay(position + 1, year), position + 1, year));
+                mViewModel.setDateRangeValue(range);
+                dialog.cancel();
             });
 
 

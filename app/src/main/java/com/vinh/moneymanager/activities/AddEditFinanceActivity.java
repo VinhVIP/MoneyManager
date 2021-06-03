@@ -204,11 +204,6 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
             // Cập nhật chế độ Danh mục
             mViewModel.categoryType.set(categoryType);
 
-//            mViewModel.category.set(category);
-//            Category ctg = mViewModel.category.get();
-//            Log.d("MMM", "Add Finance After: " + ctg.getCategoryId() + " & " + ctg.getName());
-
-
         } else if (getIntent().hasExtra(Helper.EDIT_TRANSFER)) {
             // Chỉnh sửa transfer
             Log.d("MM", "Edit Transfer");
@@ -408,7 +403,7 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
             int selectedCategoryId = 1;
             if (getIntent().hasExtra(Helper.EDIT_FINANCE)) {
                 selectedCategoryId = getIntent().getBundleExtra(Helper.EDIT_FINANCE).getInt(Helper.CATEGORY_ID);
-            }else if(getIntent().hasExtra(Helper.ADD_FINANCE)){
+            } else if (getIntent().hasExtra(Helper.ADD_FINANCE)) {
                 selectedCategoryId = getIntent().getBundleExtra(Helper.ADD_FINANCE).getInt(Helper.CATEGORY_ID);
             }
 
@@ -438,11 +433,7 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
 
         if (currentCategorySelected.getType() != mViewModel.categoryType.get()) {
             if (!mCategories.isEmpty()) {
-                System.out.println("----------adm-----");
                 mViewModel.category.set(mCategories.get(0));
-
-//                selectedCategoryId = mCategories.get(0).getId();
-//                tvCategory.setText(mCategories.get(0).getName());
             }
         }
     }
@@ -496,7 +487,7 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         });
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
-//            mViewModel.category.set(mCategories.get(position));
+            mViewModel.category.set(mCategories.get(position));
 
 //            selectedCategoryId = mCategories.get(position).getId();
 //            tvCategory.setText(mCategories.get(position).getName());
