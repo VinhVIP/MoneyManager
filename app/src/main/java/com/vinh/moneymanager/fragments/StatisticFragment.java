@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -33,12 +34,10 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.databinding.FragmentStatisticBinding;
 import com.vinh.moneymanager.libs.DateRange;
@@ -52,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 
 public class StatisticFragment extends Fragment implements OnChartValueSelectedListener {
@@ -275,6 +275,7 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         horizontalBarChart.getXAxis().setDrawAxisLine(false);
         horizontalBarChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         horizontalBarChart.getXAxis().setEnabled(true);
+        horizontalBarChart.getXAxis().setTextSize(12);
 
         horizontalBarChart.getAxisLeft().setEnabled(false);
         horizontalBarChart.getAxisRight().setEnabled(false);
@@ -289,7 +290,7 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         ArrayList<String> labels = new ArrayList<>();
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         ArrayList<BarEntry> barEntries = new ArrayList<>();
-        int[] colors = ColorTemplate.MATERIAL_COLORS;
+        int[] colors = getRandomColors();
 
         int index = 0;
         for (Category category : mapMonthFinances.keySet()) {
@@ -299,13 +300,12 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
             for (Finance finance : mapMonthFinances.get(category)) {
                 total += finance.getMoney();
             }
-            if (total != 0) {
+//            if (total != 0) {
                 labels.add(category.getName());
                 pieEntries.add(new PieEntry(total, category.getName()));
                 barEntries.add(new BarEntry(index++, total));
-            }
+//            }
         }
-        System.out.println("labels: " + labels.size());
 
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
         pieDataSet.setSliceSpace(2);
@@ -320,9 +320,10 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         barDataSet.setValueTextSize(12);
         barDataSet.setDrawValues(true);
 
-        horizontalBarChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+        horizontalBarChart.getXAxis().setEnabled(false);
         horizontalBarChart.setData(new BarData(barDataSet));
         horizontalBarChart.getData().setHighlightEnabled(false);
+        horizontalBarChart.getData().setValueTextColor(Color.BLACK);
 
         pieChart.animateXY(1000, 1000);
         horizontalBarChart.animateY(1500);
@@ -340,6 +341,46 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
     @Override
     public void onNothingSelected() {
 
+    }
+
+    public int[] getColorsResource() {
+        return new int[]{
+                ContextCompat.getColor(getContext(), R.color.cyan),
+                ContextCompat.getColor(getContext(), R.color.blueGray),
+                ContextCompat.getColor(getContext(), R.color.jade),
+                ContextCompat.getColor(getContext(), R.color.lightBlue),
+                ContextCompat.getColor(getContext(), R.color.royalBlue),
+                ContextCompat.getColor(getContext(), R.color.brown),
+                ContextCompat.getColor(getContext(), R.color.khaki),
+                ContextCompat.getColor(getContext(), R.color.glaucous),
+                ContextCompat.getColor(getContext(), R.color.sageGreen),
+                ContextCompat.getColor(getContext(), R.color.brightGreen),
+                ContextCompat.getColor(getContext(), R.color.malachite),
+                ContextCompat.getColor(getContext(), R.color.amber),
+                ContextCompat.getColor(getContext(), R.color.coralPink),
+                ContextCompat.getColor(getContext(), R.color.fuchsia),
+                ContextCompat.getColor(getContext(), R.color.purple),
+                ContextCompat.getColor(getContext(), R.color.iris),
+                ContextCompat.getColor(getContext(), R.color.lightViolet),
+                ContextCompat.getColor(getContext(), R.color.scarlet)
+        };
+    }
+
+    public int[] getRandomColors() {
+        int[] colors = getColorsResource();
+        int[] ranIndex = new int[colors.length];
+        for (int i = 0; i < ranIndex.length; i++) ranIndex[i] = i;
+        Random r = new Random();
+        for (int i = ranIndex.length - 1; i > 0; i--) {
+            int j = Math.abs(r.nextInt()) % (i + 1);
+            int k = ranIndex[i];
+            ranIndex[i] = ranIndex[j];
+            ranIndex[j] = k;
+        }
+        for (int i = 0; i < ranIndex.length; i++) {
+            ranIndex[i] = colors[ranIndex[i]];
+        }
+        return ranIndex;
     }
 
 

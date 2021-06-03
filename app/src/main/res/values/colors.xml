@@ -39,4 +39,26 @@
 
     <color name="textColorTransferFee">#ff0000</color>
 
+    <color name="cyan">#00ffff</color>
+    <color name="blue">#0000ff</color>
+    <color name="blueGray">#7393b3</color>
+    <color name="jade">#00a36c</color>
+    <color name="lightBlue">#add8e6</color>
+    <color name="royalBlue">#4169e1</color>
+    <color name="bronze">#cd7f32</color>
+    <color name="brown">#a52a2a</color>
+    <color name="khaki">#f0e68c</color>
+    <color name="glaucous">#6082b6</color>
+    <color name="sageGreen">#8a9a5b</color>
+    <color name="brightGreen">#aaff00</color>
+    <color name="malachite">#0bda51</color>
+    <color name="amber">#ffbf00</color>
+    <color name="coralPink">#f88379</color>
+    <color name="fuchsia">#ff00ff</color>
+    <color name="purple">#800080</color>
+    <color name="iris">#5d3fd3</color>
+    <color name="lightViolet">#cf9fff</color>
+    <color name="scarlet">#ff2400</color>
+
+
 </resources>
