@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -33,12 +35,11 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.databinding.FragmentStatisticBinding;
 import com.vinh.moneymanager.libs.DateRange;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 
 public class StatisticFragment extends Fragment implements OnChartValueSelectedListener {
@@ -73,6 +75,8 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
 
     private int statisticMode = Helper.TYPE_EXPENSE;
 
+    private final int HORIZONTAL_BAR_HEIGHT = 150;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +94,7 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
                 new DateRange.Date(DateRange.getLastDay(month, year), month, year));
 
         dateHandlerClick = new DateHandlerClick();
+
     }
 
     @Override
@@ -100,7 +105,7 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
 
         pieChart = view.findViewById(R.id.pieChart);
         horizontalBarChart = view.findViewById(R.id.horizontalBarChart);
-        setupPieAndBarChart();
+        setupPieAndHorizontalBarChart();
 
 
         barChart = view.findViewById(R.id.barChart);
@@ -139,6 +144,14 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
             binding.setMode(statisticMode);
 
             updateChartData();
+        });
+
+        // --- Dialog Settings ---
+        initSettingsDialog();
+
+        ImageView btnSettings = view.findViewById(R.id.btnSetting);
+        btnSettings.setOnClickListener(v -> {
+            dialogSettings.show();
         });
 
         return view;
@@ -241,17 +254,16 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         chart.invalidate();
     }
 
-    private void setupPieAndBarChart() {
+    private void setupPieAndHorizontalBarChart() {
         pieChart.setRotationEnabled(true);
-        pieChart.setHoleRadius(35f);
+        pieChart.setHoleRadius(38f);
         pieChart.setTransparentCircleAlpha(0);
         pieChart.setCenterTextSize(12);
 
-        pieChart.setDrawEntryLabels(true);
         pieChart.getDescription().setEnabled(false);
         pieChart.setHoleColor(Color.parseColor("#ccccff"));
         pieChart.setUsePercentValues(true);
-        pieChart.setExtraOffsets(5, 5, 5, 20);
+        pieChart.setExtraOffsets(20, 0, 20, 0);
 
         Legend legend = pieChart.getLegend();
         legend.setForm(Legend.LegendForm.CIRCLE);
@@ -275,12 +287,26 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         horizontalBarChart.getXAxis().setDrawAxisLine(false);
         horizontalBarChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         horizontalBarChart.getXAxis().setEnabled(true);
+        horizontalBarChart.getXAxis().setTextSize(12);
 
-        horizontalBarChart.getAxisLeft().setEnabled(false);
+        horizontalBarChart.getAxisLeft().setEnabled(true);
         horizontalBarChart.getAxisRight().setEnabled(false);
         horizontalBarChart.getLegend().setEnabled(false);
-        horizontalBarChart.setDrawValueAboveBar(false);
+        horizontalBarChart.setDrawValueAboveBar(true);
+        horizontalBarChart.setExtraOffsets(-10, 0, 0, 0);
+        horizontalBarChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                Toast.makeText(StatisticFragment.this.getContext(), e.getY() + "", Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+
+        horizontalBarChart.getLayoutParams().height = 1500;
     }
 
     private void updateChartData() {
@@ -289,7 +315,7 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         ArrayList<String> labels = new ArrayList<>();
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         ArrayList<BarEntry> barEntries = new ArrayList<>();
-        int[] colors = ColorTemplate.MATERIAL_COLORS;
+        int[] colors = getRandomColors();
 
         int index = 0;
         for (Category category : mapMonthFinances.keySet()) {
@@ -305,14 +331,22 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
                 barEntries.add(new BarEntry(index++, total));
             }
         }
-        System.out.println("labels: " + labels.size());
 
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
-        pieDataSet.setSliceSpace(2);
+        pieDataSet.setSliceSpace(1);
         pieDataSet.setValueTextSize(13);
         pieDataSet.setColors(colors);
 
+        pieDataSet.setValueLinePart1OffsetPercentage(83.f);
+        pieDataSet.setValueLinePart1Length(0.5f);
+        pieDataSet.setValueLinePart2Length(0.4f);
+        pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+
         pieChart.setData(new PieData(pieDataSet));
+        // Hiển thị labels và values
+        pieChart.setDrawEntryLabels(isShowLabels);
+        for (IDataSet<?> set : pieChart.getData().getDataSets())
+            set.setDrawValues(isShowValues);
 
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
         barDataSet.setColors(colors);
@@ -320,9 +354,12 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         barDataSet.setValueTextSize(12);
         barDataSet.setDrawValues(true);
 
-        horizontalBarChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+        horizontalBarChart.getXAxis().setEnabled(false);
         horizontalBarChart.setData(new BarData(barDataSet));
-        horizontalBarChart.getData().setHighlightEnabled(false);
+        horizontalBarChart.getData().setHighlightEnabled(true);
+        horizontalBarChart.getData().setValueTextColor(Color.BLACK);
+
+        horizontalBarChart.getLayoutParams().height = Math.max(barEntries.size() * HORIZONTAL_BAR_HEIGHT, 500);
 
         pieChart.animateXY(1000, 1000);
         horizontalBarChart.animateY(1500);
@@ -342,6 +379,90 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
 
     }
 
+    public int[] getColorsResource() {
+        return new int[]{
+                ContextCompat.getColor(getContext(), R.color.cyan),
+                ContextCompat.getColor(getContext(), R.color.blueGray),
+                ContextCompat.getColor(getContext(), R.color.jade),
+                ContextCompat.getColor(getContext(), R.color.lightBlue),
+                ContextCompat.getColor(getContext(), R.color.royalBlue),
+                ContextCompat.getColor(getContext(), R.color.brown),
+                ContextCompat.getColor(getContext(), R.color.khaki),
+                ContextCompat.getColor(getContext(), R.color.glaucous),
+                ContextCompat.getColor(getContext(), R.color.sageGreen),
+                ContextCompat.getColor(getContext(), R.color.brightGreen),
+                ContextCompat.getColor(getContext(), R.color.malachite),
+                ContextCompat.getColor(getContext(), R.color.amber),
+                ContextCompat.getColor(getContext(), R.color.coralPink),
+                ContextCompat.getColor(getContext(), R.color.fuchsia),
+                ContextCompat.getColor(getContext(), R.color.purple),
+                ContextCompat.getColor(getContext(), R.color.iris),
+                ContextCompat.getColor(getContext(), R.color.lightViolet),
+                ContextCompat.getColor(getContext(), R.color.scarlet)
+        };
+    }
+
+    public int[] getRandomColors() {
+        int[] colors = getColorsResource();
+        int[] ranIndex = new int[colors.length];
+        for (int i = 0; i < ranIndex.length; i++) ranIndex[i] = i;
+        Random r = new Random();
+        for (int i = ranIndex.length - 1; i > 0; i--) {
+            int j = Math.abs(r.nextInt()) % (i + 1);
+            int k = ranIndex[i];
+            ranIndex[i] = ranIndex[j];
+            ranIndex[j] = k;
+        }
+        for (int i = 0; i < ranIndex.length; i++) {
+            ranIndex[i] = colors[ranIndex[i]];
+        }
+        return ranIndex;
+    }
+
+    private void showPieChartLabels(boolean isShowLabels) {
+        pieChart.setDrawEntryLabels(isShowLabels);
+        pieChart.invalidate();
+    }
+
+    private void showPieChartValues(boolean isShowValues) {
+        for (IDataSet<?> set : pieChart.getData().getDataSets())
+            set.setDrawValues(isShowValues);
+
+        pieChart.invalidate();
+    }
+
+    private boolean isShowLabels = true;
+    private boolean isShowValues = true;
+    Dialog dialogSettings;
+
+    private void initSettingsDialog() {
+        dialogSettings = new Dialog(getContext());
+        dialogSettings.setContentView(R.layout.dialog_settings);
+        dialogSettings.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        CheckBox cbShowLabels = dialogSettings.findViewById(R.id.cbShowChartLabels);
+        CheckBox cbShowValues = dialogSettings.findViewById(R.id.cbShowChartValues);
+
+        cbShowLabels.setChecked(isShowLabels);
+        cbShowValues.setChecked(isShowValues);
+
+        Button btnClose = dialogSettings.findViewById(R.id.btnCloseDialog);
+        btnClose.setOnClickListener(v -> {
+
+            if (isShowLabels != cbShowLabels.isChecked()) {
+                isShowLabels = cbShowLabels.isChecked();
+                showPieChartLabels(isShowLabels);
+            }
+
+            if (isShowValues != cbShowValues.isChecked()) {
+                isShowValues = cbShowValues.isChecked();
+                showPieChartValues(isShowValues);
+            }
+
+            dialogSettings.dismiss();
+        });
+
+    }
 
     //-------- Date Click ------------
     public class DateHandlerClick {
