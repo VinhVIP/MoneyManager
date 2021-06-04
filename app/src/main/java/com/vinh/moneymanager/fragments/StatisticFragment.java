@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.databinding.FragmentStatisticBinding;
@@ -73,6 +75,8 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
 
     private int statisticMode = Helper.TYPE_EXPENSE;
 
+    private final int HORIZONTAL_BAR_HEIGHT = 150;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +94,7 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
                 new DateRange.Date(DateRange.getLastDay(month, year), month, year));
 
         dateHandlerClick = new DateHandlerClick();
+
     }
 
     @Override
@@ -100,7 +105,7 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
 
         pieChart = view.findViewById(R.id.pieChart);
         horizontalBarChart = view.findViewById(R.id.horizontalBarChart);
-        setupPieAndBarChart();
+        setupPieAndHorizontalBarChart();
 
 
         barChart = view.findViewById(R.id.barChart);
@@ -139,6 +144,14 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
             binding.setMode(statisticMode);
 
             updateChartData();
+        });
+
+        // --- Dialog Settings ---
+        initSettingsDialog();
+
+        ImageView btnSettings = view.findViewById(R.id.btnSetting);
+        btnSettings.setOnClickListener(v -> {
+            dialogSettings.show();
         });
 
         return view;
@@ -241,17 +254,16 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         chart.invalidate();
     }
 
-    private void setupPieAndBarChart() {
+    private void setupPieAndHorizontalBarChart() {
         pieChart.setRotationEnabled(true);
-        pieChart.setHoleRadius(35f);
+        pieChart.setHoleRadius(38f);
         pieChart.setTransparentCircleAlpha(0);
         pieChart.setCenterTextSize(12);
 
-        pieChart.setDrawEntryLabels(true);
         pieChart.getDescription().setEnabled(false);
         pieChart.setHoleColor(Color.parseColor("#ccccff"));
         pieChart.setUsePercentValues(true);
-        pieChart.setExtraOffsets(5, 5, 5, 20);
+        pieChart.setExtraOffsets(20, 0, 20, 0);
 
         Legend legend = pieChart.getLegend();
         legend.setForm(Legend.LegendForm.CIRCLE);
@@ -277,11 +289,24 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         horizontalBarChart.getXAxis().setEnabled(true);
         horizontalBarChart.getXAxis().setTextSize(12);
 
-        horizontalBarChart.getAxisLeft().setEnabled(false);
+        horizontalBarChart.getAxisLeft().setEnabled(true);
         horizontalBarChart.getAxisRight().setEnabled(false);
         horizontalBarChart.getLegend().setEnabled(false);
-        horizontalBarChart.setDrawValueAboveBar(false);
+        horizontalBarChart.setDrawValueAboveBar(true);
+        horizontalBarChart.setExtraOffsets(-10, 0, 0, 0);
+        horizontalBarChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                Toast.makeText(StatisticFragment.this.getContext(), e.getY() + "", Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+
+        horizontalBarChart.getLayoutParams().height = 1500;
     }
 
     private void updateChartData() {
@@ -300,19 +325,28 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
             for (Finance finance : mapMonthFinances.get(category)) {
                 total += finance.getMoney();
             }
-//            if (total != 0) {
+            if (total != 0) {
                 labels.add(category.getName());
                 pieEntries.add(new PieEntry(total, category.getName()));
                 barEntries.add(new BarEntry(index++, total));
-//            }
+            }
         }
 
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
-        pieDataSet.setSliceSpace(2);
+        pieDataSet.setSliceSpace(1);
         pieDataSet.setValueTextSize(13);
         pieDataSet.setColors(colors);
 
+        pieDataSet.setValueLinePart1OffsetPercentage(83.f);
+        pieDataSet.setValueLinePart1Length(0.5f);
+        pieDataSet.setValueLinePart2Length(0.4f);
+        pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+
         pieChart.setData(new PieData(pieDataSet));
+        // Hiển thị labels và values
+        pieChart.setDrawEntryLabels(isShowLabels);
+        for (IDataSet<?> set : pieChart.getData().getDataSets())
+            set.setDrawValues(isShowValues);
 
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
         barDataSet.setColors(colors);
@@ -322,8 +356,10 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
 
         horizontalBarChart.getXAxis().setEnabled(false);
         horizontalBarChart.setData(new BarData(barDataSet));
-        horizontalBarChart.getData().setHighlightEnabled(false);
+        horizontalBarChart.getData().setHighlightEnabled(true);
         horizontalBarChart.getData().setValueTextColor(Color.BLACK);
+
+        horizontalBarChart.getLayoutParams().height = Math.max(barEntries.size() * HORIZONTAL_BAR_HEIGHT, 500);
 
         pieChart.animateXY(1000, 1000);
         horizontalBarChart.animateY(1500);
@@ -383,6 +419,50 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         return ranIndex;
     }
 
+    private void showPieChartLabels(boolean isShowLabels) {
+        pieChart.setDrawEntryLabels(isShowLabels);
+        pieChart.invalidate();
+    }
+
+    private void showPieChartValues(boolean isShowValues) {
+        for (IDataSet<?> set : pieChart.getData().getDataSets())
+            set.setDrawValues(isShowValues);
+
+        pieChart.invalidate();
+    }
+
+    private boolean isShowLabels = true;
+    private boolean isShowValues = true;
+    Dialog dialogSettings;
+
+    private void initSettingsDialog() {
+        dialogSettings = new Dialog(getContext());
+        dialogSettings.setContentView(R.layout.dialog_settings);
+        dialogSettings.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        CheckBox cbShowLabels = dialogSettings.findViewById(R.id.cbShowChartLabels);
+        CheckBox cbShowValues = dialogSettings.findViewById(R.id.cbShowChartValues);
+
+        cbShowLabels.setChecked(isShowLabels);
+        cbShowValues.setChecked(isShowValues);
+
+        Button btnClose = dialogSettings.findViewById(R.id.btnCloseDialog);
+        btnClose.setOnClickListener(v -> {
+
+            if (isShowLabels != cbShowLabels.isChecked()) {
+                isShowLabels = cbShowLabels.isChecked();
+                showPieChartLabels(isShowLabels);
+            }
+
+            if (isShowValues != cbShowValues.isChecked()) {
+                isShowValues = cbShowValues.isChecked();
+                showPieChartValues(isShowValues);
+            }
+
+            dialogSettings.dismiss();
+        });
+
+    }
 
     //-------- Date Click ------------
     public class DateHandlerClick {
