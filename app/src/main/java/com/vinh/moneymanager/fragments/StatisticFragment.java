@@ -130,7 +130,7 @@ public class StatisticFragment extends Fragment {
 
 
         barChart = view.findViewById(R.id.barChart);
-        setupBarChart(barChart);
+        initBarChar();
 
         categoryViewModel.getCategories().observe(this.getViewLifecycleOwner(), allCategories -> {
             financeViewModel.getAllFinances().observe(this.getViewLifecycleOwner(), finances -> {
@@ -198,15 +198,15 @@ public class StatisticFragment extends Fragment {
     }
 
 
-    private void setupBarChart(BarChart chart) {
-        chart.getDescription().setEnabled(false);
-        chart.setPinchZoom(false);
-        chart.setDrawBarShadow(false);
-        chart.setDrawGridBackground(false);
+    private void initBarChar() {
+        barChart.getDescription().setEnabled(false);
+        barChart.setPinchZoom(false);
+        barChart.setDrawBarShadow(false);
+        barChart.setDrawGridBackground(false);
 
-        chart.animateY(2000);
+        barChart.animateY(2000);
 
-        Legend l = chart.getLegend();
+        Legend l = barChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
@@ -216,7 +216,7 @@ public class StatisticFragment extends Fragment {
         l.setYEntrySpace(0f);
         l.setTextSize(8f);
 
-        XAxis xAxis = chart.getXAxis();
+        XAxis xAxis = barChart.getXAxis();
         xAxis.setGranularity(1f);
         xAxis.setCenterAxisLabels(true);
         xAxis.setValueFormatter(new ValueFormatter() {
@@ -227,13 +227,13 @@ public class StatisticFragment extends Fragment {
             }
         });
 
-        YAxis leftAxis = chart.getAxisLeft();
+        YAxis leftAxis = barChart.getAxisLeft();
         leftAxis.setValueFormatter(new LargeValueFormatter());
         leftAxis.setDrawGridLines(false);
         leftAxis.setSpaceTop(35f);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-        chart.getAxisRight().setEnabled(false);
+        barChart.getAxisRight().setEnabled(false);
 
         ArrayList<BarEntry> values1 = new ArrayList<>();
         ArrayList<BarEntry> values2 = new ArrayList<>();
@@ -262,15 +262,15 @@ public class StatisticFragment extends Fragment {
 
         int startYear = 0;
 
-        chart.setData(data);
+        barChart.setData(data);
 
-        chart.getXAxis().setAxisMaximum(chart.getBarData().getGroupWidth(groupSpace, barSpace) * (groupCount + 1));
-        chart.groupBars(startYear, groupSpace, barSpace);
+        barChart.getXAxis().setAxisMaximum(barChart.getBarData().getGroupWidth(groupSpace, barSpace) * (groupCount + 1));
+        barChart.groupBars(startYear, groupSpace, barSpace);
 
-        chart.getData().setHighlightEnabled(false);
+        barChart.getData().setHighlightEnabled(false);
 
-        chart.getXAxis().setEnabled(false);
-        chart.invalidate();
+        barChart.getXAxis().setEnabled(false);
+        barChart.invalidate();
     }
 
     private void initPieAndHorizontalBarChart() {
@@ -330,7 +330,7 @@ public class StatisticFragment extends Fragment {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
                 BarEntry entry = (BarEntry) e;
-                Toast.makeText(StatisticFragment.this.getContext(), labels.get((int) entry.getX()) + ": " + Helper.formatCurrency((long) entry.getY()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(StatisticFragment.this.getContext(), labels.get(labels.size() - 1 - (int) entry.getX()) + ": " + Helper.formatCurrency((long) entry.getY()), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -353,7 +353,8 @@ public class StatisticFragment extends Fragment {
         pieEntries.clear();
         barEntries.clear();
 
-        int index = 0;
+        ArrayList<Long> listBarEntry = new ArrayList<>();
+
         for (Category category : mapMonthFinances.keySet()) {
             if (category.getType() != statisticMode) continue;
 
@@ -364,9 +365,13 @@ public class StatisticFragment extends Fragment {
             if (money != 0) {
                 labels.add(category.getName());
                 pieEntries.add(new PieEntry(money, category.getName()));
-                barEntries.add(new BarEntry(index, money));
-                index++;
+                listBarEntry.add(money);
             }
+        }
+
+        // Đảo ngược thứ tự xuất hiện
+        for (int i = 0; i < listBarEntry.size(); i++) {
+            barEntries.add(new BarEntry(i, listBarEntry.get(listBarEntry.size() - 1 - i)));
         }
 
         updatePieChartData();
@@ -407,7 +412,12 @@ public class StatisticFragment extends Fragment {
         horizontalBarChart.requestLayout();     // Cập nhật lại layout
 
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
-        barDataSet.setColors(chartColors);
+        // Đảo ngược thứ tụ màu
+        int[] colors = new int[barEntries.size()];
+        for (int i = 0; i < colors.length; i++) {
+            colors[i] = chartColors[colors.length - 1 - i];
+        }
+        barDataSet.setColors(colors);
         barDataSet.setValueTextColor(Color.BLUE);
         barDataSet.setValueTextSize(12);
         barDataSet.setDrawValues(true);
@@ -425,7 +435,6 @@ public class StatisticFragment extends Fragment {
         barData.setValueTextColor(Color.BLACK);
         barData.setBarWidth(0.8f);
         horizontalBarChart.setData(barData);
-
 
 
         horizontalBarChart.animateY(1500);
