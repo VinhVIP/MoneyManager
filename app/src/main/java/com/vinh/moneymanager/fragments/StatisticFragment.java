@@ -56,7 +56,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
-public class StatisticFragment extends Fragment implements OnChartValueSelectedListener {
+public class StatisticFragment extends Fragment {
 
     private FragmentStatisticBinding binding;
 
@@ -67,7 +67,6 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
     private HorizontalBarChart horizontalBarChart;
     private BarChart barChart;
 
-    private List<Category> allCategories;
     private Map<Category, List<Finance>> mapAllFinances, mapMonthFinances;
 
     private DateHandlerClick dateHandlerClick;
@@ -76,6 +75,8 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
     private int statisticMode = Helper.TYPE_EXPENSE;
 
     private final int HORIZONTAL_BAR_HEIGHT = 150;
+
+    private int[] colorsResource;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,6 +96,26 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
 
         dateHandlerClick = new DateHandlerClick();
 
+        colorsResource = new int[]{
+                ContextCompat.getColor(getContext(), R.color.cyan),
+                ContextCompat.getColor(getContext(), R.color.blueGray),
+                ContextCompat.getColor(getContext(), R.color.jade),
+                ContextCompat.getColor(getContext(), R.color.lightBlue),
+                ContextCompat.getColor(getContext(), R.color.royalBlue),
+                ContextCompat.getColor(getContext(), R.color.brown),
+                ContextCompat.getColor(getContext(), R.color.khaki),
+                ContextCompat.getColor(getContext(), R.color.glaucous),
+                ContextCompat.getColor(getContext(), R.color.sageGreen),
+                ContextCompat.getColor(getContext(), R.color.brightGreen),
+                ContextCompat.getColor(getContext(), R.color.malachite),
+                ContextCompat.getColor(getContext(), R.color.amber),
+                ContextCompat.getColor(getContext(), R.color.coralPink),
+                ContextCompat.getColor(getContext(), R.color.fuchsia),
+                ContextCompat.getColor(getContext(), R.color.purple),
+                ContextCompat.getColor(getContext(), R.color.iris),
+                ContextCompat.getColor(getContext(), R.color.lightViolet),
+                ContextCompat.getColor(getContext(), R.color.scarlet)
+        };
     }
 
     @Override
@@ -105,15 +126,13 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
 
         pieChart = view.findViewById(R.id.pieChart);
         horizontalBarChart = view.findViewById(R.id.horizontalBarChart);
-        setupPieAndHorizontalBarChart();
+        initPieAndHorizontalBarChart();
 
 
         barChart = view.findViewById(R.id.barChart);
         setupBarChart(barChart);
 
         categoryViewModel.getCategories().observe(this.getViewLifecycleOwner(), allCategories -> {
-            this.allCategories = allCategories;
-
             financeViewModel.getAllFinances().observe(this.getViewLifecycleOwner(), finances -> {
                 Map<Category, List<Finance>> map = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
 
@@ -254,14 +273,14 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         chart.invalidate();
     }
 
-    private void setupPieAndHorizontalBarChart() {
+    private void initPieAndHorizontalBarChart() {
         pieChart.setRotationEnabled(true);
         pieChart.setHoleRadius(38f);
         pieChart.setTransparentCircleAlpha(0);
         pieChart.setCenterTextSize(12);
 
         pieChart.getDescription().setEnabled(false);
-        pieChart.setHoleColor(Color.parseColor("#ccccff"));
+        pieChart.setHoleColor(Color.WHITE);
         pieChart.setUsePercentValues(true);
         pieChart.setExtraOffsets(20, 0, 20, 0);
 
@@ -276,7 +295,18 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         legend.setDrawInside(false);
 
-        pieChart.setOnChartValueSelectedListener(this);
+        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                PieEntry entry = (PieEntry) e;
+                Toast.makeText(StatisticFragment.this.getContext(), entry.getLabel() + ": " + Helper.formatCurrency((long) entry.getY()), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
 
         // Horizontal Bar Chart
         horizontalBarChart.getDescription().setEnabled(false);
@@ -290,14 +320,17 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         horizontalBarChart.getXAxis().setTextSize(12);
 
         horizontalBarChart.getAxisLeft().setEnabled(true);
+        horizontalBarChart.getAxisLeft().setAxisMinimum(0f);
         horizontalBarChart.getAxisRight().setEnabled(false);
+
         horizontalBarChart.getLegend().setEnabled(false);
         horizontalBarChart.setDrawValueAboveBar(true);
         horizontalBarChart.setExtraOffsets(-10, 0, 0, 0);
         horizontalBarChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-                Toast.makeText(StatisticFragment.this.getContext(), e.getY() + "", Toast.LENGTH_SHORT).show();
+                BarEntry entry = (BarEntry) e;
+                Toast.makeText(StatisticFragment.this.getContext(), labels.get((int) entry.getX()) + ": " + Helper.formatCurrency((long) entry.getY()), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -306,41 +339,58 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
             }
         });
 
-        horizontalBarChart.getLayoutParams().height = 1500;
     }
 
-    private void updateChartData() {
-        pieChart.setCenterText(statisticMode == Helper.TYPE_INCOME ? "Thu nhập" : "Chi tiêu");
+    private ArrayList<String> labels = new ArrayList<>();
+    private ArrayList<PieEntry> pieEntries = new ArrayList<>();
+    private ArrayList<BarEntry> barEntries = new ArrayList<>();
+    private int[] chartColors;
 
-        ArrayList<String> labels = new ArrayList<>();
-        ArrayList<PieEntry> pieEntries = new ArrayList<>();
-        ArrayList<BarEntry> barEntries = new ArrayList<>();
-        int[] colors = getRandomColors();
+    private void updateChartData() {
+        chartColors = getRandomColors();
+
+        labels.clear();
+        pieEntries.clear();
+        barEntries.clear();
 
         int index = 0;
         for (Category category : mapMonthFinances.keySet()) {
             if (category.getType() != statisticMode) continue;
 
-            long total = 0;
+            long money = 0;
             for (Finance finance : mapMonthFinances.get(category)) {
-                total += finance.getMoney();
+                money += finance.getMoney();
             }
-            if (total != 0) {
+            if (money != 0) {
                 labels.add(category.getName());
-                pieEntries.add(new PieEntry(total, category.getName()));
-                barEntries.add(new BarEntry(index++, total));
+                pieEntries.add(new PieEntry(money, category.getName()));
+                barEntries.add(new BarEntry(index, money));
+                index++;
             }
         }
 
+        updatePieChartData();
+        updateHorizontalBarChartData();
+    }
+
+    private void updatePieChartData() {
+        pieChart.setCenterText(statisticMode == Helper.TYPE_INCOME ? "THU NHẬP" : "CHI TIÊU");
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
         pieDataSet.setSliceSpace(1);
         pieDataSet.setValueTextSize(13);
-        pieDataSet.setColors(colors);
+        pieDataSet.setColors(chartColors);
 
         pieDataSet.setValueLinePart1OffsetPercentage(83.f);
         pieDataSet.setValueLinePart1Length(0.5f);
         pieDataSet.setValueLinePart2Length(0.4f);
         pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+
+        pieDataSet.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getPieLabel(float value, PieEntry pieEntry) {
+                return String.format("%.1f", value) + "%";
+            }
+        });
 
         pieChart.setData(new PieData(pieDataSet));
         // Hiển thị labels và values
@@ -348,63 +398,42 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
         for (IDataSet<?> set : pieChart.getData().getDataSets())
             set.setDrawValues(isShowValues);
 
+        pieChart.animateXY(1000, 1000);
+        pieChart.invalidate();
+    }
+
+    private void updateHorizontalBarChartData() {
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
-        barDataSet.setColors(colors);
+        barDataSet.setColors(chartColors);
         barDataSet.setValueTextColor(Color.BLUE);
         barDataSet.setValueTextSize(12);
         barDataSet.setDrawValues(true);
 
+        barDataSet.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getBarLabel(BarEntry barEntry) {
+                return Helper.formatCurrentWithoutSymbol((long) barEntry.getY());
+            }
+        });
+
         horizontalBarChart.getXAxis().setEnabled(false);
-        horizontalBarChart.setData(new BarData(barDataSet));
-        horizontalBarChart.getData().setHighlightEnabled(true);
-        horizontalBarChart.getData().setValueTextColor(Color.BLACK);
+        BarData barData = new BarData(barDataSet);
+        barData.setHighlightEnabled(true);
+        barData.setValueTextColor(Color.BLACK);
+        barData.setBarWidth(0.8f);
+        horizontalBarChart.setData(barData);
 
-        horizontalBarChart.getLayoutParams().height = Math.max(barEntries.size() * HORIZONTAL_BAR_HEIGHT, 500);
+        // TODO: Chưa thể set height khi vừa vào menu Thống Kê, hoặc chuyển từ xem CHI TIÊU <-> THU NHẬP
+        horizontalBarChart.getLayoutParams().height = Math.max(barEntries.size() * HORIZONTAL_BAR_HEIGHT, 450);
+        Toast.makeText(this.getContext(), horizontalBarChart.getLayoutParams().height + "", Toast.LENGTH_SHORT).show();
 
-        pieChart.animateXY(1000, 1000);
         horizontalBarChart.animateY(1500);
-
-        pieChart.invalidate();
         horizontalBarChart.invalidate();
     }
 
-    @Override
-    public void onValueSelected(Entry e, Highlight h) {
-        PieEntry entry = (PieEntry) e;
-        Toast.makeText(this.getContext(), entry.getLabel() + " : " + entry.getY(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onNothingSelected() {
-
-    }
-
-    public int[] getColorsResource() {
-        return new int[]{
-                ContextCompat.getColor(getContext(), R.color.cyan),
-                ContextCompat.getColor(getContext(), R.color.blueGray),
-                ContextCompat.getColor(getContext(), R.color.jade),
-                ContextCompat.getColor(getContext(), R.color.lightBlue),
-                ContextCompat.getColor(getContext(), R.color.royalBlue),
-                ContextCompat.getColor(getContext(), R.color.brown),
-                ContextCompat.getColor(getContext(), R.color.khaki),
-                ContextCompat.getColor(getContext(), R.color.glaucous),
-                ContextCompat.getColor(getContext(), R.color.sageGreen),
-                ContextCompat.getColor(getContext(), R.color.brightGreen),
-                ContextCompat.getColor(getContext(), R.color.malachite),
-                ContextCompat.getColor(getContext(), R.color.amber),
-                ContextCompat.getColor(getContext(), R.color.coralPink),
-                ContextCompat.getColor(getContext(), R.color.fuchsia),
-                ContextCompat.getColor(getContext(), R.color.purple),
-                ContextCompat.getColor(getContext(), R.color.iris),
-                ContextCompat.getColor(getContext(), R.color.lightViolet),
-                ContextCompat.getColor(getContext(), R.color.scarlet)
-        };
-    }
 
     public int[] getRandomColors() {
-        int[] colors = getColorsResource();
-        int[] ranIndex = new int[colors.length];
+        int[] ranIndex = new int[colorsResource.length];
         for (int i = 0; i < ranIndex.length; i++) ranIndex[i] = i;
         Random r = new Random();
         for (int i = ranIndex.length - 1; i > 0; i--) {
@@ -414,7 +443,7 @@ public class StatisticFragment extends Fragment implements OnChartValueSelectedL
             ranIndex[j] = k;
         }
         for (int i = 0; i < ranIndex.length; i++) {
-            ranIndex[i] = colors[ranIndex[i]];
+            ranIndex[i] = colorsResource[ranIndex[i]];
         }
         return ranIndex;
     }
