@@ -403,6 +403,9 @@ public class StatisticFragment extends Fragment {
     }
 
     private void updateHorizontalBarChartData() {
+        horizontalBarChart.getLayoutParams().height = Math.max(barEntries.size() * HORIZONTAL_BAR_HEIGHT, 450);
+        horizontalBarChart.requestLayout();     // Cập nhật lại layout
+
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
         barDataSet.setColors(chartColors);
         barDataSet.setValueTextColor(Color.BLUE);
@@ -423,9 +426,7 @@ public class StatisticFragment extends Fragment {
         barData.setBarWidth(0.8f);
         horizontalBarChart.setData(barData);
 
-        // TODO: Chưa thể set height khi vừa vào menu Thống Kê, hoặc chuyển từ xem CHI TIÊU <-> THU NHẬP
-        horizontalBarChart.getLayoutParams().height = Math.max(barEntries.size() * HORIZONTAL_BAR_HEIGHT, 450);
-        Toast.makeText(this.getContext(), horizontalBarChart.getLayoutParams().height + "", Toast.LENGTH_SHORT).show();
+
 
         horizontalBarChart.animateY(1500);
         horizontalBarChart.invalidate();
