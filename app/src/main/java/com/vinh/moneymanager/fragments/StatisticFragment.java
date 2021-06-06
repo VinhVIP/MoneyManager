@@ -35,7 +35,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.LargeValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
@@ -67,6 +66,7 @@ public class StatisticFragment extends Fragment {
     private HorizontalBarChart horizontalBarChart;
     private BarChart barChart;
 
+    private List<Finance> allFinances = new ArrayList<>();
     private Map<Category, List<Finance>> mapAllFinances, mapMonthFinances;
 
     private DateHandlerClick dateHandlerClick;
@@ -77,6 +77,7 @@ public class StatisticFragment extends Fragment {
     private final int HORIZONTAL_BAR_HEIGHT = 150;
 
     private int[] colorsResource;
+    private int currentYear;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,6 +135,8 @@ public class StatisticFragment extends Fragment {
 
         categoryViewModel.getCategories().observe(this.getViewLifecycleOwner(), allCategories -> {
             financeViewModel.getAllFinances().observe(this.getViewLifecycleOwner(), finances -> {
+                allFinances = finances;
+
                 Map<Category, List<Finance>> map = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
 
                 for (Category c : allCategories) map.put(c, new ArrayList<>());
@@ -195,82 +198,193 @@ public class StatisticFragment extends Fragment {
 
         this.mapMonthFinances = mapRange;
         updateChartData();
+
+        updateDataYear();
     }
 
+    ArrayList<BarEntry> entriesExpense = new ArrayList<>();
+    ArrayList<BarEntry> entriesIncome = new ArrayList<>();
 
-    private void initBarChar() {
-        barChart.getDescription().setEnabled(false);
-        barChart.setPinchZoom(false);
-        barChart.setDrawBarShadow(false);
-        barChart.setDrawGridBackground(false);
+    private void updateDataYear() {
+        int selectedYear = dateRange.getStartDate().getYear();
+        if (selectedYear == currentYear) return;
+        currentYear = selectedYear;
 
-        barChart.animateY(2000);
+        ArrayList<ArrayList<Long>> lists = new ArrayList<>();
+        lists.ensureCapacity(12);
 
-        Legend l = barChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setDrawInside(true);
-        l.setYOffset(0f);
-        l.setXOffset(10f);
-        l.setYEntrySpace(0f);
-        l.setTextSize(8f);
+        long[][] money = new long[12][2];
+        for (int i = 0; i < money.length; i++)
+            for (int j = 0; j < money[0].length; j++)
+                money[i][j] = 0;
 
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setGranularity(1f);
-        xAxis.setCenterAxisLabels(true);
-        xAxis.setValueFormatter(new ValueFormatter() {
+        for (Finance f : allFinances) {
+            String[] dates = f.getDateTime().split("-")[0].trim().split("/");
+            int year = Integer.parseInt(dates[2]);
+            int month = Integer.parseInt(dates[1]);
+
+            if (year == selectedYear) {
+                int type = getCategoryType(f.getCategoryId());
+
+                if (type == Helper.TYPE_EXPENSE) money[month - 1][0] += f.getMoney();
+                else if (type == Helper.TYPE_INCOME) money[month - 1][1] += f.getMoney();
+            }
+        }
+
+        entriesExpense.clear();
+        entriesIncome.clear();
+        for (int mon = 0; mon < money.length; mon++) {
+            entriesExpense.add(new BarEntry(mon, money[mon][0]));
+            entriesIncome.add(new BarEntry(mon, money[mon][1]));
+        }
+
+        updateChartYear();
+    }
+
+    private int getCategoryType(int categoryId) {
+        for (Category c : mapAllFinances.keySet()) {
+            if (c.getCategoryId() == categoryId) return c.getType();
+        }
+        return -1;
+    }
+
+    private void updateChartYear() {
+
+        BarDataSet dataSet = new BarDataSet(entriesExpense, "Chi tiêu");
+        dataSet.setColor(Color.RED);
+        dataSet.setDrawValues(true);
+        dataSet.setValueTextSize(10);
+        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        dataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return String.valueOf((int) value);
+                String s = String.format("%.2f", value / 1000000);
+                while (s.endsWith("0")) s = s.substring(0, s.length() - 1);
+                return s.endsWith(",") ? s.substring(0, s.length() - 1) : s;
+            }
+        });
+
+
+        BarDataSet dataSet2 = new BarDataSet(entriesIncome, "Thu nhập");
+        dataSet2.setColor(Color.GREEN);
+        dataSet2.setDrawValues(true);
+        dataSet2.setValueTextSize(10);
+        dataSet2.setAxisDependency(YAxis.AxisDependency.LEFT);
+        dataSet2.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                String s = String.format("%.2f", value / 1000000);
+                while (s.endsWith("0")) s = s.substring(0, s.length() - 1);
+                return s.endsWith(",") ? s.substring(0, s.length() - 1) : s;
+            }
+        });
+
+        float groupSpace = 0.12f;
+        float barSpace = 0.02f; // x2 dataset
+        float barWidth = 0.42f; // x2 dataset
+        // (0.45 + 0.02) * 2 + 0.06 = 1.00 -> interval per "group"
+
+        BarData barData = new BarData(dataSet, dataSet2);
+        barData.setBarWidth(barWidth);
+
+        // make this BarData object grouped
+        barData.groupBars(0, groupSpace, barSpace); // start at x = 0
+
+        barChart.setData(barData);
+        barChart.getXAxis().setAxisMinimum(0);
+        barChart.getXAxis().setAxisMaximum(0 + barChart.getBarData().getGroupWidth(groupSpace, barSpace) * 12);
+
+        barChart.invalidate();
+    }
+
+    private void initBarChar() {
+        barChart.setDrawBarShadow(false);
+        barChart.setDrawValueAboveBar(true);
+
+        barChart.getDescription().setEnabled(false);
+        String[] labels = {"Chi tiêu", "Thu nhập"};
+        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                Toast.makeText(StatisticFragment.this.getContext(), labels[h.getDataSetIndex()] + " tháng " + (int) (e.getX() + 1) + ": " + Helper.formatCurrencyWithoutSymbol((long) e.getY()), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected() {
 
             }
         });
 
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+//        barChart.setMaxVisibleValueCount(12);
+
+        // scaling can now only be done on x- and y-axis separately
+        barChart.setPinchZoom(false);
+
+        barChart.setDrawGridBackground(false);
+        // chart.setDrawYLabels(false);
+
+//        IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(chart);
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxis.setTypeface(tfLight);
+        xAxis.setDrawGridLines(false);
+        xAxis.setGranularity(1f); // only intervals of 1 day
+        xAxis.setLabelCount(12);
+        xAxis.setCenterAxisLabels(true);
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return "T" + (int) (value + 1);
+            }
+        });
+//        xAxis.setValueFormatter(xAxisFormatter);
+
+//        IAxisValueFormatter custom = new MyAxisValueFormatter();
+
         YAxis leftAxis = barChart.getAxisLeft();
-        leftAxis.setValueFormatter(new LargeValueFormatter());
-        leftAxis.setDrawGridLines(false);
-        leftAxis.setSpaceTop(35f);
+//        leftAxis.setTypeface(tfLight);
+//        leftAxis.setLabelCount(8, false);
+//        leftAxis.setValueFormatter(custom);
+        leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        leftAxis.setSpaceTop(10f);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        leftAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return ((long) value / 1000000) + "M";
+            }
+        });
+
+//        barChart.setExtraOffsets(0, 0, 0, -10);
 
         barChart.getAxisRight().setEnabled(false);
+//        YAxis rightAxis = barChart.getAxisRight();
+//        rightAxis.setDrawGridLines(false);
+////        rightAxis.setTypeface(tfLight);
+//        rightAxis.setLabelCount(8, false);
+////        rightAxis.setValueFormatter(custom);
+//        rightAxis.setSpaceTop(15f);
+//        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-        ArrayList<BarEntry> values1 = new ArrayList<>();
-        ArrayList<BarEntry> values2 = new ArrayList<>();
+        Legend l = barChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setForm(Legend.LegendForm.SQUARE);
+        l.setFormSize(9f);
+        l.setTextSize(11f);
+        l.setXEntrySpace(4f);
+        l.setYEntrySpace(4f);
 
-        values1.add(new BarEntry(0, 25));
-        values1.add(new BarEntry(1, 20));
-        values1.add(new BarEntry(2, 32));
+//        XYMarkerView mv = new XYMarkerView(this, xAxisFormatter);
+//        mv.setChartView(chart); // For bounds control
+//        chart.setMarker(mv); // Set the marker to the chart
 
-        values2.add(new BarEntry(0, 17));
-        values2.add(new BarEntry(1, 10));
-        values2.add(new BarEntry(2, 8));
 
-        BarDataSet set1 = new BarDataSet(values1, "Set A");
-        set1.setColor(Color.GREEN);
-        BarDataSet set2 = new BarDataSet(values2, "Set B");
-        set2.setColor(Color.BLUE);
-        set1.setValueTextSize(12);
-        set2.setValueTextSize(12);
-
-        BarData data = new BarData(set1, set2);
-
-        float groupSpace = 0.5f;
-        float barSpace = 0.05f; // x4 DataSet
-        float barWidth = 0.2f; // x4 DataSet
-        int groupCount = 3;
-
-        int startYear = 0;
-
-        barChart.setData(data);
-
-        barChart.getXAxis().setAxisMaximum(barChart.getBarData().getGroupWidth(groupSpace, barSpace) * (groupCount + 1));
-        barChart.groupBars(startYear, groupSpace, barSpace);
-
-        barChart.getData().setHighlightEnabled(false);
-
-        barChart.getXAxis().setEnabled(false);
-        barChart.invalidate();
     }
 
     private void initPieAndHorizontalBarChart() {
@@ -425,7 +539,7 @@ public class StatisticFragment extends Fragment {
         barDataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getBarLabel(BarEntry barEntry) {
-                return Helper.formatCurrentWithoutSymbol((long) barEntry.getY());
+                return Helper.formatCurrencyWithoutSymbol((long) barEntry.getY());
             }
         });
 

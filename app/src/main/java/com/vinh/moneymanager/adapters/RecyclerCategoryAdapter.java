@@ -56,7 +56,7 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
                 }
             }
 
-            holder.bindData(R.drawable.bagicon, category.getName(), Helper.formatCurrentWithoutSymbol(totalCost));
+            holder.bindData(R.drawable.bagicon, category.getName(), Helper.formatCurrencyWithoutSymbol(totalCost));
 
             holder.itemView.setOnClickListener(v -> listener.onCategoryClick(category, position));
             holder.itemView.setOnLongClickListener(v -> {
