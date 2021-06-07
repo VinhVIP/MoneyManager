@@ -405,7 +405,7 @@ public class StatisticFragment extends Fragment {
         pieChart.getDescription().setEnabled(false);
         pieChart.setHoleColor(Color.WHITE);
         pieChart.setUsePercentValues(true);
-        pieChart.setExtraOffsets(10, 0, 10, 0);
+        pieChart.setExtraOffsets(15, 0, 15, 0);
 
         Legend legend = pieChart.getLegend();
         legend.setForm(Legend.LegendForm.CIRCLE);
