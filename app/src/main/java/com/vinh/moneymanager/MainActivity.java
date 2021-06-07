@@ -44,32 +44,32 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
 
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+//        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+//
+//                switch (position) {
+//                    case 0:
+//                        navigationView.getMenu().findItem(R.id.nav_finance).setChecked(true);
+//                        break;
+//                    case 1:
+//                        navigationView.getMenu().findItem(R.id.nav_account).setChecked(true);
+//                        break;
+//                    case 2:
+//                        navigationView.getMenu().findItem(R.id.nav_statistic).setChecked(true);
+//                        break;
+//                }
+//            }
+//        });
 
-                switch (position) {
-                    case 0:
-                        navigationView.getMenu().findItem(R.id.nav_finance).setChecked(true);
-                        break;
-                    case 1:
-                        navigationView.getMenu().findItem(R.id.nav_account).setChecked(true);
-                        break;
-                    case 2:
-                        navigationView.getMenu().findItem(R.id.nav_statistic).setChecked(true);
-                        break;
-                }
-            }
-        });
-
+        // bugs
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) navigationView.getLayoutParams();
         layoutParams.setBehavior(new BottomNavigationBehavior());
 
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = item -> {
-        Fragment fragment;
         switch (item.getItemId()) {
             case R.id.nav_finance:
                 viewPager.setCurrentItem(0, true);
@@ -100,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(statisticFragment);
 
         viewPager.setAdapter(adapter);
+        // Không cho scroll
+        viewPager.setUserInputEnabled(false);
     }
 
 }
