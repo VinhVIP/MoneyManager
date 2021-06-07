@@ -1,13 +1,17 @@
 package com.vinh.moneymanager;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.vinh.moneymanager.adapters.MainPagerAdapter;
 import com.vinh.moneymanager.components.BottomNavigationBehavior;
 import com.vinh.moneymanager.fragments.AccountFragment;
 import com.vinh.moneymanager.fragments.ExpenseFragment;
@@ -15,8 +19,14 @@ import com.vinh.moneymanager.fragments.StatisticFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    BottomNavigationView navigationView;
+    private BottomNavigationView navigationView;
     private int fragmentIndex = 0;
+
+    private ViewPager2 viewPager;
+
+    private ExpenseFragment expenseFragment;
+    private AccountFragment accountFragment;
+    private StatisticFragment statisticFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,46 +38,70 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 //        getSupportActionBar().hide();
+        viewPager = findViewById(R.id.view_pager_main);
+        setupViewPager(viewPager);
 
         navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
 
+//        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+//
+//                switch (position) {
+//                    case 0:
+//                        navigationView.getMenu().findItem(R.id.nav_finance).setChecked(true);
+//                        break;
+//                    case 1:
+//                        navigationView.getMenu().findItem(R.id.nav_account).setChecked(true);
+//                        break;
+//                    case 2:
+//                        navigationView.getMenu().findItem(R.id.nav_statistic).setChecked(true);
+//                        break;
+//                }
+//            }
+//        });
+
+        // bugs
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) navigationView.getLayoutParams();
         layoutParams.setBehavior(new BottomNavigationBehavior());
 
-        loadFragment(ExpenseFragment.getInstance());
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = item -> {
-        Fragment fragment;
         switch (item.getItemId()) {
             case R.id.nav_finance:
-                if (fragmentIndex == 0) break;
-                fragmentIndex = 0;
-                fragment = new ExpenseFragment();
-                loadFragment(fragment);
-                return true;
+                viewPager.setCurrentItem(0, true);
+                item.setChecked(true);
+                break;
             case R.id.nav_account:
-                if (fragmentIndex == 1) break;
-                fragmentIndex = 1;
-                fragment = new AccountFragment();
-                loadFragment(fragment);
-                return true;
+                viewPager.setCurrentItem(1, true);
+                item.setChecked(true);
+                break;
             case R.id.nav_statistic:
-                if (fragmentIndex == 2) break;
-                fragmentIndex = 2;
-                fragment = new StatisticFragment();
-                loadFragment(fragment);
-                return true;
+                viewPager.setCurrentItem(2, true);
+                item.setChecked(true);
+                break;
         }
         return false;
     };
 
-    private void loadFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_container, fragment);
-//        transaction.addToBackStack(null);
-        transaction.commit();
+    private void setupViewPager(ViewPager2 viewPager) {
+
+        MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager(), getLifecycle());
+
+        expenseFragment = new ExpenseFragment();
+        accountFragment =  new AccountFragment();
+        statisticFragment = new StatisticFragment();
+
+        adapter.addFragment(expenseFragment);
+        adapter.addFragment(accountFragment);
+        adapter.addFragment(statisticFragment);
+
+        viewPager.setAdapter(adapter);
+        // Không cho scroll
+        viewPager.setUserInputEnabled(false);
     }
 
 }

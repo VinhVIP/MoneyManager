@@ -1,8 +1,6 @@
 package com.vinh.moneymanager.libs;
 
-import java.text.NumberFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 public class Helper {
     public static final int TYPE_INCOME = 1;
@@ -13,7 +11,6 @@ public class Helper {
     public static final int REQUEST_EDIT_CATEGORY = 103;
     public static final int REQUEST_ADD_FINANCE = 201;
     public static final int REQUEST_EDIT_FINANCE = 202;
-
 
 
     public static final String CATEGORY_NAME = "category_name";
@@ -50,23 +47,27 @@ public class Helper {
 
 
     public static String formatCurrency(long cost) {
-        Locale localeVN = new Locale("vi", "VN");
-        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
-        return currencyVN.format(cost);
+//        Locale localeVN = new Locale("vi", "VN");
+//        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+//        return currencyVN.format(cost);
+        return formatCurrencyWithoutSymbol(cost) + "đ";
     }
 
-    public static String clearDotInText(String text){
+    public static String clearDotInText(String text) {
         return text.replace(".", "");
     }
 
-    public static String formatCurrencyWithoutSymbol(String cost){
-        if(cost == null || cost.isEmpty()) return "";
+    public static String formatCurrencyWithoutSymbol(String cost) {
+        if (cost == null || cost.isEmpty()) return "";
 
         cost = clearDotInText(cost);
         return formatCurrencyWithoutSymbol(Long.parseLong(cost));
     }
 
     public static String formatCurrencyWithoutSymbol(long cost) {
+        boolean sign = cost < 0;
+        cost = Math.abs(cost);
+
         String s = String.valueOf(cost);
         String res = "";
         int i = s.length();
@@ -76,6 +77,8 @@ public class Helper {
         }
         if (res.startsWith(".")) res = res.substring(1);
         if (res.endsWith(".")) res = res.substring(0, res.length() - 1);
+
+        if (sign) res = "-" + res;
         return res;
     }
 
