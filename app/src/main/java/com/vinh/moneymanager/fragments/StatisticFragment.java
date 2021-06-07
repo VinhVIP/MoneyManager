@@ -74,17 +74,26 @@ public class StatisticFragment extends Fragment {
 
     private int statisticMode = Helper.TYPE_EXPENSE;
 
-    private final int HORIZONTAL_BAR_HEIGHT = 150;
+    private final int HORIZONTAL_BAR_HEIGHT = 100;
 
     private int[] colorsResource;
     private int currentYear;
+
+    private static StatisticFragment instance;
+
+    public static StatisticFragment getInstance() {
+        if (instance == null) {
+            instance = new StatisticFragment();
+        }
+        return instance;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        financeViewModel = new ViewModelProvider(this).get(FinanceViewModel.class);
+        categoryViewModel = new ViewModelProvider(getActivity()).get(CategoryViewModel.class);
+        financeViewModel = new ViewModelProvider(getActivity()).get(FinanceViewModel.class);
 
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -354,7 +363,7 @@ public class StatisticFragment extends Fragment {
         leftAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return ((long) value / 1000000) + "M";
+                return toM(value);
             }
         });
 
@@ -396,7 +405,7 @@ public class StatisticFragment extends Fragment {
         pieChart.getDescription().setEnabled(false);
         pieChart.setHoleColor(Color.WHITE);
         pieChart.setUsePercentValues(true);
-        pieChart.setExtraOffsets(20, 0, 20, 0);
+        pieChart.setExtraOffsets(10, 0, 10, 0);
 
         Legend legend = pieChart.getLegend();
         legend.setForm(Legend.LegendForm.CIRCLE);
@@ -432,6 +441,15 @@ public class StatisticFragment extends Fragment {
         horizontalBarChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         horizontalBarChart.getXAxis().setEnabled(true);
         horizontalBarChart.getXAxis().setTextSize(12);
+        horizontalBarChart.getAxisLeft().setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                if (value < 1000000) {
+                    return toK(value);
+                }
+                return toM(value);
+            }
+        });
 
         horizontalBarChart.getAxisLeft().setEnabled(true);
         horizontalBarChart.getAxisLeft().setAxisMinimum(0f);
@@ -453,6 +471,22 @@ public class StatisticFragment extends Fragment {
             }
         });
 
+    }
+
+    private String toK(float value) {
+        if (value == 0) return "0";
+        return String.format("%.0fK", value / 1000);
+    }
+
+    private String toM(float value) {
+        String s = toMWithoutSymbol(value);
+        return s + "M";
+    }
+
+    private String toMWithoutSymbol(float value) {
+        String s = String.format("%.2f", value / 1000000);
+        while (s.endsWith("0")) s = s.substring(0, s.length() - 1);
+        return s.endsWith(",") ? s.substring(0, s.length() - 1) : s;
     }
 
     private ArrayList<String> labels = new ArrayList<>();
@@ -539,7 +573,8 @@ public class StatisticFragment extends Fragment {
         barDataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getBarLabel(BarEntry barEntry) {
-                return Helper.formatCurrencyWithoutSymbol((long) barEntry.getY());
+                if (barEntry.getY() < 1000000) return toK(barEntry.getY());
+                return toM(barEntry.getY());
             }
         });
 

@@ -118,6 +118,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="300dp" />
 
+                <TextView
+                    android:id="@+id/tvYear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="@{String.valueOf(date.startDate.year)}"
+                    android:textColor="#0000ff"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/barChart"
                     android:layout_width="match_parent"

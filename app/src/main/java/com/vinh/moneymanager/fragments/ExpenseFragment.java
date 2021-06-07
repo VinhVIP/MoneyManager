@@ -129,7 +129,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mViewModel = new ViewModelProvider(this).get(CategoryFinanceViewModel.class);
+        mViewModel = new ViewModelProvider(getActivity()).get(CategoryFinanceViewModel.class);
 
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;

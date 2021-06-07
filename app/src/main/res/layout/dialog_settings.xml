@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:paddingStart="15dp"
-            android:text="Hiển thị nhãn" />
+            android:text="Hiển thị nhãn danh mục" />
 
         <CheckBox
             android:id="@+id/cbShowChartValues"
@@ -45,15 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:paddingStart="15dp"
-            android:text="Hiển thị giá trị" />
-
-        <CheckBox
-            android:id="@+id/cbRandomColors"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:paddingStart="15dp"
-            android:text="Random màu" />
+            android:text="Hiển thị tỉ lệ" />
 
         <Button
             android:id="@+id/btnCloseDialog"
