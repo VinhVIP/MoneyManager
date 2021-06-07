@@ -57,7 +57,7 @@ public class AccountFragment extends Fragment  {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+        mViewModel = new ViewModelProvider(getActivity()).get(AccountViewModel.class);
     }
 
     @Override

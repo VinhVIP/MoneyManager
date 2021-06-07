@@ -63,10 +63,10 @@ public class Helper {
         if(cost == null || cost.isEmpty()) return "";
 
         cost = clearDotInText(cost);
-        return formatCurrentWithoutSymbol(Long.parseLong(cost));
+        return formatCurrencyWithoutSymbol(Long.parseLong(cost));
     }
 
-    public static String formatCurrentWithoutSymbol(long cost) {
+    public static String formatCurrencyWithoutSymbol(long cost) {
         String s = String.valueOf(cost);
         String res = "";
         int i = s.length();
