@@ -20,10 +20,14 @@ public class Account {
     @ColumnInfo(name = "a_description")
     private String description;
 
-    public Account(String accountName, long balance, String description) {
+    @ColumnInfo(name = "a_icon")
+    private int icon;
+
+    public Account(String accountName, long balance, String description, int icon) {
         this.accountName = accountName;
         this.balance = balance;
         this.description = description;
+        this.icon = icon;
     }
 
     public int getAccountId() {
@@ -56,5 +60,13 @@ public class Account {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getIcon() {
+        return icon;
+    }
+
+    public void setIcon(int icon) {
+        this.icon = icon;
     }
 }

@@ -40,11 +40,13 @@ public class RecyclerAccountAdapter extends RecyclerView.Adapter<RecyclerAccount
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Account account = accounts.get(position);
-        holder.tvAccountName.setText(account.getAccountName());
-        holder.tvAccountBalance.setText(Helper.formatCurrency(account.getBalance()));
 
-        holder.itemView.setOnClickListener(v -> {
+        holder.bindData(account);
+
+        holder.itemView.setOnClickListener(v -> listener.onItemAccountClick(account));
+        holder.itemView.setOnLongClickListener(v -> {
             listener.onItemAccountClick(account);
+            return false;
         });
     }
 
@@ -61,12 +63,17 @@ public class RecyclerAccountAdapter extends RecyclerView.Adapter<RecyclerAccount
         ImageView imageAccount;
         TextView tvAccountName, tvAccountBalance;
 
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageAccount = itemView.findViewById(R.id.img_account);
             tvAccountName = itemView.findViewById(R.id.tv_account_name);
             tvAccountBalance = itemView.findViewById(R.id.tv_asset);
+        }
+
+        public void bindData(Account account) {
+            imageAccount.setImageResource(Helper.iconsAccount[account.getIcon()]);
+            tvAccountName.setText(account.getAccountName());
+            tvAccountBalance.setText(Helper.formatCurrency(account.getBalance()));
         }
     }
 }

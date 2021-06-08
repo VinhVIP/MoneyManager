@@ -37,6 +37,11 @@ public class Helper {
             R.drawable.thu5
     };
 
+    public static final int[] iconsAccount = new int[]{
+            R.drawable.account1,
+            R.drawable.account2
+    };
+
 
     public static final String CATEGORY_NAME = "category_name";
     public static final String CATEGORY_ID = "category_id";
@@ -48,6 +53,8 @@ public class Helper {
     public static final String ACCOUNT_NAME = "account_name";
     public static final String ACCOUNT_BALANCE = "account_balance";
     public static final String ACCOUNT_DESCRIPTION = "account_description";
+    public static final String ACCOUNT_ICON = "account_icon";
+
     public static final String FINANCE_DAY = "f_day";
     public static final String FINANCE_TIME = "f_time";
     public static final String FINANCE_COST = "f_cost";

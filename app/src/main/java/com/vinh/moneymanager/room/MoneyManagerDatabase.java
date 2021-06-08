@@ -80,8 +80,8 @@ public abstract class MoneyManagerDatabase extends RoomDatabase {
 
             categoryDao.insert(new Category("Lương", Helper.TYPE_INCOME, "Mua các vật dụng cá nhân", 0));
 
-            accountDao.insert(new Account("Tiền mặt", 5000000, "Tiền mặt"));
-            accountDao.insert(new Account("Thẻ BIDV", 8000000, "Tiền trong thẻ ngân hàng"));
+            accountDao.insert(new Account("Tiền mặt", 5000000, "Tiền mặt", 1));
+            accountDao.insert(new Account("Thẻ BIDV", 8000000, "Tiền trong thẻ ngân hàng", 0));
 
             return null;
         }
