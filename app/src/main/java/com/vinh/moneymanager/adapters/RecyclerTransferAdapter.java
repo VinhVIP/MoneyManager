@@ -1,7 +1,5 @@
 package com.vinh.moneymanager.adapters;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,9 +55,15 @@ public class RecyclerTransferAdapter extends RecyclerView.Adapter<RecyclerTransf
         return transfers.size();
     }
 
-    public void deleteTransfer(int position){
+    public void deleteTransfer(int position) {
         transfers.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public interface OnItemTransferListener {
+        void onItemTransferClick(Transfer transfer, int position);
+
+        void onItemDelete(Transfer transfer, int position);
     }
 
     // ---------------- Holder --------------------
@@ -101,12 +105,6 @@ public class RecyclerTransferAdapter extends RecyclerView.Adapter<RecyclerTransf
             }
         }
 
-    }
-
-    public interface OnItemTransferListener {
-        void onItemTransferClick(Transfer transfer, int position);
-
-        void onItemDelete(Transfer transfer, int position);
     }
 
 }

@@ -27,22 +27,18 @@ public class CategoryFinanceViewModel extends ViewModel {
     public FinanceViewModel financeViewModel;
     public CategoryViewModel categoryViewModel;
     public AccountViewModel accountViewModel;
-
+    public ObservableField<DateRange> dateRange = new ObservableField<>();
+    public ObservableLong totalCostIncome = new ObservableLong();
+    public ObservableLong totalCostExpense = new ObservableLong();
+    public ObservableInt switchExpenseIncome = new ObservableInt();
     private Map<Category, List<Finance>> allFinances;
-
     private MutableLiveData<List<Category>> categories;
     private MutableLiveData<Map<Category, List<Finance>>> mapCategoryFinance;
-
     private MutableLiveData<List<DateRange.Date>> dates;
     private MutableLiveData<Map<String, List<Finance>>> mapTimeFinance;
 
-
-    public ObservableField<DateRange> dateRange = new ObservableField<>();
-
-    public ObservableLong totalCostIncome = new ObservableLong();
-    public ObservableLong totalCostExpense = new ObservableLong();
-
-    public ObservableInt switchExpenseIncome = new ObservableInt();
+    public CategoryFinanceViewModel() {
+    }
 
     public void initLiveData(ViewModelStoreOwner owner, LifecycleOwner lifecycleOwner) {
         financeViewModel = new ViewModelProvider(owner).get(FinanceViewModel.class);
@@ -91,10 +87,6 @@ public class CategoryFinanceViewModel extends ViewModel {
                 update();
             });
         });
-    }
-
-
-    public CategoryFinanceViewModel() {
     }
 
     private void update() {

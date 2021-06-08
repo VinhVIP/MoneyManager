@@ -196,7 +196,7 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
             int categoryId = data.getInt(Helper.CATEGORY_ID, 0);
             String categoryName = data.getString(Helper.CATEGORY_NAME);
 
-            Category category = new Category(categoryName, categoryType, "");
+            Category category = new Category(categoryName, categoryType, "", 0);
             category.setCategoryId(categoryId);
 
             Log.d("MMM", "Add Finance Bef: " + categoryId + categoryName);
@@ -480,7 +480,9 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
                     ImageView imageView = convertView.findViewById(R.id.image_view);
                     TextView tvName = convertView.findViewById(R.id.text_view);
 
-                    tvName.setText(mCategories.get(position).getName());
+                    Category category = mCategories.get(position);
+                    tvName.setText(category.getName());
+                    imageView.setImageResource(category.getType() == Helper.TYPE_EXPENSE ? Helper.iconsExpense[category.getIcon()] : Helper.iconsIncome[category.getIcon()]);
                 }
                 return convertView;
             }

@@ -25,12 +25,13 @@ import com.vinh.moneymanager.room.entities.Type;
 public abstract class MoneyManagerDatabase extends RoomDatabase {
 
     private static MoneyManagerDatabase instance;
-
-    public abstract TypeDao typeDao();
-    public abstract CategoryDao categoryDao();
-    public abstract AccountDao accountDao();
-    public abstract FinanceDao financeDao();
-    public abstract TransferDao transferDao();
+    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+            new PopulateDBAsyncTask(instance).execute();
+        }
+    };
 
     public static synchronized MoneyManagerDatabase getInstance(Context context) {
         if (instance == null) {
@@ -44,13 +45,15 @@ public abstract class MoneyManagerDatabase extends RoomDatabase {
         return instance;
     }
 
-    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
-            new PopulateDBAsyncTask(instance).execute();
-        }
-    };
+    public abstract TypeDao typeDao();
+
+    public abstract CategoryDao categoryDao();
+
+    public abstract AccountDao accountDao();
+
+    public abstract FinanceDao financeDao();
+
+    public abstract TransferDao transferDao();
 
     private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void> {
 
@@ -72,10 +75,10 @@ public abstract class MoneyManagerDatabase extends RoomDatabase {
             typeDao.insert(new Type(Helper.TYPE_EXPENSE, "Chi tiêu"));
             typeDao.insert(new Type(Helper.TYPE_TRANSFER, "Chuyển khoản"));
 
-            categoryDao.insert(new Category("Ăn uống", Helper.TYPE_EXPENSE, "Bao gồm ăn vặt và ăn bữa chính"));
-            categoryDao.insert(new Category("Mua sắm", Helper.TYPE_EXPENSE, "Mua các vật dụng cá nhân"));
+            categoryDao.insert(new Category("Ăn uống", Helper.TYPE_EXPENSE, "Bao gồm ăn vặt và ăn bữa chính", 0));
+            categoryDao.insert(new Category("Mua sắm", Helper.TYPE_EXPENSE, "Mua các vật dụng cá nhân", 1));
 
-            categoryDao.insert(new Category("Lương", Helper.TYPE_INCOME, "Mua các vật dụng cá nhân"));
+            categoryDao.insert(new Category("Lương", Helper.TYPE_INCOME, "Mua các vật dụng cá nhân", 0));
 
             accountDao.insert(new Account("Tiền mặt", 5000000, "Tiền mặt"));
             accountDao.insert(new Account("Thẻ BIDV", 8000000, "Tiền trong thẻ ngân hàng"));

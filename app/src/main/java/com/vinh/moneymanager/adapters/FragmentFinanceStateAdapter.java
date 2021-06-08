@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.vinh.moneymanager.fragments.ListCategoryFragment;
-
 public class FragmentFinanceStateAdapter extends FragmentStateAdapter {
 
     private final int NUM_PAGES = 2;
@@ -19,7 +17,7 @@ public class FragmentFinanceStateAdapter extends FragmentStateAdapter {
         this.parentFragment = fragment;
     }
 
-    public void setFragment(Fragment incomeFragment, Fragment expenseFragment){
+    public void setFragment(Fragment incomeFragment, Fragment expenseFragment) {
         this.incomeFragment = incomeFragment;
         this.expenseFragment = expenseFragment;
     }

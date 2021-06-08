@@ -67,12 +67,12 @@ public class Finance {
         return dateTime;
     }
 
-    public String getTime(){
-        return dateTime.split("-")[1].trim();
-    }
-
     public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public String getTime() {
+        return dateTime.split("-")[1].trim();
     }
 
     public String getDetail() {

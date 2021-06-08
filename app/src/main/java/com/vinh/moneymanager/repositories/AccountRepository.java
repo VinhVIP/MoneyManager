@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData;
 import com.vinh.moneymanager.room.MoneyManagerDatabase;
 import com.vinh.moneymanager.room.daos.AccountDao;
 import com.vinh.moneymanager.room.entities.Account;
-import com.vinh.moneymanager.room.entities.Finance;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -38,7 +37,7 @@ public class AccountRepository {
         new DeleteAccountAsyncTask(accountDao).execute(account);
     }
 
-    public Account search(int accountId){
+    public Account search(int accountId) {
         SearchAccountAsyncTask asyncTask = new SearchAccountAsyncTask(accountDao);
         try {
             return asyncTask.execute(accountId).get();
@@ -50,7 +49,7 @@ public class AccountRepository {
         return null;
     }
 
-    public LiveData<List<Account>> getAccounts(){
+    public LiveData<List<Account>> getAccounts() {
         return accounts;
     }
 
@@ -99,7 +98,7 @@ public class AccountRepository {
         }
     }
 
-    private static class SearchAccountAsyncTask extends AsyncTask<Integer, Void, Account>{
+    private static class SearchAccountAsyncTask extends AsyncTask<Integer, Void, Account> {
         private AccountDao accountDao;
 
         private SearchAccountAsyncTask(AccountDao accountDao) {

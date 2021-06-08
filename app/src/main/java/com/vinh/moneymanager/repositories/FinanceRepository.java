@@ -4,16 +4,12 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
-import com.vinh.moneymanager.room.daos.CategoryDao;
-import com.vinh.moneymanager.room.daos.FinanceDao;
 import com.vinh.moneymanager.room.MoneyManagerDatabase;
-import com.vinh.moneymanager.room.entities.Category;
+import com.vinh.moneymanager.room.daos.FinanceDao;
 import com.vinh.moneymanager.room.entities.Finance;
 
 import java.util.List;
-import java.util.Map;
 
 public class FinanceRepository {
 
@@ -30,31 +26,32 @@ public class FinanceRepository {
         finances = financeDao.getAllFinances();
     }
 
-    public void insert(Finance finance){
+    public void insert(Finance finance) {
         new InsertFinanceAsyncTask(financeDao).execute(finance);
     }
 
-    public void update(Finance finance){
+    public void update(Finance finance) {
         new UpdateFinanceAsyncTask(financeDao).execute(finance);
     }
 
-    public void delete(Finance finance){
+    public void delete(Finance finance) {
         new DeleteFinanceAsyncTask(financeDao).execute(finance);
     }
 
-    public LiveData<List<Finance>> getAllFinances(){
+    public LiveData<List<Finance>> getAllFinances() {
         return finances;
     }
 
-    public LiveData<List<Finance>> getFinances(int categoryId){
+    public LiveData<List<Finance>> getFinances(int categoryId) {
         return financeDao.getFinances(categoryId);
     }
 
     // ------------- AsyncTask --------------------
 
-    private static class InsertFinanceAsyncTask extends AsyncTask<Finance, Void, Void>{
+    private static class InsertFinanceAsyncTask extends AsyncTask<Finance, Void, Void> {
         private FinanceDao financeDao;
-        private InsertFinanceAsyncTask(FinanceDao financeDao){
+
+        private InsertFinanceAsyncTask(FinanceDao financeDao) {
             this.financeDao = financeDao;
         }
 
@@ -65,9 +62,10 @@ public class FinanceRepository {
         }
     }
 
-    private static class DeleteFinanceAsyncTask extends AsyncTask<Finance, Void, Void>{
+    private static class DeleteFinanceAsyncTask extends AsyncTask<Finance, Void, Void> {
         private FinanceDao financeDao;
-        private DeleteFinanceAsyncTask(FinanceDao financeDao){
+
+        private DeleteFinanceAsyncTask(FinanceDao financeDao) {
             this.financeDao = financeDao;
         }
 
@@ -78,9 +76,10 @@ public class FinanceRepository {
         }
     }
 
-    private static class UpdateFinanceAsyncTask extends AsyncTask<Finance, Void, Void>{
+    private static class UpdateFinanceAsyncTask extends AsyncTask<Finance, Void, Void> {
         private FinanceDao financeDao;
-        private UpdateFinanceAsyncTask(FinanceDao financeDao){
+
+        private UpdateFinanceAsyncTask(FinanceDao financeDao) {
             this.financeDao = financeDao;
         }
 

@@ -36,11 +36,11 @@ public class CategoryViewModel extends AndroidViewModel {
         repository.delete(category);
     }
 
-    public boolean isExists(String categoryName){
+    public boolean isExists(String categoryName) {
         return repository.isExists(categoryName);
     }
 
-    public Category getCategory(int categoryId){
+    public Category getCategory(int categoryId) {
         return repository.getCategory(categoryId);
     }
 

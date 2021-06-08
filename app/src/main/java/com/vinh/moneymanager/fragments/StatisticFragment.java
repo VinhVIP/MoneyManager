@@ -57,29 +57,30 @@ import java.util.TreeMap;
 
 public class StatisticFragment extends Fragment {
 
+    private static StatisticFragment instance;
+    private final int HORIZONTAL_BAR_HEIGHT = 100;
+    ArrayList<BarEntry> entriesExpense = new ArrayList<>();
+    ArrayList<BarEntry> entriesIncome = new ArrayList<>();
+    Dialog dialogSettings;
     private FragmentStatisticBinding binding;
-
     private CategoryViewModel categoryViewModel;
     private FinanceViewModel financeViewModel;
-
     private PieChart pieChart;
     private HorizontalBarChart horizontalBarChart;
     private BarChart barChart;
-
     private List<Finance> allFinances = new ArrayList<>();
     private Map<Category, List<Finance>> mapAllFinances, mapMonthFinances;
-
     private DateHandlerClick dateHandlerClick;
     private DateRange dateRange;
-
     private int statisticMode = Helper.TYPE_EXPENSE;
-
-    private final int HORIZONTAL_BAR_HEIGHT = 100;
-
     private int[] colorsResource;
     private int currentYear;
-
-    private static StatisticFragment instance;
+    private ArrayList<String> labels = new ArrayList<>();
+    private ArrayList<PieEntry> pieEntries = new ArrayList<>();
+    private ArrayList<BarEntry> barEntries = new ArrayList<>();
+    private int[] chartColors;
+    private boolean isShowLabels = true;
+    private boolean isShowValues = true;
 
     public static StatisticFragment getInstance() {
         if (instance == null) {
@@ -188,7 +189,6 @@ public class StatisticFragment extends Fragment {
         return view;
     }
 
-
     private void update() {
         Map<Category, List<Finance>> mapRange = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
 
@@ -210,9 +210,6 @@ public class StatisticFragment extends Fragment {
 
         updateDataYear();
     }
-
-    ArrayList<BarEntry> entriesExpense = new ArrayList<>();
-    ArrayList<BarEntry> entriesIncome = new ArrayList<>();
 
     private void updateDataYear() {
         int selectedYear = dateRange.getStartDate().getYear();
@@ -489,11 +486,6 @@ public class StatisticFragment extends Fragment {
         return s.endsWith(",") ? s.substring(0, s.length() - 1) : s;
     }
 
-    private ArrayList<String> labels = new ArrayList<>();
-    private ArrayList<PieEntry> pieEntries = new ArrayList<>();
-    private ArrayList<BarEntry> barEntries = new ArrayList<>();
-    private int[] chartColors;
-
     private void updateChartData() {
         chartColors = getRandomColors();
 
@@ -590,7 +582,6 @@ public class StatisticFragment extends Fragment {
         horizontalBarChart.invalidate();
     }
 
-
     public int[] getRandomColors() {
         int[] ranIndex = new int[colorsResource.length];
         for (int i = 0; i < ranIndex.length; i++) ranIndex[i] = i;
@@ -618,10 +609,6 @@ public class StatisticFragment extends Fragment {
 
         pieChart.invalidate();
     }
-
-    private boolean isShowLabels = true;
-    private boolean isShowValues = true;
-    Dialog dialogSettings;
 
     private void initSettingsDialog() {
         dialogSettings = new Dialog(getContext());

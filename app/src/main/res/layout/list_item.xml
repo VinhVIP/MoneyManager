@@ -3,15 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:gravity="center_vertical"
-    android:paddingVertical="3dp"
-    >
+    android:paddingVertical="3dp">
 
     <include
         android:id="@+id/layout_calendar"
         layout="@layout/calendar"
-        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_marginStart="28dp" />
 
     <TextView
@@ -28,10 +27,10 @@
         android:textColor="@color/textColorSecondary" />
 
     <TextView
-        android:layout_alignParentEnd="true"
         android:id="@+id/text_view_item_price"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:gravity="right"
         android:paddingEnd="10dp"

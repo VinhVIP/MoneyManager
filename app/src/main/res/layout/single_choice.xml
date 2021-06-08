@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.vinh.moneymanager.viewmodels.SingleChoiceViewModel" />
@@ -18,9 +19,9 @@
             android:layout_height="wrap_content"
             android:background="@{viewModel.selectedIndex == 0 ? @drawable/single_choice_bg_left_highlight : @drawable/single_choice_bg_left_default}"
             android:gravity="center"
+            android:onClick="@{()->viewModel.setSelectedIndex(0)}"
             android:padding="4dp"
             android:text="Ngày"
-            android:onClick="@{()->viewModel.setSelectedIndex(0)}"
             android:textColor="@{viewModel.selectedIndex == 0 ? @color/white : @color/black}" />
 
         <TextView
@@ -29,9 +30,9 @@
             android:layout_height="wrap_content"
             android:background="@{viewModel.selectedIndex == 1 ? @drawable/single_choice_bg_mid_highlight : @drawable/single_choice_bg_mid_default}"
             android:gravity="center"
+            android:onClick="@{()->viewModel.setSelectedIndex(1)}"
             android:padding="4dp"
             android:text="Tuần"
-            android:onClick="@{()->viewModel.setSelectedIndex(1)}"
             android:textColor="@{viewModel.selectedIndex == 1 ? @color/white : @color/black}" />
 
         <TextView
@@ -40,9 +41,9 @@
             android:layout_height="wrap_content"
             android:background="@{viewModel.selectedIndex == 2 ? @drawable/single_choice_bg_right_highlight : @drawable/single_choice_bg_right_default}"
             android:gravity="center"
+            android:onClick="@{()->viewModel.setSelectedIndex(2)}"
             android:padding="4dp"
             android:text="Tháng"
-            android:onClick="@{()->viewModel.setSelectedIndex(2)}"
             android:textColor="@{viewModel.selectedIndex == 2 ? @color/white : @color/black}" />
 
     </LinearLayout>

@@ -1,13 +1,9 @@
 package com.vinh.moneymanager;
 
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,6 +23,23 @@ public class MainActivity extends AppCompatActivity {
     private ExpenseFragment expenseFragment;
     private AccountFragment accountFragment;
     private StatisticFragment statisticFragment;
+    private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = item -> {
+        switch (item.getItemId()) {
+            case R.id.nav_finance:
+                viewPager.setCurrentItem(0, true);
+                item.setChecked(true);
+                break;
+            case R.id.nav_account:
+                viewPager.setCurrentItem(1, true);
+                item.setChecked(true);
+                break;
+            case R.id.nav_statistic:
+                viewPager.setCurrentItem(2, true);
+                item.setChecked(true);
+                break;
+        }
+        return false;
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,30 +82,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = item -> {
-        switch (item.getItemId()) {
-            case R.id.nav_finance:
-                viewPager.setCurrentItem(0, true);
-                item.setChecked(true);
-                break;
-            case R.id.nav_account:
-                viewPager.setCurrentItem(1, true);
-                item.setChecked(true);
-                break;
-            case R.id.nav_statistic:
-                viewPager.setCurrentItem(2, true);
-                item.setChecked(true);
-                break;
-        }
-        return false;
-    };
-
     private void setupViewPager(ViewPager2 viewPager) {
 
         MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager(), getLifecycle());
 
         expenseFragment = new ExpenseFragment();
-        accountFragment =  new AccountFragment();
+        accountFragment = new AccountFragment();
         statisticFragment = new StatisticFragment();
 
         adapter.addFragment(expenseFragment);

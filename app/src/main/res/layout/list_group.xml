@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
-    android:layout_height="wrap_content">
+    android:layout_marginBottom="4dp">
 
     <ImageView
         android:id="@+id/image_view_list_group"
@@ -39,8 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="4dp"
         android:text="120.000đ"
-        android:textSize="16sp"
         android:textColor="@color/textColorPrimary"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

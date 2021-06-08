@@ -113,23 +113,6 @@ public class ExpandCategoryAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
-    private class GroupHolder {
-        ImageView imgView;
-        TextView tvTitle, tvTotal;
-
-        public GroupHolder(View view) {
-            imgView = view.findViewById(R.id.image_view_list_group);
-            tvTitle = view.findViewById(R.id.text_view_title);
-            tvTotal = view.findViewById(R.id.text_view_total);
-        }
-
-        public void bindData(int imgRes, String title, long total) {
-            imgView.setImageResource(imgRes);
-            tvTitle.setText(title);
-            tvTotal.setText(Helper.formatCurrency(total));
-        }
-    }
-
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         ChildHolder holder;
@@ -148,6 +131,23 @@ public class ExpandCategoryAdapter extends BaseExpandableListAdapter {
 
         convertView.setTag(holder);
         return convertView;
+    }
+
+    private class GroupHolder {
+        ImageView imgView;
+        TextView tvTitle, tvTotal;
+
+        public GroupHolder(View view) {
+            imgView = view.findViewById(R.id.image_view_list_group);
+            tvTitle = view.findViewById(R.id.text_view_title);
+            tvTotal = view.findViewById(R.id.text_view_total);
+        }
+
+        public void bindData(int imgRes, String title, long total) {
+            imgView.setImageResource(imgRes);
+            tvTitle.setText(title);
+            tvTotal.setText(Helper.formatCurrency(total));
+        }
     }
 
     private class ChildHolder {
