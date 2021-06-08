@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_finance"
-        android:icon="@drawable/revenue"
+        android:icon="@drawable/icon_finance"
         android:title="Thu chi" />
 
     <item
         android:id="@+id/nav_account"
-        android:icon="@drawable/bank_cards"
+        android:icon="@drawable/icon_account"
         android:title="Tài khoản" />
 
     <item
         android:id="@+id/nav_statistic"
-        android:icon="@drawable/graph"
+        android:icon="@drawable/icon_chart"
         android:title="Thống kê" />
 
 </menu>
