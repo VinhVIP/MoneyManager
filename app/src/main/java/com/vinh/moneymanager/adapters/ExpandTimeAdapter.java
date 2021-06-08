@@ -109,6 +109,31 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        ChildHolder holder;
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.list_item_time, null);
+            holder = new ChildHolder(convertView);
+        } else {
+            holder = (ChildHolder) convertView.getTag();
+        }
+
+        Finance finance = getChild(groupPosition, childPosition);
+        holder.bindData(finance);
+
+        holder.view.setOnClickListener(v -> listener.onFinanceClick(finance, getCategory(finance.getCategoryId())));
+
+        convertView.setTag(holder);
+        return convertView;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+    }
+
     private class GroupHolder {
         private TextView tvDay, tvMonthYear, tvDayOfWeek, tvDetail, tvTotal;
 
@@ -137,26 +162,6 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
         }
     }
 
-    @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        ChildHolder holder;
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_time, null);
-            holder = new ChildHolder(convertView);
-        } else {
-            holder = (ChildHolder) convertView.getTag();
-        }
-
-        Finance finance = getChild(groupPosition, childPosition);
-        holder.bindData(finance);
-
-        holder.view.setOnClickListener(v->listener.onFinanceClick(finance, getCategory(finance.getCategoryId())));
-
-        convertView.setTag(holder);
-        return convertView;
-    }
-
     private class ChildHolder {
         View view;
         TextView tvTime, tvDetail, tvCategoryName, tvCost;
@@ -176,10 +181,5 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
             tvCategoryName.setText(getCategory(finance.getCategoryId()).getName());
             tvCost.setText(Helper.formatCurrency(finance.getMoney()));
         }
-    }
-
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
     }
 }

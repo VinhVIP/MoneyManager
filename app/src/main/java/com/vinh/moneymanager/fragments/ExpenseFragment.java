@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.GridView;
@@ -66,53 +65,38 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
     private final int MODE_CATEGORY = 0;
     private final int MODE_TIME = 1;
-
-    private int mode = MODE_CATEGORY;
-
-
-    // Expand List hiển thị các khoản chi tiêu theo danh mục và thời gian
-    private ExpandableListView expandListView;
-    // Adapter cho Expand ListView
-    private ExpandCategoryAdapter expandFinanceAdapter;
-    private ExpandTimeAdapter expandTimeAdapter;
-
-    private Calendar calendar;
-    private DialogWeek dialogWeek;
-
-    private DateHandlerClick dateHandlerClick;
-    private CategoryFinanceViewModel mViewModel;
-
     LinearLayout layoutBottomSheet, mainLayout;
     BottomSheetBehavior sheetBehavior;
-
-    private TabLayout tabLayout;
-    private FloatingActionButton fabListFinances;
-
-    private ViewPager2 viewPager;
-    private FragmentFinanceStateAdapter pagerAdapter;
-
-    private ChipGroup chipGroup;
-    private Chip chipIncome, chipExpense;
-
-
-    private ListCategoryFragment listIncomeFragment, listExpenseFragment;
-
-    private List<Category> allCategories = new ArrayList<>();
-
     Map<Category, List<Finance>> mapIncome = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
     Map<Category, List<Finance>> mapExpense = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
-
     Map<String, List<Finance>> mapTimeIncome = new TreeMap<>((o1, o2) -> {
         DateRange.Date d1 = new DateRange.Date(o1);
         DateRange.Date d2 = new DateRange.Date(o2);
         return d1.compare(d2);
     });
-
     Map<String, List<Finance>> mapTimeExpense = new TreeMap<>((o1, o2) -> {
         DateRange.Date d1 = new DateRange.Date(o1);
         DateRange.Date d2 = new DateRange.Date(o2);
         return d1.compare(d2);
     });
+    private int mode = MODE_CATEGORY;
+    // Expand List hiển thị các khoản chi tiêu theo danh mục và thời gian
+    private ExpandableListView expandListView;
+    // Adapter cho Expand ListView
+    private ExpandCategoryAdapter expandFinanceAdapter;
+    private ExpandTimeAdapter expandTimeAdapter;
+    private Calendar calendar;
+    private DialogWeek dialogWeek;
+    private DateHandlerClick dateHandlerClick;
+    private CategoryFinanceViewModel mViewModel;
+    private TabLayout tabLayout;
+    private FloatingActionButton fabListFinances;
+    private ViewPager2 viewPager;
+    private FragmentFinanceStateAdapter pagerAdapter;
+    private ChipGroup chipGroup;
+    private Chip chipIncome, chipExpense;
+    private ListCategoryFragment listIncomeFragment, listExpenseFragment;
+    private List<Category> allCategories = new ArrayList<>();
 
     public ExpenseFragment() {
         calendar = Calendar.getInstance();
@@ -532,7 +516,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     @Override
     public void onCategoryClick(Category category, int position) {
         Log.d("MMM", category.getCategoryId() + " : " + category.getName() + " : " + position);
-        System.out.println("MMM abc: "+ category.getCategoryId() + " : " + category.getName() + " : " + position);
+        System.out.println("MMM abc: " + category.getCategoryId() + " : " + category.getName() + " : " + position);
         Bundle bundle = new Bundle();
         bundle.putInt(Helper.CATEGORY_ID, category.getCategoryId());
         bundle.putString(Helper.CATEGORY_NAME, category.getName());
@@ -552,6 +536,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         bundle.putInt(Helper.CATEGORY_TYPE, category.getType());
         bundle.putString(Helper.CATEGORY_NAME, category.getName());
         bundle.putString(Helper.CATEGORY_DESCRIPTION, category.getDescription());
+        bundle.putInt(Helper.CATEGORY_ICON, category.getIcon());
 
         Intent intent = new Intent(getActivity(), AddEditCategoryActivity.class);
         intent.putExtra(Helper.EDIT_CATEGORY, bundle);

@@ -25,6 +25,19 @@ public class AddEditFinanceViewModel extends BaseObservable {
 
     private String transferFee;
 
+    public AddEditFinanceViewModel() {
+    }
+
+    /*
+     * Thiết lập vị trí con trỏ (cursor) của EditText luôn ở vị trí cuối cùng sau khi nhập
+     * Bởi bình thường khi dùng phương thức setText thì con trỏ sẽ tự động nhảy về đầu dòng
+     */
+    @BindingAdapter("android:text")
+    public static void setText(EditText view, String oldText, String newText) {
+        view.setText(newText);
+        if (newText != null) view.setSelection(newText.length());
+    }
+
     @Bindable
     public String getBalance() {
         return balance;
@@ -47,19 +60,6 @@ public class AddEditFinanceViewModel extends BaseObservable {
             this.transferFee = Helper.formatCurrencyWithoutSymbol(transferFee);
             notifyPropertyChanged(BR.transferFee);
         }
-    }
-
-    /*
-     * Thiết lập vị trí con trỏ (cursor) của EditText luôn ở vị trí cuối cùng sau khi nhập
-     * Bởi bình thường khi dùng phương thức setText thì con trỏ sẽ tự động nhảy về đầu dòng
-     */
-    @BindingAdapter("android:text")
-    public static void setText(EditText view, String oldText, String newText) {
-        view.setText(newText);
-        if (newText != null) view.setSelection(newText.length());
-    }
-
-    public AddEditFinanceViewModel() {
     }
 
 }

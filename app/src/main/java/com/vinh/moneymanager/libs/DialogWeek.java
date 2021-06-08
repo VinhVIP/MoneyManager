@@ -19,18 +19,14 @@ import java.util.List;
 
 public class DialogWeek implements View.OnClickListener {
 
+    RecyclerWeekAdapter.OnItemWeekClickListener listener;
     private Context context;
     private Dialog dialog;
     private TextView tvMonth, tvYear;
     private View btnPreviousMonth, btnNextMonth, btnPreviousYear, btnNextYear, imgClose, btnCurWeek;
-
     private int month, year;
-
-
     private RecyclerView recyclerView;
     private RecyclerWeekAdapter weekAdapter;
-
-    RecyclerWeekAdapter.OnItemWeekClickListener listener;
 
     public DialogWeek(Context context, int month, int year, RecyclerWeekAdapter.OnItemWeekClickListener listener) {
         this.context = context;
@@ -43,7 +39,7 @@ public class DialogWeek implements View.OnClickListener {
         updateMonthYear();
     }
 
-    public void setMonthYear(int month, int year){
+    public void setMonthYear(int month, int year) {
         this.month = month;
         this.year = year;
 
@@ -90,7 +86,7 @@ public class DialogWeek implements View.OnClickListener {
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.MONTH, month-1);
+        calendar.set(Calendar.MONTH, month - 1);
         calendar.set(Calendar.YEAR, year);
         int week = calendar.get(Calendar.WEEK_OF_YEAR);
 
@@ -98,7 +94,7 @@ public class DialogWeek implements View.OnClickListener {
             DateRange range = new DateRange(DateRange.MODE_WEEK);
             range.setWeek(week, year);
 
-            if(range.getStartDate().year > year || (range.getStartDate().year == year && range.getStartDate().month > month)){
+            if (range.getStartDate().year > year || (range.getStartDate().year == year && range.getStartDate().month > month)) {
                 break;
             }
 
@@ -113,11 +109,11 @@ public class DialogWeek implements View.OnClickListener {
         this.dialog.show();
     }
 
-    public void hideDialog(){
+    public void hideDialog() {
         this.dialog.cancel();
     }
 
-    private void chooseCurrentWeek(){
+    private void chooseCurrentWeek() {
         Calendar calendar = Calendar.getInstance();
         int week = calendar.get(Calendar.WEEK_OF_YEAR);
         DateRange curDateRange = new DateRange(DateRange.MODE_WEEK);
@@ -156,7 +152,7 @@ public class DialogWeek implements View.OnClickListener {
                 hideDialog();
                 break;
             case R.id.tv_choose_current_week:
-chooseCurrentWeek();
+                chooseCurrentWeek();
                 break;
         }
     }

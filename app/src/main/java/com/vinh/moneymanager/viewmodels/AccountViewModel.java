@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableLong;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.vinh.moneymanager.repositories.AccountRepository;
 import com.vinh.moneymanager.room.entities.Account;
@@ -14,11 +13,9 @@ import com.vinh.moneymanager.room.entities.Account;
 import java.util.List;
 
 public class AccountViewModel extends AndroidViewModel {
-    private AccountRepository repository;
-
-    private LiveData<List<Account>> accounts;
-
     public ObservableLong totalBalance = new ObservableLong();
+    private AccountRepository repository;
+    private LiveData<List<Account>> accounts;
 
     public AccountViewModel(@NonNull Application application) {
         super(application);
@@ -39,7 +36,7 @@ public class AccountViewModel extends AndroidViewModel {
         repository.update(account);
     }
 
-    public Account search(int accountId){
+    public Account search(int accountId) {
         return repository.search(accountId);
     }
 

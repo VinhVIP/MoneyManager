@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingHorizontal="8dp"
-    android:paddingVertical="8dp">
+    android:paddingVertical="8dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="8dp">
 
     <ImageView
         android:id="@+id/image_view"
@@ -16,11 +17,11 @@
         android:id="@+id/text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:textSize="17sp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:textColor="@color/textColorPrimary"
         android:layout_gravity="center_vertical"
-        android:text="Shopping" />
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingLeft="20dp"
+        android:text="Shopping"
+        android:textColor="@color/textColorPrimary"
+        android:textSize="17sp" />
 </LinearLayout>

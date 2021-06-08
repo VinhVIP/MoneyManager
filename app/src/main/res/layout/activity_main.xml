@@ -9,8 +9,8 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager_main"
         android:layout_width="match_parent"
-        android:layout_marginBottom="58dp"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginBottom="58dp" />
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -22,8 +22,8 @@
         android:foregroundTint="@color/blueGray"
         app:itemBackground="@color/malachite"
         app:itemHorizontalTranslationEnabled="false"
-        app:itemTextColor="@color/white"
         app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/white"
         app:labelVisibilityMode="selected"
         app:menu="@menu/navigation" />
 

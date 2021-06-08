@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -15,228 +15,304 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/milk"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.GONE:View.VISIBLE}">
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginVertical="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="3dp">
 
-            <TextView
-                android:id="@+id/tv_category_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:minWidth="@dimen/title_width"
-                android:text="Danh mục"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tv_category_name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_toRightOf="@+id/tv_day"
-                android:hint="Chọn danh mục"
-                android:text="@{viewModel.category.name}"
-                android:textColor="@color/text_view_color"
-                android:textSize="18sp" />
-        </LinearLayout>
+                android:gravity="center"
+                android:minHeight="@dimen/height_finance_item"
+                android:orientation="horizontal"
+                android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.GONE:View.VISIBLE}">
 
-        <LinearLayout
+                <TextView
+                    android:id="@+id/tv_category_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:minWidth="@dimen/title_width"
+                    android:text="Danh mục"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_category_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Chọn danh mục"
+                    android:text="@{viewModel.category.name}"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginVertical="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="3dp">
 
-            <TextView
-                android:id="@+id/tv_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:minWidth="@dimen/title_width"
-                android:text="Ngày"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tv_day_finance"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="12/12/2020"
-                android:textColor="@color/text_view_color_default"
-                android:textSize="18sp" />
-        </LinearLayout>
+                android:gravity="center"
+                android:minHeight="@dimen/height_finance_item"
+                android:orientation="horizontal">
 
-        <LinearLayout
+                <TextView
+                    android:id="@+id/tv_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:minWidth="@dimen/title_width"
+                    android:text="Ngày"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_day_finance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="12/12/2020"
+                    android:textColor="@color/text_view_color_default"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginVertical="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="3dp">
 
-            <TextView
-                android:id="@+id/tv_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:minWidth="@dimen/title_width"
-                android:text="Giờ"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tv_time_finance"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="21:30"
-                android:textColor="@color/text_view_color_default"
-                android:textSize="18sp" />
-        </LinearLayout>
+                android:gravity="center"
+                android:minHeight="@dimen/height_finance_item"
+                android:orientation="horizontal">
 
-        <LinearLayout
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:minWidth="@dimen/title_width"
+                    android:text="Giờ"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_time_finance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="21:30"
+                    android:textColor="@color/text_view_color_default"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginVertical="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="3dp">
 
-            <TextView
-                android:id="@+id/tv_account"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:minWidth="@dimen/title_width"
-                android:text="@{viewModel.categoryType==Helper.TYPE_TRANSFER?@string/account_out:@string/account}"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tv_account_finance"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Chọn tài khoản"
-                android:text="@{viewModel.account.accountName}"
-                android:textColor="@color/text_view_color"
-                android:textSize="18sp" />
-        </LinearLayout>
+                android:gravity="center"
+                android:minHeight="@dimen/height_finance_item"
+                android:orientation="horizontal">
 
-        <LinearLayout
+                <TextView
+                    android:id="@+id/tv_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:minWidth="@dimen/title_width"
+                    android:text="@{viewModel.categoryType==Helper.TYPE_TRANSFER?@string/account_out:@string/account}"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_account_finance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Chọn tài khoản"
+                    android:text="@{viewModel.account.accountName}"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.VISIBLE:View.GONE}">
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginVertical="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="3dp">
 
-            <TextView
-                android:id="@+id/tv_account_in"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:minWidth="@dimen/title_width"
-                android:text="@{viewModel.categoryType==Helper.TYPE_TRANSFER?@string/account_in:@string/account}"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tv_account_finance_in"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Chọn tài khoản"
-                android:text="@{viewModel.accountIn.accountName}"
-                android:textColor="@color/text_view_color"
-                android:textSize="18sp" />
-        </LinearLayout>
+                android:gravity="center"
+                android:minHeight="@dimen/height_finance_item"
+                android:orientation="horizontal"
+                android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.VISIBLE:View.GONE}">
 
-        <LinearLayout
+                <TextView
+                    android:id="@+id/tv_account_in"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:minWidth="@dimen/title_width"
+                    android:text="@{viewModel.categoryType==Helper.TYPE_TRANSFER?@string/account_in:@string/account}"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_account_finance_in"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Chọn tài khoản"
+                    android:text="@{viewModel.accountIn.accountName}"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginVertical="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="3dp">
 
-            <TextView
-                android:id="@+id/tv_cost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:minWidth="@dimen/title_width"
-                android:text="Số tiền"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/ed_cost_finance"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@null"
-                android:inputType="number"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="@={viewModel.balance}"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-        </LinearLayout>
+                android:gravity="center"
+                android:minHeight="@dimen/height_finance_item"
+                android:orientation="horizontal">
 
-        <LinearLayout
+                <TextView
+                    android:id="@+id/tv_cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:minWidth="@dimen/title_width"
+                    android:text="Số tiền"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/ed_cost_finance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:text="@={viewModel.balance}"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.VISIBLE:View.GONE}">
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginVertical="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="3dp">
 
-            <TextView
-                android:id="@+id/tv_transfer_fee"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:minWidth="@dimen/title_width"
-                android:text="Phí GD"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/ed_transfer_fee"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@null"
-                android:hint="0"
-                android:inputType="number"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="@={viewModel.transferFee}"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-        </LinearLayout>
+                android:gravity="center"
+                android:minHeight="@dimen/height_finance_item"
+                android:orientation="horizontal"
+                android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.VISIBLE:View.GONE}">
 
-        <LinearLayout
+                <TextView
+                    android:id="@+id/tv_transfer_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:minWidth="@dimen/title_width"
+                    android:text="Phí GD"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/ed_transfer_fee"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:text="@={viewModel.transferFee}"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginVertical="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="3dp">
 
-            <TextView
-                android:id="@+id/tv_note"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:minWidth="@dimen/title_width"
-                android:text="Ghi chú"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/ed_note_finance"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@null"
-                android:gravity="top"
-                android:hint="..."
-                android:lines="5"
-                android:maxLines="5"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-        </LinearLayout>
+                android:gravity="center"
+                android:minHeight="@dimen/height_finance_item"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/tv_note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:minWidth="@dimen/title_width"
+                    android:text="Ghi chú"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/ed_note_finance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="top"
+                    android:hint="..."
+                    android:maxLines="5"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 </layout>

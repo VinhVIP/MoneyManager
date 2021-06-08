@@ -1,11 +1,19 @@
 package com.vinh.moneymanager.activities;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -19,6 +27,9 @@ import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.viewmodels.CategoryViewModel;
 
+import static com.vinh.moneymanager.libs.Helper.iconsExpense;
+import static com.vinh.moneymanager.libs.Helper.iconsIncome;
+
 public class AddEditCategoryActivity extends AppCompatActivity {
 
     private CategoryViewModel categoryViewModel;
@@ -26,8 +37,10 @@ public class AddEditCategoryActivity extends AppCompatActivity {
     private RadioButton radioIncome, radioExpense;
     private EditText edName, edDescription;
     private Button btnSubmit;
+    private ImageView imgIcon;
 
     private int categoryId = 0;
+    private int iconIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +54,20 @@ public class AddEditCategoryActivity extends AppCompatActivity {
         edName = findViewById(R.id.ed_category_name);
         edDescription = findViewById(R.id.ed_description);
         btnSubmit = findViewById(R.id.btn_submit_category);
+        imgIcon = findViewById(R.id.imgIcon);
 
-        btnSubmit.setOnClickListener((v) -> {
-            addEditCategory();
+        btnSubmit.setOnClickListener((v) -> addEditCategory());
+
+        imgIcon.setOnClickListener(v -> showDialogSelectIcon());
+
+        radioExpense.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                imgIcon.setImageResource(iconsExpense[0]);
+            } else {
+                imgIcon.setImageResource(iconsIncome[0]);
+            }
         });
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -71,17 +94,21 @@ public class AddEditCategoryActivity extends AppCompatActivity {
             edDescription.setText(data.getString(Helper.CATEGORY_DESCRIPTION));
 
             type = data.getInt(Helper.CATEGORY_TYPE);
+            iconIndex = data.getInt(Helper.CATEGORY_ICON);
 
             getSupportActionBar().setTitle("Chỉnh sửa");
+            btnSubmit.setText("Chỉnh sửa");
         } else {
             Bundle data = getIntent().getBundleExtra(Helper.ADD_CATEGORY);
             type = data.getInt(Helper.CATEGORY_TYPE);
 
             getSupportActionBar().setTitle("Thêm danh mục");
+            btnSubmit.setText("Thêm");
         }
 
         if (type == Helper.TYPE_INCOME) radioIncome.setChecked(true);
         else radioExpense.setChecked(true);
+        imgIcon.setImageResource(type == Helper.TYPE_EXPENSE ? iconsExpense[iconIndex] : iconsIncome[iconIndex]);
     }
 
     private void addEditCategory() {
@@ -94,10 +121,11 @@ public class AddEditCategoryActivity extends AppCompatActivity {
 
         Category newCategory = new Category(categoryName,
                 radioIncome.isChecked() ? Helper.TYPE_INCOME : Helper.TYPE_EXPENSE,
-                edDescription.getText().toString().trim());
+                edDescription.getText().toString().trim(), iconIndex);
 
         if (categoryId == 0) {
             // Thêm 1 danh mục mới
+
             if (categoryViewModel.isExists(categoryName)) {
                 Toast.makeText(this, "Tên danh mục đã tồn tại", Toast.LENGTH_SHORT).show();
                 return;
@@ -117,7 +145,7 @@ public class AddEditCategoryActivity extends AppCompatActivity {
                 // Tên danh mục thay đổi nhưng trùng tên với 1 danh mục khác
                 Toast.makeText(this, "Tên danh mục đã tồn tại", Toast.LENGTH_SHORT).show();
                 return;
-            }else{
+            } else {
                 newCategory.setCategoryId(categoryId);
                 categoryViewModel.update(newCategory);
             }
@@ -150,5 +178,56 @@ public class AddEditCategoryActivity extends AppCompatActivity {
     public void onBackPressed() {
         setResult(RESULT_CANCELED);
         super.onBackPressed();
+    }
+
+
+    private void showDialogSelectIcon() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_icon);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        ImageView imgClose = dialog.findViewById(R.id.img_close_dialog);
+        imgClose.setOnClickListener((v) -> dialog.cancel());
+
+        boolean isExpense = radioExpense.isChecked();
+
+        GridView gridView = dialog.findViewById(R.id.grid_view_icon);
+        gridView.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return isExpense ? iconsExpense.length : iconsIncome.length;
+            }
+
+            @Override
+            public Integer getItem(int position) {
+                if (isExpense) return iconsExpense[position];
+                else return iconsIncome[position];
+            }
+
+            @Override
+            public long getItemId(int position) {
+                if (isExpense) return iconsExpense[position];
+                else return iconsIncome[position];
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    convertView = LayoutInflater.from(AddEditCategoryActivity.this).inflate(R.layout.single_image, null);
+                    ImageView imageView = convertView.findViewById(R.id.img_view_icon);
+                    imageView.setImageResource(getItem(position));
+                }
+                return convertView;
+            }
+        });
+
+        gridView.setOnItemClickListener((parent, view, position, id) -> {
+            iconIndex = position;
+            imgIcon.setImageResource(isExpense ? iconsExpense[position] : iconsIncome[position]);
+            dialog.cancel();
+        });
+
+
+        dialog.show();
     }
 }

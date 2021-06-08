@@ -28,13 +28,17 @@ public class Category {
     @ColumnInfo(name = "c_description")
     private String description;
 
+    @ColumnInfo(name = "c_icon")
+    private int icon;
+
     @Ignore
     private long totalCost;
 
-    public Category(String name, int type, String description) {
+    public Category(String name, int type, String description, int icon) {
         this.name = name;
         this.type = type;
         this.description = description;
+        this.icon = icon;
     }
 
     public int getCategoryId() {
@@ -75,6 +79,14 @@ public class Category {
 
     public void setTotalCost(long totalCost) {
         this.totalCost = totalCost;
+    }
+
+    public int getIcon() {
+        return icon;
+    }
+
+    public void setIcon(int icon) {
+        this.icon = icon;
     }
 
 }

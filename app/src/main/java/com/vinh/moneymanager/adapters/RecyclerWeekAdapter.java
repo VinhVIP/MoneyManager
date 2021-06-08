@@ -49,6 +49,10 @@ public class RecyclerWeekAdapter extends RecyclerView.Adapter<RecyclerWeekAdapte
         return list.size();
     }
 
+    public interface OnItemWeekClickListener {
+        void onItemWeekClick(DateRange dateWeek);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvWeek, tvDateRange;
@@ -58,9 +62,5 @@ public class RecyclerWeekAdapter extends RecyclerView.Adapter<RecyclerWeekAdapte
             tvWeek = itemView.findViewById(R.id.tv_week);
             tvDateRange = itemView.findViewById(R.id.tv_date_range);
         }
-    }
-
-    public interface OnItemWeekClickListener {
-        void onItemWeekClick(DateRange dateWeek);
     }
 }

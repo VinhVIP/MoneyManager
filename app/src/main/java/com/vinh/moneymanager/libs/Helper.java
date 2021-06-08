@@ -1,5 +1,7 @@
 package com.vinh.moneymanager.libs;
 
+import com.vinh.moneymanager.R;
+
 import java.util.Calendar;
 
 public class Helper {
@@ -12,11 +14,36 @@ public class Helper {
     public static final int REQUEST_ADD_FINANCE = 201;
     public static final int REQUEST_EDIT_FINANCE = 202;
 
+    public static final int[] iconsExpense = new int[]{
+            R.drawable.chi1,
+            R.drawable.chi2,
+            R.drawable.chi3,
+            R.drawable.chi4,
+            R.drawable.chi5,
+            R.drawable.chi6,
+            R.drawable.chi7,
+            R.drawable.chi8,
+            R.drawable.chi9,
+            R.drawable.chi10,
+            R.drawable.chi11,
+            R.drawable.chi12,
+            R.drawable.chi13
+    };
+    public static final int[] iconsIncome = new int[]{
+            R.drawable.thu1,
+            R.drawable.thu2,
+            R.drawable.thu3,
+            R.drawable.thu4,
+            R.drawable.thu5
+    };
+
 
     public static final String CATEGORY_NAME = "category_name";
     public static final String CATEGORY_ID = "category_id";
     public static final String CATEGORY_TYPE = "category_type";
     public static final String CATEGORY_DESCRIPTION = "category_description";
+    public static final String CATEGORY_ICON = "category_icon";
+
     public static final String ACCOUNT_ID = "account_id";
     public static final String ACCOUNT_NAME = "account_name";
     public static final String ACCOUNT_BALANCE = "account_balance";

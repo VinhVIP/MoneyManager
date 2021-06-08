@@ -10,28 +10,28 @@
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/divider_bottom_sheet"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:paddingHorizontal="40dp">-->
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/divider_bottom_sheet"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:paddingHorizontal="40dp">-->
 
-<!--        <View-->
-<!--            android:id="@+id/icon_control_bottom_sheet"-->
-<!--            android:layout_width="30dp"-->
-<!--            android:layout_height="30dp"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:background="@drawable/ic_line" />-->
-<!--    </LinearLayout>-->
+    <!--        <View-->
+    <!--            android:id="@+id/icon_control_bottom_sheet"-->
+    <!--            android:layout_width="30dp"-->
+    <!--            android:layout_height="30dp"-->
+    <!--            android:layout_gravity="center"-->
+    <!--            android:background="@drawable/ic_line" />-->
+    <!--    </LinearLayout>-->
 
     <com.google.android.material.tabs.TabLayout
-        android:layout_marginTop="16dp"
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginHorizontal="2dp"
+        android:layout_marginTop="16dp"
         android:background="@color/colorPrimaryLight"
         app:tabBackground="@drawable/tab_selector"
         app:tabGravity="center"

@@ -16,26 +16,26 @@
 
         <ImageView
             android:id="@+id/image_view_category"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_centerHorizontal="true"
             android:src="@drawable/bagicon" />
 
         <TextView
-            android:gravity="center"
             android:id="@+id/text_view_category_name"
             android:layout_width="wrap_content"
-            android:maxWidth="100dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/image_view_category"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="2dp"
-            android:text="Mua sắm bao nhieu"
-            android:lines="2"
-            android:maxLines="2"
             android:ellipsize="end"
+            android:gravity="center"
+            android:lines="2"
+            android:maxWidth="100dp"
+            android:maxLines="2"
+            android:text="Mua sắm bao nhieu"
             android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/text_view_category_total"
@@ -43,10 +43,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/text_view_category_name"
             android:layout_centerHorizontal="true"
-            android:text="10.000.000"
-            android:gravity="center"
             android:ellipsize="end"
+            android:gravity="center"
             android:maxLines="1"
+            android:text="10.000.000"
             android:textColor="@color/purple_700" />
 
     </RelativeLayout>

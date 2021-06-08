@@ -37,11 +37,11 @@ public class FinanceViewModel extends AndroidViewModel {
         repository.delete(finance);
     }
 
-    public LiveData<List<Finance>> getAllFinances(){
+    public LiveData<List<Finance>> getAllFinances() {
         return finances;
     }
 
-    public LiveData<List<Finance>> getFinances(int categoryId){
+    public LiveData<List<Finance>> getFinances(int categoryId) {
         return repository.getFinances(categoryId);
     }
 

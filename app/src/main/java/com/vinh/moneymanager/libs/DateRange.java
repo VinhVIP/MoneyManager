@@ -18,14 +18,13 @@ public class DateRange {
 
     }
 
+    private int mode;
+    private Date startDate, endDate;
+
     public DateRange(int mode) {
         this.mode = mode;
         startDate = endDate = nowDate;
     }
-
-    private int mode;
-
-    private Date startDate, endDate;
 
 
     public DateRange() {
@@ -36,6 +35,24 @@ public class DateRange {
         this.mode = mode;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public static int getLastDay(int month, int year) {
+        switch (month) {
+            case 2:
+                if (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)) {
+                    return 29;
+                } else {
+                    return 28;
+                }
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                return 30;
+            default:
+                return 31;
+        }
     }
 
     public String getDateString() {
@@ -150,24 +167,6 @@ public class DateRange {
         calendar.add(Calendar.MONTH, n);
         startDate = new Date(1, calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
         endDate = new Date(getLastDay(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR)), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
-    }
-
-    public static int getLastDay(int month, int year) {
-        switch (month) {
-            case 2:
-                if (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)) {
-                    return 29;
-                } else {
-                    return 28;
-                }
-            case 4:
-            case 6:
-            case 9:
-            case 11:
-                return 30;
-            default:
-                return 31;
-        }
     }
 
     public void setWeek(int week, int year) {

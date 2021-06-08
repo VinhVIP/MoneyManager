@@ -87,7 +87,7 @@
                 android:text="Giờ"
                 android:textColor="@color/black"
                 android:textSize="22sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_time_finance"

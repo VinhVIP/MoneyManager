@@ -43,7 +43,7 @@ public class CategoryRepository {
         return categoryDao.isExists(categoryName);
     }
 
-    public Category getCategory(int categoryId){
+    public Category getCategory(int categoryId) {
         return categoryDao.getCategory(categoryId);
     }
 

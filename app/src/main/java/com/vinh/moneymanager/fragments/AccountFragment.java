@@ -1,6 +1,5 @@
 package com.vinh.moneymanager.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,26 +9,18 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.vinh.moneymanager.R;
-import com.vinh.moneymanager.activities.AddEditAccountActivity;
 import com.vinh.moneymanager.adapters.FragmentAccountStateAdapter;
-import com.vinh.moneymanager.adapters.RecyclerAccountAdapter;
 import com.vinh.moneymanager.databinding.FragmentAccountBinding;
 import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.viewmodels.AccountViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class AccountFragment extends Fragment  {
+public class AccountFragment extends Fragment {
 
     private static AccountFragment instance;
 

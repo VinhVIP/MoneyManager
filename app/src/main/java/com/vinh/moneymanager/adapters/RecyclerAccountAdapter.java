@@ -53,6 +53,10 @@ public class RecyclerAccountAdapter extends RecyclerView.Adapter<RecyclerAccount
         return accounts.size();
     }
 
+    public interface OnItemAccountClickListener {
+        void onItemAccountClick(Account account);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageAccount;
         TextView tvAccountName, tvAccountBalance;
@@ -64,9 +68,5 @@ public class RecyclerAccountAdapter extends RecyclerView.Adapter<RecyclerAccount
             tvAccountName = itemView.findViewById(R.id.tv_account_name);
             tvAccountBalance = itemView.findViewById(R.id.tv_asset);
         }
-    }
-
-    public interface OnItemAccountClickListener {
-        void onItemAccountClick(Account account);
     }
 }
