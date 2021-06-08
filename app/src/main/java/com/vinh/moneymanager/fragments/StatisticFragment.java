@@ -213,7 +213,7 @@ public class StatisticFragment extends Fragment {
 
     private void updateDataYear() {
         int selectedYear = dateRange.getStartDate().getYear();
-        if (selectedYear == currentYear) return;
+//        if (selectedYear == currentYear) return;
         currentYear = selectedYear;
 
         ArrayList<ArrayList<Long>> lists = new ArrayList<>();

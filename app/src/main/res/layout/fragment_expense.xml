@@ -19,13 +19,14 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/milk"
         android:orientation="vertical"
         tools:context=".fragments.ExpenseFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="90dp"
-            android:background="@color/white"
+            android:background="@color/milk"
             app:elevation="3dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
