@@ -21,6 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:fontFamily="@font/oswald"
                 android:text="27"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="20sp"
@@ -31,6 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_calendar_day"
+                android:fontFamily="@font/oswald_light"
                 android:text="12.2020"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="10sp" />
@@ -45,6 +47,7 @@
             android:layout_marginTop="6dp"
             android:layout_toRightOf="@id/relative"
             android:background="@color/colorAccent"
+            android:fontFamily="@font/oswald"
             android:padding="3dp"
             android:text="T7"
             android:textColor="@color/white"

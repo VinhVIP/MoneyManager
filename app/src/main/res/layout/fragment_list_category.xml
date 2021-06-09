@@ -12,6 +12,7 @@
         android:id="@+id/tv_title_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/oswald"
         android:paddingStart="8dp"
         android:text="Thêm khoản chi tiêu"
         android:textColor="@color/black"

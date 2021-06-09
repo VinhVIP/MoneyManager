@@ -49,6 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/calendar_selector"
+                android:fontFamily="@font/oswald"
                 android:gravity="center"
                 android:onClick="@{dateHandler::onDateClick}"
                 android:text="@{date.dateString}"

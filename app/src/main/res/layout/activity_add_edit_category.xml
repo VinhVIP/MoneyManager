@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/milk"
+    android:background="@drawable/bg"
     android:orientation="vertical"
     tools:context=".activities.AddEditCategoryActivity">
 
@@ -36,6 +36,7 @@
                 android:id="@+id/tv_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/oswald"
                 android:minWidth="@dimen/title_width"
                 android:text="Thể loại"
                 android:textSize="18sp" />
@@ -50,12 +51,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="30dp"
+                    android:fontFamily="@font/oswald_light"
                     android:text="Thu nhập" />
 
                 <RadioButton
                     android:id="@+id/radio_expense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald_light"
                     android:text="Chi tiêu" />
             </RadioGroup>
         </LinearLayout>
@@ -82,6 +85,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/oswald"
                 android:minWidth="@dimen/title_width"
                 android:text="Tên"
                 android:textSize="18sp" />
@@ -91,6 +95,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:fontFamily="@font/oswald_light"
                 android:hint="VD: Shopping"
                 android:maxLines="1"
                 android:textColor="@color/black"
@@ -118,6 +123,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/oswald"
                 android:minWidth="@dimen/title_width"
                 android:text="Icon"
                 android:textSize="18sp" />
@@ -150,6 +156,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/oswald"
                 android:minWidth="@dimen/title_width"
                 android:text="Mô tả"
                 android:textSize="18sp" />
@@ -159,6 +166,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:fontFamily="@font/oswald_light"
                 android:gravity="top"
                 android:hint="Có thể bỏ trống..."
                 android:maxLines="5"
@@ -173,6 +181,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="16dp"
+        android:fontFamily="@font/oswald_bold"
         android:text="Thêm" />
 
 </LinearLayout>

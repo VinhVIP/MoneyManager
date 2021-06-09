@@ -28,6 +28,7 @@
             android:layout_below="@id/image_view_category"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="2dp"
+            android:fontFamily="@font/oswald"
             android:text="Thêm"
             android:textColor="@color/black"
             android:textSize="14sp" />

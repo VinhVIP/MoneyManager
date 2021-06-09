@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -12,7 +13,7 @@
             type="com.vinh.moneymanager.viewmodels.AddEditFinanceViewModel" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/milk"
@@ -40,6 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/oswald"
                     android:minWidth="@dimen/title_width"
                     android:text="Danh mục"
                     android:textSize="18sp" />
@@ -48,6 +50,7 @@
                     android:id="@+id/tv_category_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald"
                     android:hint="Chọn danh mục"
                     android:text="@{viewModel.category.name}"
                     android:textColor="@color/text_view_color"
@@ -76,6 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/oswald"
                     android:minWidth="@dimen/title_width"
                     android:text="Ngày"
                     android:textSize="18sp" />
@@ -84,6 +88,7 @@
                     android:id="@+id/tv_day_finance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald"
                     android:text="12/12/2020"
                     android:textColor="@color/text_view_color_default"
                     android:textSize="18sp" />
@@ -111,6 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/oswald"
                     android:minWidth="@dimen/title_width"
                     android:text="Giờ"
                     android:textSize="18sp" />
@@ -119,6 +125,7 @@
                     android:id="@+id/tv_time_finance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald"
                     android:text="21:30"
                     android:textColor="@color/text_view_color_default"
                     android:textSize="18sp" />
@@ -146,6 +153,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/oswald"
                     android:minWidth="@dimen/title_width"
                     android:text="@{viewModel.categoryType==Helper.TYPE_TRANSFER?@string/account_out:@string/account}"
                     android:textSize="18sp" />
@@ -154,6 +162,7 @@
                     android:id="@+id/tv_account_finance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald"
                     android:hint="Chọn tài khoản"
                     android:text="@{viewModel.account.accountName}"
                     android:textColor="@color/text_view_color"
@@ -183,6 +192,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/oswald"
                     android:minWidth="@dimen/title_width"
                     android:text="@{viewModel.categoryType==Helper.TYPE_TRANSFER?@string/account_in:@string/account}"
                     android:textSize="18sp" />
@@ -191,6 +201,7 @@
                     android:id="@+id/tv_account_finance_in"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald"
                     android:hint="Chọn tài khoản"
                     android:text="@{viewModel.accountIn.accountName}"
                     android:textColor="@color/text_view_color"
@@ -219,6 +230,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/oswald"
                     android:minWidth="@dimen/title_width"
                     android:text="Số tiền"
                     android:textSize="18sp" />
@@ -228,6 +240,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
+                    android:fontFamily="@font/oswald_light"
                     android:inputType="number"
                     android:maxLines="1"
                     android:text="@={viewModel.balance}"
@@ -258,6 +271,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/oswald"
                     android:minWidth="@dimen/title_width"
                     android:text="Phí GD"
                     android:textSize="18sp" />
@@ -267,6 +281,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
+                    android:fontFamily="@font/oswald_light"
                     android:hint="0"
                     android:inputType="number"
                     android:maxLines="1"
@@ -297,6 +312,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/oswald"
                     android:minWidth="@dimen/title_width"
                     android:text="Ghi chú"
                     android:textSize="18sp" />
@@ -306,6 +322,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
+                    android:fontFamily="@font/oswald_light"
                     android:gravity="top"
                     android:hint="..."
                     android:maxLines="5"

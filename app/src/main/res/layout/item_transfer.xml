@@ -45,6 +45,7 @@
                     android:id="@+id/tv_account_out"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald"
                     android:text="Tiền mặt"
                     android:textColor="@color/colorAccent"
                     android:textSize="16sp"
@@ -60,6 +61,7 @@
                     android:id="@+id/tv_account_in"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald"
                     android:text="Thẻ BIDV"
                     android:textColor="@color/colorAccent"
                     android:textSize="16sp"
@@ -79,6 +81,7 @@
                     android:id="@+id/tv_money"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald_light"
                     android:text="15.000.000"
                     android:textColor="@color/textColorPrimary"
                     android:textSize="13sp" />
@@ -96,6 +99,7 @@
                     android:id="@+id/tv_fee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald_light"
                     android:text="15.000"
                     android:textColor="@color/textColorTransferFee"
                     android:textSize="13sp" />

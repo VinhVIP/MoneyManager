@@ -13,6 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            android:fontFamily="@font/oswald"
             android:gravity="center"
             android:text="Icons"
             android:textAllCaps="true"

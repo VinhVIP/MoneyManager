@@ -15,6 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            android:fontFamily="@font/oswald"
             android:foreground="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:text="Cài đặt"
@@ -36,6 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:fontFamily="@font/oswald_light"
             android:paddingStart="15dp"
             android:text="Hiển thị nhãn danh mục" />
 
@@ -44,6 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:fontFamily="@font/oswald_light"
             android:paddingStart="15dp"
             android:text="Hiển thị tỉ lệ" />
 

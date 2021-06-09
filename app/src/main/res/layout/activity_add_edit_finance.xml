@@ -41,6 +41,7 @@
                 android:layout_weight="1"
                 android:background="@{viewModel.categoryType==Helper.TYPE_INCOME?@drawable/button_selected:@drawable/button_unselected}"
                 android:clickable="true"
+                android:fontFamily="@font/oswald_bold"
                 android:gravity="center"
                 android:text="Thu nhập"
                 android:textSize="15sp" />
@@ -53,6 +54,7 @@
                 android:layout_weight="1"
                 android:background="@{viewModel.categoryType==Helper.TYPE_EXPENSE?@drawable/button_selected:@drawable/button_unselected}"
                 android:clickable="true"
+                android:fontFamily="@font/oswald_bold"
                 android:gravity="center"
                 android:text="Chi tiêu"
                 android:textSize="15sp" />
@@ -65,6 +67,7 @@
                 android:layout_weight="1"
                 android:background="@{viewModel.categoryType==Helper.TYPE_TRANSFER?@drawable/button_selected:@drawable/button_unselected}"
                 android:clickable="true"
+                android:fontFamily="@font/oswald_bold"
                 android:gravity="center"
                 android:text="Chuyển khoản"
                 android:textSize="15sp" />
@@ -86,7 +89,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/layout_finance_or_transfer"
             android:layout_centerHorizontal="true"
-            android:layout_margin="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            android:textStyle="bold"
+            android:fontFamily="@font/oswald_bold"
             android:text="Hoàn tất" />
 
     </RelativeLayout>
