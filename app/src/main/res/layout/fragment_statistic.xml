@@ -111,6 +111,17 @@
                     android:fontFamily="@font/oswald"
                     android:text="@{mode==Helper.TYPE_INCOME?@string/statistic_income:@string/statistic_expense}" />
 
+                <TextView
+                    android:id="@+id/tv_no_data"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald"
+                    android:gravity="center_horizontal"
+                    android:text="Tháng này không có dữ liệu!"
+                    android:textColor="@color/amber"
+                    android:textSize="16sp" />
+
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pieChart"
                     android:layout_width="match_parent"
@@ -126,9 +137,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="@font/oswald"
                     android:gravity="center"
                     android:text="@{String.valueOf(date.startDate.year)}"
-                    android:textColor="#0000ff"
+                    android:textColor="@color/iris"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 

@@ -14,9 +14,9 @@
     </data>
 
     <RelativeLayout
-        android:background="@color/milk"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/milk">
 
         <TextView
             android:layout_width="wrap_content"
@@ -60,6 +60,7 @@
                 android:checked="true"
                 android:fontFamily="@font/oswald"
                 android:text="Tài khoản"
+                android:textAppearance="@style/ChipText"
                 android:textColor="@color/chip_text_color"
                 android:theme="@style/Theme.MaterialComponents.Light"
                 app:chipBackgroundColor="@color/chip_bg_color" />
@@ -71,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/oswald"
                 android:text="Chuyển khoản"
+                android:textAppearance="@style/ChipText"
                 android:textColor="@color/chip_text_color"
                 android:theme="@style/Theme.MaterialComponents.Light"
                 app:chipBackgroundColor="@color/chip_bg_color" />

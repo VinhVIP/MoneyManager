@@ -1,5 +1,8 @@
 package com.vinh.moneymanager.libs;
 
+import android.content.Context;
+import android.util.DisplayMetrics;
+
 import com.vinh.moneymanager.R;
 
 import java.util.Calendar;
@@ -139,6 +142,14 @@ public class Helper {
                 return "CN";
         }
         return "";
+    }
+
+    public static float convertDpToPixel(float dp, Context context) {
+        return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
+    public static float convertPixelsToDp(float px, Context context) {
+        return px / ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
 }

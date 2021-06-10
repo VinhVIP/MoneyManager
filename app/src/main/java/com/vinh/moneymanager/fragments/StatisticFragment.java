@@ -2,6 +2,7 @@ package com.vinh.moneymanager.fragments;
 
 import android.app.Dialog;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -58,29 +60,43 @@ import java.util.TreeMap;
 public class StatisticFragment extends Fragment {
 
     private static StatisticFragment instance;
-    private final int HORIZONTAL_BAR_HEIGHT = 100;
-    ArrayList<BarEntry> entriesExpense = new ArrayList<>();
-    ArrayList<BarEntry> entriesIncome = new ArrayList<>();
-    Dialog dialogSettings;
+    private final int HORIZONTAL_BAR_HEIGHT = 50;
+
+    private ArrayList<BarEntry> entriesExpense = new ArrayList<>();
+    private ArrayList<BarEntry> entriesIncome = new ArrayList<>();
+
+    private Dialog dialogSettings;
+
     private FragmentStatisticBinding binding;
+
     private CategoryViewModel categoryViewModel;
     private FinanceViewModel financeViewModel;
+
     private PieChart pieChart;
     private HorizontalBarChart horizontalBarChart;
     private BarChart barChart;
+
+    private TextView tvNoData;
+
     private List<Finance> allFinances = new ArrayList<>();
     private Map<Category, List<Finance>> mapAllFinances, mapMonthFinances;
+
     private DateHandlerClick dateHandlerClick;
     private DateRange dateRange;
+
     private int statisticMode = Helper.TYPE_EXPENSE;
     private int[] colorsResource;
     private int currentYear;
+
     private ArrayList<String> labels = new ArrayList<>();
     private ArrayList<PieEntry> pieEntries = new ArrayList<>();
     private ArrayList<BarEntry> barEntries = new ArrayList<>();
+
     private int[] chartColors;
     private boolean isShowLabels = true;
     private boolean isShowValues = true;
+
+    private Typeface tfRegular, tfLight;
 
     public static StatisticFragment getInstance() {
         if (instance == null) {
@@ -106,6 +122,10 @@ public class StatisticFragment extends Fragment {
                 new DateRange.Date(DateRange.getLastDay(month, year), month, year));
 
         dateHandlerClick = new DateHandlerClick();
+
+        // Typeface
+        tfRegular = ResourcesCompat.getFont(getContext(), R.font.oswald);
+        tfRegular = ResourcesCompat.getFont(getContext(), R.font.oswald_light);
 
         colorsResource = new int[]{
                 ContextCompat.getColor(getContext(), R.color.cyan),
@@ -134,6 +154,8 @@ public class StatisticFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_statistic, container, false);
         View view = binding.getRoot();
+
+        tvNoData = view.findViewById(R.id.tv_no_data);
 
         pieChart = view.findViewById(R.id.pieChart);
         horizontalBarChart = view.findViewById(R.id.horizontalBarChart);
@@ -213,7 +235,6 @@ public class StatisticFragment extends Fragment {
 
     private void updateDataYear() {
         int selectedYear = dateRange.getStartDate().getYear();
-//        if (selectedYear == currentYear) return;
         currentYear = selectedYear;
 
         ArrayList<ArrayList<Long>> lists = new ArrayList<>();
@@ -291,6 +312,7 @@ public class StatisticFragment extends Fragment {
         // (0.45 + 0.02) * 2 + 0.06 = 1.00 -> interval per "group"
 
         BarData barData = new BarData(dataSet, dataSet2);
+        barData.setValueTypeface(tfRegular);
         barData.setBarWidth(barWidth);
 
         // make this BarData object grouped
@@ -335,7 +357,7 @@ public class StatisticFragment extends Fragment {
 
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setTypeface(tfLight);
+        xAxis.setTypeface(tfRegular);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f); // only intervals of 1 day
         xAxis.setLabelCount(12);
@@ -351,7 +373,7 @@ public class StatisticFragment extends Fragment {
 //        IAxisValueFormatter custom = new MyAxisValueFormatter();
 
         YAxis leftAxis = barChart.getAxisLeft();
-//        leftAxis.setTypeface(tfLight);
+        leftAxis.setTypeface(tfRegular);
 //        leftAxis.setLabelCount(8, false);
 //        leftAxis.setValueFormatter(custom);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
@@ -367,13 +389,6 @@ public class StatisticFragment extends Fragment {
 //        barChart.setExtraOffsets(0, 0, 0, -10);
 
         barChart.getAxisRight().setEnabled(false);
-//        YAxis rightAxis = barChart.getAxisRight();
-//        rightAxis.setDrawGridLines(false);
-////        rightAxis.setTypeface(tfLight);
-//        rightAxis.setLabelCount(8, false);
-////        rightAxis.setValueFormatter(custom);
-//        rightAxis.setSpaceTop(15f);
-//        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         Legend l = barChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
@@ -385,6 +400,7 @@ public class StatisticFragment extends Fragment {
         l.setTextSize(11f);
         l.setXEntrySpace(4f);
         l.setYEntrySpace(4f);
+        l.setTypeface(tfRegular);
 
 //        XYMarkerView mv = new XYMarkerView(this, xAxisFormatter);
 //        mv.setChartView(chart); // For bounds control
@@ -398,6 +414,7 @@ public class StatisticFragment extends Fragment {
         pieChart.setHoleRadius(38f);
         pieChart.setTransparentCircleAlpha(0);
         pieChart.setCenterTextSize(12);
+        pieChart.setCenterTextTypeface(tfRegular);
 
         pieChart.getDescription().setEnabled(false);
         pieChart.setHoleColor(Color.WHITE);
@@ -410,6 +427,7 @@ public class StatisticFragment extends Fragment {
         legend.setTextSize(12);
         legend.setFormToTextSpace(10);
         legend.setOrientation(Legend.LegendOrientation.VERTICAL);
+        legend.setTypeface(tfRegular);
 
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
@@ -438,6 +456,7 @@ public class StatisticFragment extends Fragment {
         horizontalBarChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         horizontalBarChart.getXAxis().setEnabled(true);
         horizontalBarChart.getXAxis().setTextSize(12);
+        horizontalBarChart.getXAxis().setTypeface(tfRegular);
         horizontalBarChart.getAxisLeft().setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
@@ -450,6 +469,7 @@ public class StatisticFragment extends Fragment {
 
         horizontalBarChart.getAxisLeft().setEnabled(true);
         horizontalBarChart.getAxisLeft().setAxisMinimum(0f);
+        horizontalBarChart.getAxisLeft().setTypeface(tfRegular);
         horizontalBarChart.getAxisRight().setEnabled(false);
 
         horizontalBarChart.getLegend().setEnabled(false);
@@ -514,8 +534,17 @@ public class StatisticFragment extends Fragment {
             barEntries.add(new BarEntry(i, listBarEntry.get(listBarEntry.size() - 1 - i)));
         }
 
-        updatePieChartData();
-        updateHorizontalBarChartData();
+        if (pieEntries.isEmpty()) {
+            pieChart.setVisibility(View.GONE);
+            horizontalBarChart.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.VISIBLE);
+        } else {
+            pieChart.setVisibility(View.VISIBLE);
+            horizontalBarChart.setVisibility(View.VISIBLE);
+            tvNoData.setVisibility(View.GONE);
+            updatePieChartData();
+            updateHorizontalBarChartData();
+        }
     }
 
     private void updatePieChartData() {
@@ -537,9 +566,12 @@ public class StatisticFragment extends Fragment {
             }
         });
 
-        pieChart.setData(new PieData(pieDataSet));
+        PieData data = new PieData(pieDataSet);
+        data.setValueTypeface(tfRegular);
+        pieChart.setData(data);
         // Hiển thị labels và values
         pieChart.setDrawEntryLabels(isShowLabels);
+        pieChart.setEntryLabelTypeface(tfRegular);
         for (IDataSet<?> set : pieChart.getData().getDataSets())
             set.setDrawValues(isShowValues);
 
@@ -548,7 +580,7 @@ public class StatisticFragment extends Fragment {
     }
 
     private void updateHorizontalBarChartData() {
-        horizontalBarChart.getLayoutParams().height = Math.max(barEntries.size() * HORIZONTAL_BAR_HEIGHT, 450);
+        horizontalBarChart.getLayoutParams().height = (int) Helper.convertDpToPixel(barEntries.size() * HORIZONTAL_BAR_HEIGHT, getContext());
         horizontalBarChart.requestLayout();     // Cập nhật lại layout
 
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
@@ -575,6 +607,7 @@ public class StatisticFragment extends Fragment {
         barData.setHighlightEnabled(true);
         barData.setValueTextColor(Color.BLACK);
         barData.setBarWidth(0.8f);
+        barData.setValueTypeface(tfRegular);
         horizontalBarChart.setData(barData);
 
 

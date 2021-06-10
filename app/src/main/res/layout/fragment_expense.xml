@@ -110,6 +110,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Thu nhập"
+                            android:textAppearance="@style/ChipText"
                             android:textColor="@color/chip_text_color"
                             android:theme="@style/Theme.MaterialComponents.Light"
                             app:chipBackgroundColor="@color/chip_bg_color" />
@@ -120,7 +121,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
+                            android:fontFamily="@font/oswald"
                             android:text="Chi tiêu"
+                            android:textAppearance="@style/ChipText"
                             android:textColor="@color/chip_text_color"
                             android:theme="@style/Theme.MaterialComponents.Light"
                             app:chipBackgroundColor="@color/chip_bg_color" />

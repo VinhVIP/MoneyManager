@@ -21,6 +21,8 @@
         android:foreground="?attr/selectableItemBackground"
         android:foregroundTint="@color/blueGray"
         app:itemBackground="@color/malachite"
+        app:itemTextAppearanceActive="@style/BottomNavigationViewTextStyle"
+        app:itemTextAppearanceInactive="@style/BottomNavigationViewTextStyle"
         app:itemHorizontalTranslationEnabled="false"
         app:itemIconTint="@color/bottom_nav_color"
         app:itemTextColor="@color/white"
