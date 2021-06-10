@@ -17,10 +17,16 @@
         <item name="windowNoTitle">true</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="TitleFont">
         <item name="android:textSize">19sp</item>
         <item name="android:fontFamily">@font/oswald</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 </resources>
