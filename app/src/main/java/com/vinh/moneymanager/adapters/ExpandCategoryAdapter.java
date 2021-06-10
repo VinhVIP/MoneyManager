@@ -107,7 +107,11 @@ public class ExpandCategoryAdapter extends BaseExpandableListAdapter {
             totalCost += f.getMoney();
         }
 
-        holder.bindData(R.drawable.ic_star, category.getName(), totalCost);
+        holder.bindData(category.getType() == Helper.TYPE_EXPENSE ?
+                        Helper.iconsExpense[category.getIcon()] :
+                        Helper.iconsIncome[category.getIcon()],
+                category.getName(),
+                totalCost);
 
         convertView.setTag(holder);
         return convertView;

@@ -12,8 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -324,13 +322,15 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
             }
 
         } else {
-            Toast.makeText(this, "Vui lòng chọn tài khoản xuất và nhập", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Chưa chọn tài khoản xuất và nhập", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void finance() {
         if (edCost.getText().toString().isEmpty()) {
             Toast.makeText(this, "Chưa nhập số tiền", Toast.LENGTH_SHORT).show();
+        } else if (mViewModel.account.get() == null) {
+            Toast.makeText(this, "Chưa chọn tài khoản", Toast.LENGTH_SHORT).show();
         } else {
 
             long cost = Long.parseLong(Helper.clearDotInText(edCost.getText().toString()));
