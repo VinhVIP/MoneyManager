@@ -15,7 +15,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/milk"
+        android:background="@drawable/bg"
         tools:context=".activities.AddEditFinanceActivity">
 
         <include
@@ -41,9 +41,10 @@
                 android:layout_weight="1"
                 android:background="@{viewModel.categoryType==Helper.TYPE_INCOME?@drawable/button_selected:@drawable/button_unselected}"
                 android:clickable="true"
-                android:fontFamily="@font/oswald_bold"
+                android:fontFamily="@font/oswald"
                 android:gravity="center"
                 android:text="Thu nhập"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView
@@ -54,9 +55,10 @@
                 android:layout_weight="1"
                 android:background="@{viewModel.categoryType==Helper.TYPE_EXPENSE?@drawable/button_selected:@drawable/button_unselected}"
                 android:clickable="true"
-                android:fontFamily="@font/oswald_bold"
+                android:fontFamily="@font/oswald"
                 android:gravity="center"
                 android:text="Chi tiêu"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView
@@ -67,9 +69,10 @@
                 android:layout_weight="1"
                 android:background="@{viewModel.categoryType==Helper.TYPE_TRANSFER?@drawable/button_selected:@drawable/button_unselected}"
                 android:clickable="true"
-                android:fontFamily="@font/oswald_bold"
+                android:fontFamily="@font/oswald"
                 android:gravity="center"
                 android:text="Chuyển khoản"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
         </LinearLayout>
@@ -93,9 +96,9 @@
             android:layout_marginTop="12dp"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="12dp"
-            android:textStyle="bold"
-            android:fontFamily="@font/oswald_bold"
-            android:text="Hoàn tất" />
+            android:fontFamily="@font/oswald"
+            android:text="Hoàn tất"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 </layout>

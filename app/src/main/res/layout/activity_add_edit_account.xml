@@ -167,7 +167,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:layout_marginTop="100dp"
-        android:fontFamily="@font/oswald_bold"
+        android:fontFamily="@font/oswald"
         android:text="Hoàn tất" />
 
 </LinearLayout>

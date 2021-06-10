@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -68,6 +70,9 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         super.onCreate(savedInstanceState);
 
         ActivityAddEditFinanceBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_add_edit_finance);
@@ -78,11 +83,6 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
-
-
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
         tvCategory = findViewById(R.id.tv_category_name);
@@ -117,6 +117,7 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         selectAccount();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitleTextAppearance(this, R.style.TitleFont);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

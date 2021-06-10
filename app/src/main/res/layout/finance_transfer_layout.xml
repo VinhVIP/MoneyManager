@@ -16,7 +16,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/milk"
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
@@ -24,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="6dp"
             android:layout_marginVertical="4dp"
+            android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.GONE:View.VISIBLE}"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="14dp"
             app:cardElevation="3dp">
@@ -33,8 +33,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:minHeight="@dimen/height_finance_item"
-                android:orientation="horizontal"
-                android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.GONE:View.VISIBLE}">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_category_title"
@@ -175,6 +174,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="6dp"
             android:layout_marginVertical="4dp"
+            android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.VISIBLE:View.GONE}"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="14dp"
             app:cardElevation="3dp">
@@ -184,8 +184,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:minHeight="@dimen/height_finance_item"
-                android:orientation="horizontal"
-                android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.VISIBLE:View.GONE}">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_account_in"
@@ -254,6 +253,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="6dp"
             android:layout_marginVertical="4dp"
+            android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.VISIBLE:View.GONE}"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="14dp"
             app:cardElevation="3dp">
@@ -263,8 +263,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:minHeight="@dimen/height_finance_item"
-                android:orientation="horizontal"
-                android:visibility="@{viewModel.categoryType==Helper.TYPE_TRANSFER?View.VISIBLE:View.GONE}">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_transfer_fee"

@@ -18,4 +18,9 @@
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
     </style>
+
+    <style name="TitleFont">
+        <item name="android:textSize">19sp</item>
+        <item name="android:fontFamily">@font/oswald</item>
+    </style>
 </resources>

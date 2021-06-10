@@ -23,9 +23,9 @@
 
 
     <LinearLayout
-        android:background="@color/milk"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/milk"
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -108,6 +108,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
+                    android:fontFamily="@font/oswald"
                     android:text="@{mode==Helper.TYPE_INCOME?@string/statistic_income:@string/statistic_expense}" />
 
                 <com.github.mikephil.charting.charts.PieChart
