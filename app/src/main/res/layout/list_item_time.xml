@@ -25,7 +25,7 @@
         android:fontFamily="@font/oswald"
         android:text="11:30"
         android:textColor="@color/textColorPrimary"
-        android:textSize="15sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/text_view_item_detail"
@@ -40,7 +40,7 @@
         android:maxLines="1"
         android:text="Buy something"
         android:textColor="@color/textColorSecondary"
-        android:textSize="15sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/text_view_category_name"
@@ -55,11 +55,10 @@
         android:maxLines="1"
         android:text="Shopping"
         android:textColor="@color/textColorPrimary"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
     <TextView
-
         android:id="@+id/text_view_item_price"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
@@ -67,5 +66,6 @@
         android:layout_centerVertical="true"
         android:fontFamily="@font/oswald_light"
         android:gravity="right"
-        android:text="120.500.000" />
+        android:text="120.500.000"
+        android:textSize="14sp" />
 </RelativeLayout>

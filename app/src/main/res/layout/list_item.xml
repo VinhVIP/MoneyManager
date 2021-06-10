@@ -25,7 +25,8 @@
         android:fontFamily="@font/oswald_light"
         android:maxLines="1"
         android:text="Buy something"
-        android:textColor="@color/textColorSecondary" />
+        android:textColor="@color/textColorSecondary"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/text_view_item_price"
@@ -36,7 +37,8 @@
         android:fontFamily="@font/oswald_light"
         android:gravity="right"
         android:paddingEnd="10dp"
-        android:text="120.500.000" />
+        android:text="120.500.000"
+        android:textSize="14sp" />
 
 
 </RelativeLayout>

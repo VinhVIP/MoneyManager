@@ -24,7 +24,7 @@
                 android:fontFamily="@font/oswald"
                 android:text="27"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="20sp"
+                android:textSize="19sp"
                 android:textStyle="bold" />
 
             <TextView

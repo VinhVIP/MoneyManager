@@ -1,11 +1,15 @@
 package com.vinh.moneymanager.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.libs.DateRange;
@@ -158,6 +162,8 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
             }
 
             tvDetail.setText("");
+            tvTotal.setTypeface(ResourcesCompat.getFont(context, R.font.oswald), Typeface.BOLD);
+            tvTotal.setTextColor(Color.BLACK);
             tvTotal.setText(Helper.formatCurrency(total));
         }
     }

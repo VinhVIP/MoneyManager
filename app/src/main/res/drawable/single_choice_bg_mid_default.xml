@@ -3,13 +3,13 @@
     <!-- Border -->
     <item>
         <shape>
-            <solid android:color="@color/bg_single_choice_highlight"></solid>
+            <solid android:color="@color/bg_single_choice_highlight" />
         </shape>
     </item>
     <!-- Body -->
     <item
-        android:bottom="1.2dp"
-        android:top="1.2dp">
+        android:bottom="1.4dp"
+        android:top="1.4dp">
         <shape>
             <solid android:color="@color/white" />
         </shape>
