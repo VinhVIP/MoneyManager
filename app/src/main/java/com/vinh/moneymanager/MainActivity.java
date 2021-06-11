@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private ExpenseFragment expenseFragment;
     private AccountFragment accountFragment;
     private StatisticFragment statisticFragment;
+
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = item -> {
         switch (item.getItemId()) {
             case R.id.nav_finance:
@@ -55,28 +56,9 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
 
-//        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-//
-//                switch (position) {
-//                    case 0:
-//                        navigationView.getMenu().findItem(R.id.nav_finance).setChecked(true);
-//                        break;
-//                    case 1:
-//                        navigationView.getMenu().findItem(R.id.nav_account).setChecked(true);
-//                        break;
-//                    case 2:
-//                        navigationView.getMenu().findItem(R.id.nav_statistic).setChecked(true);
-//                        break;
-//                }
-//            }
-//        });
-
         // bugs
-        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) navigationView.getLayoutParams();
-        layoutParams.setBehavior(new BottomNavigationBehavior());
+//        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) navigationView.getLayoutParams();
+//        layoutParams.setBehavior(new BottomNavigationBehavior());
 
     }
 
