@@ -70,7 +70,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     private LinearLayout layoutBottomSheet, mainLayout;
     private BottomSheetBehavior sheetBehavior;
 
-    private  Map<Category, List<Finance>> mapIncome = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
+    private Map<Category, List<Finance>> mapIncome = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
     private Map<Category, List<Finance>> mapExpense = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
 
     private Map<String, List<Finance>> mapTimeIncome = new TreeMap<>((o1, o2) -> {
@@ -104,6 +104,9 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     private FragmentFinanceStateAdapter pagerAdapter;
     private ChipGroup chipGroup;
     private Chip chipIncome, chipExpense;
+
+    private ImageView imgExpandCollapse;
+    private boolean isExpandedAll = false;
 
     private ListCategoryFragment listIncomeFragment, listExpenseFragment;
     private List<Category> allCategories = new ArrayList<>();
@@ -326,26 +329,21 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
     private void initTabLayout(View view) {
         tabLayout = view.findViewById(R.id.tab_layout);
+        imgExpandCollapse = view.findViewById(R.id.img_expand_collapse);
+        imgExpandCollapse.setImageResource(isExpandedAll ? R.drawable.ic_collapse : R.drawable.ic_expand);
+
         setMarginTabItem(tabLayout);    // tab item margin
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() != mode) {
                     mode = tab.getPosition();
-
-                    int size = 0;
-
                     if (mode == MODE_CATEGORY) {
                         expandListView.setAdapter(expandFinanceAdapter);
-                        size = expandFinanceAdapter.getGroupCount();
                     } else if (mode == MODE_TIME) {
                         expandListView.setAdapter(expandTimeAdapter);
-                        size = expandTimeAdapter.getGroupCount();
                     }
-
-                    for (int i = 0; i < size; i++) {
-                        expandListView.expandGroup(i);
-                    }
+                    expandCollapseGroup();
                 }
             }
 
@@ -359,13 +357,34 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
             }
         });
+
+        imgExpandCollapse.setOnClickListener(v -> {
+            isExpandedAll = !isExpandedAll;
+            imgExpandCollapse.setImageResource(isExpandedAll ? R.drawable.ic_collapse : R.drawable.ic_expand);
+
+            expandCollapseGroup();
+        });
+    }
+
+    private void expandCollapseGroup(){
+        int size = 0;
+        if (mode == MODE_CATEGORY) size = expandFinanceAdapter.getGroupCount();
+        else if (mode == MODE_TIME) size = expandTimeAdapter.getGroupCount();
+
+        if (isExpandedAll) {
+            for (int i = 0; i < size; i++)
+                expandListView.expandGroup(i);
+        } else {
+            for (int i = 0; i < size; i++)
+                expandListView.collapseGroup(i);
+        }
     }
 
     private void setMarginTabItem(TabLayout tabLayout) {
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             View tab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(i);
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
-            p.setMargins(50, 0, 50, 0);
+            p.setMargins((int) Helper.convertDpToPixel(20, getContext()), 0, (int) Helper.convertDpToPixel(20, getContext()), 0);
             tab.requestLayout();
         }
     }

@@ -26,37 +26,53 @@
     <!--            android:background="@drawable/ic_line" />-->
     <!--    </LinearLayout>-->
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginHorizontal="4dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:background="@color/colorPrimaryLight"
-        app:tabBackground="@drawable/tab_selector"
-        app:tabGravity="center"
-        app:tabIndicator="@null"
-        app:tabInlineLabel="true"
-        app:tabMode="fixed"
-        app:tabPaddingEnd="10dp"
-        app:tabPaddingStart="10dp"
-        app:tabSelectedTextColor="#ffffff"
-        app:tabTextAppearance="@style/ChipText"
-        app:tabTextColor="#81D51F">
+        android:layout_marginEnd="8dp">
 
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_item_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/single_choice_bg_left_highlight"
-            android:text="DANH MỤC" />
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/colorPrimaryLight"
+            app:tabBackground="@drawable/tab_selector"
+            app:tabGravity="center"
+            app:tabIndicator="@null"
+            app:tabInlineLabel="true"
+            app:tabMode="fixed"
+            app:tabPaddingEnd="10dp"
+            app:tabPaddingStart="10dp"
+            app:tabSelectedTextColor="#ffffff"
+            app:tabTextAppearance="@style/ChipText"
+            app:tabTextColor="#81D51F">
 
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_item_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="THỜI GIAN" />
-    </com.google.android.material.tabs.TabLayout>
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_item_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/single_choice_bg_left_highlight"
+                android:text="DANH MỤC" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_item_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="THỜI GIAN" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <ImageView
+            android:id="@+id/img_expand_collapse"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="4dp"
+            android:src="@drawable/ic_expand" />
+    </RelativeLayout>
+
 
     <ExpandableListView
         android:id="@+id/expandable_list_category_finance"
