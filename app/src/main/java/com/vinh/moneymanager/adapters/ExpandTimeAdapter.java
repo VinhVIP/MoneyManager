@@ -15,6 +15,7 @@ import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.libs.DateRange;
 import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.listeners.OnItemFinanceListener;
+import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
 
@@ -27,6 +28,7 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
     private List<String> dates;
     private List<Category> categories;
     private Context context;
+    private List<Account> accounts;
 
     private OnItemFinanceListener listener;
 
@@ -54,6 +56,20 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
             if (c.getCategoryId() == categoryId) return c;
         }
         return null;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
+    }
+
+    private String getAccountName(int accountId) {
+        if (accounts == null || accounts.isEmpty()) return "";
+        for (Account account : accounts) {
+            if (account.getAccountId() == accountId) {
+                return account.getAccountName();
+            }
+        }
+        return "";
     }
 
     @Override
@@ -139,7 +155,7 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
     }
 
     private class GroupHolder {
-        private TextView tvDay, tvMonthYear, tvDayOfWeek, tvDetail, tvTotal;
+        private TextView tvDay, tvMonthYear, tvDayOfWeek, tvDetail, tvTotal, tvAccountName;
 
         public GroupHolder(View view) {
             tvDay = view.findViewById(R.id.tv_calendar_day);
@@ -147,6 +163,7 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
             tvDayOfWeek = view.findViewById(R.id.tv_calendar_day_of_week);
             tvDetail = view.findViewById(R.id.text_view_item_detail);
             tvTotal = view.findViewById(R.id.text_view_item_price);
+            tvAccountName = view.findViewById(R.id.text_view_item_account);
         }
 
         public void bindData(String strDate, long total) {
@@ -161,6 +178,7 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
                 tvDayOfWeek.setBackgroundResource(R.color.colorDayOfWeek);
             }
 
+            tvAccountName.setText("");
             tvDetail.setText("");
             tvTotal.setTypeface(ResourcesCompat.getFont(context, R.font.oswald), Typeface.BOLD);
             tvTotal.setTextColor(Color.BLACK);
@@ -170,7 +188,7 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
 
     private class ChildHolder {
         View view;
-        TextView tvTime, tvDetail, tvCategoryName, tvCost;
+        TextView tvTime, tvDetail, tvCategoryName, tvCost, tvAccountName;
 
         public ChildHolder(View view) {
             this.view = view;
@@ -179,6 +197,8 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
             tvDetail = view.findViewById(R.id.text_view_item_detail);
             tvCategoryName = view.findViewById(R.id.text_view_category_name);
             tvCost = view.findViewById(R.id.text_view_item_price);
+            tvCost = view.findViewById(R.id.text_view_item_price);
+            tvAccountName = view.findViewById(R.id.text_view_account_name);
         }
 
         public void bindData(Finance finance) {
@@ -186,6 +206,7 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
             tvDetail.setText(finance.getDetail());
             tvCategoryName.setText(getCategory(finance.getCategoryId()).getName());
             tvCost.setText(Helper.formatCurrency(finance.getMoney()));
+            tvAccountName.setText(getAccountName(finance.getAccountId()));
         }
     }
 }

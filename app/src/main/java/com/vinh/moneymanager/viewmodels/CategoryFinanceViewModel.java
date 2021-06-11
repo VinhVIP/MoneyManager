@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.vinh.moneymanager.libs.DateRange;
 import com.vinh.moneymanager.libs.Helper;
+import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
 
@@ -27,15 +28,20 @@ public class CategoryFinanceViewModel extends ViewModel {
     public FinanceViewModel financeViewModel;
     public CategoryViewModel categoryViewModel;
     public AccountViewModel accountViewModel;
+
     public ObservableField<DateRange> dateRange = new ObservableField<>();
+
     public ObservableLong totalCostIncome = new ObservableLong();
     public ObservableLong totalCostExpense = new ObservableLong();
     public ObservableInt switchExpenseIncome = new ObservableInt();
+
     private Map<Category, List<Finance>> allFinances;
     private MutableLiveData<List<Category>> categories;
     private MutableLiveData<Map<Category, List<Finance>>> mapCategoryFinance;
     private MutableLiveData<List<DateRange.Date>> dates;
     private MutableLiveData<Map<String, List<Finance>>> mapTimeFinance;
+
+    private MutableLiveData<List<Account>> accounts;
 
     public CategoryFinanceViewModel() {
     }
@@ -49,6 +55,7 @@ public class CategoryFinanceViewModel extends ViewModel {
 
         categories = new MutableLiveData<>();
         mapCategoryFinance = new MutableLiveData<>();
+        accounts = new MutableLiveData<>();
 
         dates = new MutableLiveData<>();
         mapTimeFinance = new MutableLiveData<>();
@@ -86,6 +93,10 @@ public class CategoryFinanceViewModel extends ViewModel {
 //                this.mapFinance.setValue(map);
                 update();
             });
+        });
+
+        accountViewModel.getAccounts().observe(lifecycleOwner, accounts -> {
+            this.accounts.setValue(accounts);
         });
     }
 
@@ -152,5 +163,9 @@ public class CategoryFinanceViewModel extends ViewModel {
 
     public LiveData<Map<String, List<Finance>>> getMapTimeFinance() {
         return mapTimeFinance;
+    }
+
+    public LiveData<List<Account>> getAccounts() {
+        return accounts;
     }
 }

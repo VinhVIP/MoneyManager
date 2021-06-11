@@ -13,20 +13,41 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="28dp" />
 
-    <TextView
-        android:id="@+id/text_view_item_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="120dp"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_toEndOf="@id/layout_calendar"
-        android:ellipsize="end"
-        android:fontFamily="@font/oswald_light"
-        android:maxLines="1"
-        android:text="Buy something"
-        android:textColor="@color/textColorSecondary"
-        android:textSize="14sp" />
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/text_view_item_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="120dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/oswald"
+            android:maxLines="1"
+            android:text="Tiền mặt"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/text_view_item_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_view_item_account"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="120dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/oswald_light"
+            android:maxLines="1"
+            android:text="Buy something"
+            android:textColor="@color/textColorSecondary"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/text_view_item_price"

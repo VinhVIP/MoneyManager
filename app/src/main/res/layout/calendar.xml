@@ -4,12 +4,12 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:cardCornerRadius="6dp"
-    app:cardElevation="5dp">
+    app:cardElevation="4dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="3dp">
+        android:paddingHorizontal="3dp">
 
         <RelativeLayout
             android:id="@+id/relative"
@@ -45,13 +45,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/relative"
+            android:layout_toEndOf="@id/relative"
             android:background="@color/colorAccent"
             android:fontFamily="@font/oswald"
             android:padding="3dp"
             android:text="T7"
             android:textColor="@color/white"
-            android:textSize="8sp" />
+            android:textSize="10sp" />
     </RelativeLayout>
 
 

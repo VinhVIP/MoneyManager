@@ -13,6 +13,7 @@ import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.libs.DateRange;
 import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.listeners.OnItemFinanceListener;
+import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
 
@@ -24,6 +25,7 @@ public class ExpandCategoryAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<Category> categories;
     private Map<Category, List<Finance>> mapFinance;
+    private List<Account> accounts;
 
     private OnItemFinanceListener listener;
 
@@ -45,6 +47,20 @@ public class ExpandCategoryAdapter extends BaseExpandableListAdapter {
         categories.clear();
         categories.addAll(mapFinance.keySet());
         notifyDataSetInvalidated();
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
+    }
+
+    private String getAccountName(int accountId) {
+        if (accounts == null || accounts.isEmpty()) return "";
+        for (Account account : accounts) {
+            if (account.getAccountId() == accountId) {
+                return account.getAccountName();
+            }
+        }
+        return "";
     }
 
     @Override
@@ -156,8 +172,7 @@ public class ExpandCategoryAdapter extends BaseExpandableListAdapter {
 
     private class ChildHolder {
         View view;
-        TextView tvDay, tvMonthYear, tvDayOfWeek, tvDetail, tvCost;
-        ImageView imgDelete;
+        TextView tvDay, tvMonthYear, tvDayOfWeek, tvDetail, tvCost, tvAccountName;
 
         public ChildHolder(View view) {
             this.view = view;
@@ -167,6 +182,7 @@ public class ExpandCategoryAdapter extends BaseExpandableListAdapter {
             tvDayOfWeek = view.findViewById(R.id.tv_calendar_day_of_week);
             tvDetail = view.findViewById(R.id.text_view_item_detail);
             tvCost = view.findViewById(R.id.text_view_item_price);
+            tvAccountName = view.findViewById(R.id.text_view_item_account);
         }
 
         public void bindData(Finance finance) {
@@ -187,6 +203,7 @@ public class ExpandCategoryAdapter extends BaseExpandableListAdapter {
             long cost = finance.getMoney();
 
             tvCost.setText(Helper.formatCurrency(cost));
+            tvAccountName.setText(getAccountName(finance.getAccountId()));
         }
     }
 

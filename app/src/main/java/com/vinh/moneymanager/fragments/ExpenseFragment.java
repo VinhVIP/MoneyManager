@@ -65,36 +65,46 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
     private final int MODE_CATEGORY = 0;
     private final int MODE_TIME = 1;
-    LinearLayout layoutBottomSheet, mainLayout;
-    BottomSheetBehavior sheetBehavior;
-    Map<Category, List<Finance>> mapIncome = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
-    Map<Category, List<Finance>> mapExpense = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
-    Map<String, List<Finance>> mapTimeIncome = new TreeMap<>((o1, o2) -> {
-        DateRange.Date d1 = new DateRange.Date(o1);
-        DateRange.Date d2 = new DateRange.Date(o2);
-        return d1.compare(d2);
-    });
-    Map<String, List<Finance>> mapTimeExpense = new TreeMap<>((o1, o2) -> {
-        DateRange.Date d1 = new DateRange.Date(o1);
-        DateRange.Date d2 = new DateRange.Date(o2);
-        return d1.compare(d2);
-    });
     private int mode = MODE_CATEGORY;
+
+    private LinearLayout layoutBottomSheet, mainLayout;
+    private BottomSheetBehavior sheetBehavior;
+
+    private  Map<Category, List<Finance>> mapIncome = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
+    private Map<Category, List<Finance>> mapExpense = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
+
+    private Map<String, List<Finance>> mapTimeIncome = new TreeMap<>((o1, o2) -> {
+        DateRange.Date d1 = new DateRange.Date(o1);
+        DateRange.Date d2 = new DateRange.Date(o2);
+        return d1.compare(d2);
+    });
+    private Map<String, List<Finance>> mapTimeExpense = new TreeMap<>((o1, o2) -> {
+        DateRange.Date d1 = new DateRange.Date(o1);
+        DateRange.Date d2 = new DateRange.Date(o2);
+        return d1.compare(d2);
+    });
+
     // Expand List hiển thị các khoản chi tiêu theo danh mục và thời gian
     private ExpandableListView expandListView;
     // Adapter cho Expand ListView
     private ExpandCategoryAdapter expandFinanceAdapter;
     private ExpandTimeAdapter expandTimeAdapter;
+
     private Calendar calendar;
     private DialogWeek dialogWeek;
+
     private DateHandlerClick dateHandlerClick;
+
+    // Main View Model
     private CategoryFinanceViewModel mViewModel;
+
     private TabLayout tabLayout;
     private FloatingActionButton fabListFinances;
     private ViewPager2 viewPager;
     private FragmentFinanceStateAdapter pagerAdapter;
     private ChipGroup chipGroup;
     private Chip chipIncome, chipExpense;
+
     private ListCategoryFragment listIncomeFragment, listExpenseFragment;
     private List<Category> allCategories = new ArrayList<>();
 
@@ -155,7 +165,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         setLayoutBottomSheet(view);
 
 
-        mViewModel.getMapTimeFinance().observe(getViewLifecycleOwner(), timeListMap -> {
+        mViewModel.getMapTimeFinance().observe(getActivity(), timeListMap -> {
             mapTimeIncome.clear();
             mapTimeExpense.clear();
 
@@ -187,7 +197,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             }
         });
 
-        mViewModel.getMapCategoryFinance().observe(getViewLifecycleOwner(), categoryListMap -> {
+        mViewModel.getMapCategoryFinance().observe(getActivity(), categoryListMap -> {
             allCategories.clear();
             allCategories.addAll(categoryListMap.keySet());
 
@@ -232,6 +242,10 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
         });
 
+        mViewModel.getAccounts().observe(getActivity(), accounts -> {
+            expandFinanceAdapter.setAccounts(accounts);
+            expandTimeAdapter.setAccounts(accounts);
+        });
         return view;
     }
 
