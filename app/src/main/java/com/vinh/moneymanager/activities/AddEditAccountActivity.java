@@ -26,6 +26,8 @@ import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.viewmodels.AccountViewModel;
 import com.vinh.moneymanager.viewmodels.AddEditAccountViewModel;
 
+import java.util.List;
+
 import static com.vinh.moneymanager.libs.Helper.iconsAccount;
 
 public class AddEditAccountActivity extends AppCompatActivity {
@@ -34,6 +36,8 @@ public class AddEditAccountActivity extends AppCompatActivity {
     private AccountViewModel accountViewModel;
 
     private HandlerClick handler;
+
+    private List<Account> allAccounts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,7 @@ public class AddEditAccountActivity extends AppCompatActivity {
 
         mViewModel = new AddEditAccountViewModel();
         accountViewModel = new AccountViewModel(getApplication());
+        accountViewModel.getAccounts().observe(this, accounts -> allAccounts = accounts);
 
         // Get data from intent
         getData();
@@ -64,7 +69,7 @@ public class AddEditAccountActivity extends AppCompatActivity {
     }
 
     private void submit() {
-        if (checkAccountName()) {
+        if (isAccountNameValid()) {
             Account account = mViewModel.getAccount();
 
             if (account.getAccountId() == 0) {
@@ -120,14 +125,35 @@ public class AddEditAccountActivity extends AppCompatActivity {
         }
     }
 
-    private boolean checkAccountName() {
-        // TODO: Chua kiểm tra tên các tài khoản đã có sẵn
+    private boolean isAccountNameValid() {
         String name = mViewModel.getAccountName();
         if (name == null || name.isEmpty()) {
             Toast.makeText(this, "Tên tài khoản không được bỏ trống!", Toast.LENGTH_SHORT).show();
             return false;
+        } else if (isAccountNameExists(name, mViewModel.getAccount().getAccountId())) {
+            Toast.makeText(this, "Tên tài khoản bị trùng!", Toast.LENGTH_SHORT).show();
+            return false;
         }
+
         return true;
+    }
+
+    /**
+     * Kiểm tra tên tài khoản đã tồn tại hay chưa
+     *
+     * @param accountName Tên tài khoản
+     * @param ignoreId    ID tài khoản bỏ qua khi kiểm tra (bỏ qua trường hợp tự so sánh với chính nó)
+     */
+    private boolean isAccountNameExists(String accountName, int ignoreId) {
+        if (allAccounts == null) return false;
+
+        for (Account a : allAccounts) {
+            if (a.getAccountId() != ignoreId && a.getAccountName().equals(accountName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
