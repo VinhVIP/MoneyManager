@@ -71,6 +71,7 @@ public class ListAccountFragment extends Fragment implements RecyclerAccountAdap
         bundle.putString(Helper.ACCOUNT_NAME, account.getAccountName());
         bundle.putLong(Helper.ACCOUNT_BALANCE, account.getBalance());
         bundle.putString(Helper.ACCOUNT_DESCRIPTION, account.getDescription());
+        bundle.putInt(Helper.ACCOUNT_ICON, account.getIcon());
 
         Intent intent = new Intent(this.getActivity(), AddEditAccountActivity.class);
         intent.putExtra(Helper.EDIT_ACCOUNT, bundle);
