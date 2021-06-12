@@ -1,16 +1,13 @@
 package com.vinh.moneymanager;
 
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.vinh.moneymanager.adapters.MainPagerAdapter;
-import com.vinh.moneymanager.components.BottomNavigationBehavior;
 import com.vinh.moneymanager.fragments.AccountFragment;
 import com.vinh.moneymanager.fragments.ExpenseFragment;
 import com.vinh.moneymanager.fragments.StatisticFragment;
@@ -79,4 +76,14 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setUserInputEnabled(false);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (viewPager.getCurrentItem() == 0) {
+            if (expenseFragment.getBottomSheetState() == BottomSheetBehavior.STATE_EXPANDED) {
+                expenseFragment.setBottomSheetState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

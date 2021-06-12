@@ -61,8 +61,7 @@
             android:maxLines="1"
             android:text="Shopping"
             android:textColor="@color/textColorPrimary"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textSize="14sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -82,8 +81,7 @@
             android:maxLines="1"
             android:text="Shopping"
             android:textColor="@color/textColorPrimary"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textSize="14sp" />
     </LinearLayout>
 
 

@@ -138,7 +138,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
         mViewModel.dateRange.set(range);
 
-        mViewModel.initLiveData(this, this);
+        mViewModel.initLiveData(getActivity(), getActivity());
 
         dateHandlerClick = new DateHandlerClick();
         dialogWeek = new DialogWeek(getContext(), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR), this);
@@ -310,21 +310,55 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         mainLayout = view.findViewById(R.id.main_layout);
         layoutBottomSheet = view.findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
-        sheetBehavior.setDraggable(false);
+        sheetBehavior.setDraggable(true);
 
         fabListFinances = view.findViewById(R.id.fab_list_finance);
         fabListFinances.setOnClickListener(v -> {
 
-            if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                fabListFinances.setImageResource(R.drawable.ic_fab_list);
-            } else if (sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                fabListFinances.setImageResource(R.drawable.ic_close);
+            if (getBottomSheetState() == BottomSheetBehavior.STATE_EXPANDED) {
+                setBottomSheetState(BottomSheetBehavior.STATE_COLLAPSED);
+//                fabListFinances.setImageResource(R.drawable.ic_fab_list);
+            } else if (getBottomSheetState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                setBottomSheetState(BottomSheetBehavior.STATE_EXPANDED);
+//                fabListFinances.setImageResource(R.drawable.ic_close);
+            }
+        });
+
+        sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if(newState == BottomSheetBehavior.STATE_EXPANDED){
+                    fabListFinances.setVisibility(View.INVISIBLE);
+                }else if(newState == BottomSheetBehavior.STATE_COLLAPSED){
+                    fabListFinances.setImageResource(R.drawable.ic_fab_list);
+                    fabListFinances.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
             }
         });
 
         initTabLayout(view);
+    }
+
+    public int getBottomSheetState() {
+        return sheetBehavior.getState();
+    }
+
+    public void setBottomSheetState(int state) {
+        if (getBottomSheetState() != state) {
+            sheetBehavior.setState(state);
+            if (state == BottomSheetBehavior.STATE_EXPANDED) {
+                fabListFinances.setImageResource(R.drawable.ic_close);
+                fabListFinances.setVisibility(View.INVISIBLE);
+            } else if (state == BottomSheetBehavior.STATE_COLLAPSED) {
+                fabListFinances.setImageResource(R.drawable.ic_fab_list);
+                fabListFinances.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private void initTabLayout(View view) {
@@ -366,7 +400,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         });
     }
 
-    private void expandCollapseGroup(){
+    private void expandCollapseGroup() {
         int size = 0;
         if (mode == MODE_CATEGORY) size = expandFinanceAdapter.getGroupCount();
         else if (mode == MODE_TIME) size = expandTimeAdapter.getGroupCount();
