@@ -1,9 +1,11 @@
 package com.vinh.moneymanager.activities;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,8 +25,12 @@ import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.databinding.ActivityAddEditAccountBinding;
 import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.room.entities.Account;
+import com.vinh.moneymanager.room.entities.Finance;
+import com.vinh.moneymanager.room.entities.Transfer;
 import com.vinh.moneymanager.viewmodels.AccountViewModel;
 import com.vinh.moneymanager.viewmodels.AddEditAccountViewModel;
+import com.vinh.moneymanager.viewmodels.FinanceViewModel;
+import com.vinh.moneymanager.viewmodels.TransferViewModel;
 
 import java.util.List;
 
@@ -34,10 +40,14 @@ public class AddEditAccountActivity extends AppCompatActivity {
 
     private AddEditAccountViewModel mViewModel;
     private AccountViewModel accountViewModel;
+    private FinanceViewModel financeViewModel;
+    private TransferViewModel transferViewModel;
 
     private HandlerClick handler;
 
     private List<Account> allAccounts;
+    private List<Finance> allFinances;
+    private List<Transfer> allTransfers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +58,11 @@ public class AddEditAccountActivity extends AppCompatActivity {
 
         mViewModel = new AddEditAccountViewModel();
         accountViewModel = new AccountViewModel(getApplication());
+        financeViewModel = new FinanceViewModel(getApplication());
+        transferViewModel = new TransferViewModel(getApplication());
         accountViewModel.getAccounts().observe(this, accounts -> allAccounts = accounts);
+        financeViewModel.getAllFinances().observe(this, finances -> allFinances = finances);
+        transferViewModel.getTransfers().observe(this, transfers -> allTransfers = transfers);
 
         // Get data from intent
         getData();
@@ -87,7 +101,13 @@ public class AddEditAccountActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.finance_activity_menu, menu);
+
+        // ẩn nút delete khi
+        if (!getIntent().hasExtra(Helper.EDIT_ACCOUNT)) {
+            menu.getItem(0).setVisible(false);
+        }
+        return true;
     }
 
     @Override
@@ -96,10 +116,44 @@ public class AddEditAccountActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.action_delete:
+                deleteAccount();
+                break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteAccount() {
+        Account account = mViewModel.getAccount();
+        if (canDelete(account.getAccountId())) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Xác nhận xóa")
+                    .setMessage("Bạn có xác định muốn xóa tài khoản này?")
+                    .setPositiveButton("XÓA", (dialog, which) -> {
+                        accountViewModel.delete(account);
+                        dialog.cancel();
+                        Log.d("MMM", "Account Deleted");
+                        finish();
+                    }).setNegativeButton("HỦY", (dialog, which) -> {
+                dialog.cancel();
+            }).show();
+
+        } else {
+            Toast.makeText(this, "Tài khoản đã phát sinh giao dịch nên không thể xóa!", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private boolean canDelete(int id) {
+        for (Finance f : allFinances) {
+            if (f.getAccountId() == id) return false;
+        }
+        for (Transfer t : allTransfers) {
+            if (t.getAccountInId() == id || t.getAccountOutId() == id) return false;
+        }
+        return true;
     }
 
     private void getData() {

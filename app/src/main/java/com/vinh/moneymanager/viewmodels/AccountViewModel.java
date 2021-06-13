@@ -33,7 +33,7 @@ public class AccountViewModel extends AndroidViewModel {
     }
 
     public void delete(Account account) {
-        repository.update(account);
+        repository.delete(account);
     }
 
     public Account search(int accountId) {

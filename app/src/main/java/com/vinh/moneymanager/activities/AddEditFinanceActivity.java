@@ -142,7 +142,7 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.action_delete_finance:
+            case R.id.action_delete:
                 deleteFinance();
                 return true;
             default:
