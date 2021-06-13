@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.databinding.ActivityAddEditAccountBinding;
@@ -57,9 +58,11 @@ public class AddEditAccountActivity extends AppCompatActivity {
         setupToolbar();
 
         mViewModel = new AddEditAccountViewModel();
-        accountViewModel = new AccountViewModel(getApplication());
-        financeViewModel = new FinanceViewModel(getApplication());
-        transferViewModel = new TransferViewModel(getApplication());
+
+        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+        financeViewModel = new ViewModelProvider(this).get(FinanceViewModel.class);
+        transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
+
         accountViewModel.getAccounts().observe(this, accounts -> allAccounts = accounts);
         financeViewModel.getAllFinances().observe(this, finances -> allFinances = finances);
         transferViewModel.getTransfers().observe(this, transfers -> allTransfers = transfers);

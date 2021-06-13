@@ -15,7 +15,6 @@ public class AddEditAccountViewModel extends BaseObservable {
     private Account account;
 
     private String balance;
-    private int icon;
 
     private String buttonText;
 
@@ -76,7 +75,6 @@ public class AddEditAccountViewModel extends BaseObservable {
     }
 
     public void setIcon(int icon) {
-        this.icon = icon;
         account.setIcon(icon);
         notifyPropertyChanged(BR.icon);
     }

@@ -1,191 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg"
-    android:orientation="vertical"
-    tools:context=".activities.AddEditCategoryActivity">
+<layout>
 
-    <include
-        android:id="@+id/toolbar_layout"
-        layout="@layout/toolbar"
+    <data>
+
+        <import type="com.vinh.moneymanager.libs.Helper" />
+
+        <variable
+            name="handler"
+            type="com.vinh.moneymanager.activities.AddEditCategoryActivity.HandlerClick" />
+
+        <variable
+            name="viewModel"
+            type="com.vinh.moneymanager.viewmodels.AddEditCategoryViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp" />
+        android:layout_height="match_parent"
+        android:background="@drawable/bg"
+        android:orientation="vertical"
+        tools:context=".activities.AddEditCategoryActivity">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="6dp"
-        android:layout_marginVertical="4dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="14dp"
-        app:cardElevation="3dp">
-
-        <LinearLayout
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minHeight="50dp"
-            android:orientation="horizontal"
-            android:paddingStart="16dp">
+            android:layout_marginBottom="8dp" />
 
-            <TextView
-                android:id="@+id/tv_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/oswald"
-                android:minWidth="@dimen/title_width"
-                android:text="Thể loại"
-                android:textSize="18sp" />
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginVertical="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="3dp">
 
-            <RadioGroup
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:gravity="center"
+                android:minHeight="50dp"
+                android:orientation="horizontal"
+                android:paddingStart="16dp">
 
-                <RadioButton
-                    android:id="@+id/radio_income"
+                <TextView
+                    android:id="@+id/tv_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="30dp"
-                    android:fontFamily="@font/oswald_light"
-                    android:text="Thu nhập" />
+                    android:fontFamily="@font/oswald"
+                    android:minWidth="@dimen/title_width"
+                    android:text="Thể loại"
+                    android:textSize="18sp" />
 
-                <RadioButton
-                    android:id="@+id/radio_expense"
+                <RadioGroup
+                    android:onCheckedChanged="@{handler.onTypeChanged}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio_income"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="30dp"
+                        android:checked="@{viewModel.type==Helper.TYPE_INCOME}"
+                        android:fontFamily="@font/oswald_light"
+                        android:text="Thu nhập" />
+
+                    <RadioButton
+                        android:id="@+id/radio_expense"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="@{viewModel.type==Helper.TYPE_EXPENSE}"
+                        android:fontFamily="@font/oswald_light"
+                        android:text="Chi tiêu" />
+                </RadioGroup>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginVertical="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="3dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minHeight="50dp"
+                android:orientation="horizontal"
+                android:paddingStart="16dp">
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald"
+                    android:minWidth="@dimen/title_width"
+                    android:text="Tên"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/ed_category_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
                     android:fontFamily="@font/oswald_light"
-                    android:text="Chi tiêu" />
-            </RadioGroup>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                    android:hint="VD: Shopping"
+                    android:lines="1"
+                    android:maxLength="30"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="@={viewModel.name}"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="6dp"
-        android:layout_marginVertical="4dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="14dp"
-        app:cardElevation="3dp">
-
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minHeight="50dp"
-            android:orientation="horizontal"
-            android:paddingStart="16dp">
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginVertical="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="3dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/oswald"
-                android:minWidth="@dimen/title_width"
-                android:text="Tên"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/ed_category_name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:fontFamily="@font/oswald_light"
-                android:hint="VD: Shopping"
-                android:lines="1"
-                android:maxLength="30"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                android:gravity="center_vertical"
+                android:minHeight="50dp"
+                android:orientation="horizontal"
+                android:paddingStart="16dp">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="6dp"
-        android:layout_marginVertical="4dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="14dp"
-        app:cardElevation="3dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald"
+                    android:minWidth="@dimen/title_width"
+                    android:text="Icon"
+                    android:textSize="18sp" />
 
-        <LinearLayout
+                <ImageView
+                    android:id="@+id/imgIcon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:onClick="@{()->handler.showDialogSelectIcon()}"
+                    app:imageResource="@{viewModel.type==Helper.TYPE_INCOME?Helper.iconsIncome[viewModel.icon]:Helper.iconsExpense[viewModel.icon]}" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:minHeight="50dp"
-            android:orientation="horizontal"
-            android:paddingStart="16dp">
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginVertical="4dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="3dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/oswald"
-                android:minWidth="@dimen/title_width"
-                android:text="Icon"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:id="@+id/imgIcon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/icons_money" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="6dp"
-        android:layout_marginVertical="4dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="14dp"
-        app:cardElevation="3dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minHeight="50dp"
-            android:orientation="horizontal"
-            android:paddingStart="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/oswald"
-                android:minWidth="@dimen/title_width"
-                android:text="Mô tả"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/ed_description"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:fontFamily="@font/oswald_light"
-                android:gravity="top"
-                android:hint="Có thể bỏ trống..."
-                android:maxLength="100"
-                android:maxLines="5"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                android:gravity="center"
+                android:minHeight="50dp"
+                android:orientation="horizontal"
+                android:paddingStart="16dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_submit_category"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="16dp"
-        android:fontFamily="@font/oswald"
-        android:text="Thêm" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald"
+                    android:minWidth="@dimen/title_width"
+                    android:text="Mô tả"
+                    android:textSize="18sp" />
 
-</LinearLayout>
+                <EditText
+                    android:id="@+id/ed_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:fontFamily="@font/oswald_light"
+                    android:gravity="top"
+                    android:hint="Có thể bỏ trống..."
+                    android:maxLength="100"
+                    android:maxLines="5"
+                    android:text="@={viewModel.description}"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_submit_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp"
+            android:fontFamily="@font/oswald"
+            android:onClick="@{()->handler.submit()}"
+            android:text="@{viewModel.buttonText}" />
+
+    </LinearLayout>
+</layout>
