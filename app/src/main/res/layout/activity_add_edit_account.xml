@@ -64,6 +64,7 @@
                     android:fontFamily="@font/oswald_light"
                     android:hint="VD: Thẻ BIDV"
                     android:inputType="text"
+                    android:maxLength="30"
                     android:text="@={viewModel.accountName}"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -177,6 +178,7 @@
                     android:fontFamily="@font/oswald_light"
                     android:hint="..."
                     android:inputType="textMultiLine"
+                    android:maxLength="100"
                     android:maxLines="3"
                     android:text="@={viewModel.description}"
                     android:textSize="18sp" />

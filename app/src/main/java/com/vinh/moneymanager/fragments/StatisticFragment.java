@@ -419,7 +419,7 @@ public class StatisticFragment extends Fragment {
         pieChart.getDescription().setEnabled(false);
         pieChart.setHoleColor(Color.WHITE);
         pieChart.setUsePercentValues(true);
-        pieChart.setExtraOffsets(15, 0, 15, 0);
+        pieChart.setExtraOffsets(15, 5, 15, 5);
 
         Legend legend = pieChart.getLegend();
         legend.setForm(Legend.LegendForm.CIRCLE);
@@ -432,6 +432,7 @@ public class StatisticFragment extends Fragment {
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         legend.setDrawInside(false);
+        legend.setEnabled(false); // disable
 
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
@@ -524,7 +525,7 @@ public class StatisticFragment extends Fragment {
             }
             if (money != 0) {
                 labels.add(category.getName());
-                pieEntries.add(new PieEntry(money, category.getName()));
+                pieEntries.add(new PieEntry(money, category.getName().length() > 10 ? category.getName().substring(0, 10).trim().concat("...") : category.getName()));
                 listBarEntry.add(money);
             }
         }

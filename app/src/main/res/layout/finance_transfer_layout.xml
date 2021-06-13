@@ -324,6 +324,7 @@
                     android:fontFamily="@font/oswald_light"
                     android:gravity="top"
                     android:hint="..."
+                    android:maxLength="100"
                     android:maxLines="5"
                     android:textColor="@color/black"
                     android:textSize="18sp" />

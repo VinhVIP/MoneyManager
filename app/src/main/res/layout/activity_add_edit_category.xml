@@ -98,6 +98,7 @@
                 android:fontFamily="@font/oswald_light"
                 android:hint="VD: Shopping"
                 android:lines="1"
+                android:maxLength="30"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/black"
@@ -171,6 +172,7 @@
                 android:fontFamily="@font/oswald_light"
                 android:gravity="top"
                 android:hint="Có thể bỏ trống..."
+                android:maxLength="100"
                 android:maxLines="5"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
