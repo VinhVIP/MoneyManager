@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -415,11 +414,11 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         tvCategory.setOnClickListener((v) -> showDialogSelectCategory());
     }
 
-    /*
-    Cập nhật lại danh sách danh mục theo menu "Thu nhập" hoặc "Chi tiêu"
+    /**
+     * Cập nhật lại danh sách danh mục theo menu "Thu nhập" hoặc "Chi tiêu"
      */
     private void updateCategoriesSelect() {
-        // TODO: Thay đổi tên danh mục khi mở thêm finance mới
+        // Thay đổi tên danh mục khi mở thêm finance mới
         mCategories.clear();
         for (Category c : allCategories) {
             if (c.getType() == mViewModel.categoryType.get()) {
@@ -566,7 +565,10 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
                     ImageView imageView = convertView.findViewById(R.id.image_view);
                     TextView tvName = convertView.findViewById(R.id.text_view);
 
-                    tvName.setText(allAccounts.get(position).getAccountName());
+                    Account account = allAccounts.get(position);
+
+                    tvName.setText(account.getAccountName());
+                    imageView.setImageResource(Helper.iconsAccount[account.getIcon()]);
                 }
                 return convertView;
             }
