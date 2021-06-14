@@ -220,10 +220,17 @@ public class AddEditCategoryActivity extends AppCompatActivity {
 
 
     public class HandlerClick {
-        Dialog dialog;
 
         public HandlerClick() {
-            dialog = new Dialog(AddEditCategoryActivity.this);
+
+        }
+
+        public void submit() {
+            submitCategory();
+        }
+
+        public void showDialogSelectIcon() {
+            Dialog dialog = new Dialog(AddEditCategoryActivity.this);
             dialog.setContentView(R.layout.dialog_icon);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -266,18 +273,11 @@ public class AddEditCategoryActivity extends AppCompatActivity {
                 mViewModel.setIcon(position);
                 dialog.cancel();
             });
-        }
 
-        public void submit() {
-            submitCategory();
-        }
-
-        public void showDialogSelectIcon() {
             dialog.show();
         }
 
         public void onTypeChanged(RadioGroup group, int id) {
-            System.out.println("ADM");
             RadioButton radio = (RadioButton) group.getChildAt(0);
             mViewModel.setType(radio.isChecked() ? Helper.TYPE_INCOME : Helper.TYPE_EXPENSE);
         }
