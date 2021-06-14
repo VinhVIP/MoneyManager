@@ -34,8 +34,10 @@ public class AddEditFinanceViewModel extends BaseObservable {
      */
     @BindingAdapter("android:text")
     public static void setText(EditText view, String oldText, String newText) {
-        view.setText(newText);
-        if (newText != null) view.setSelection(newText.length());
+        if (newText != null && newText.length() <= 15) {
+            view.setText(newText);
+            view.setSelection(newText.length());
+        }
     }
 
     @Bindable

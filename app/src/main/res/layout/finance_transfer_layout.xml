@@ -235,6 +235,7 @@
                     android:textSize="18sp" />
 
                 <EditText
+                    android:maxLength="@integer/maxLengthCurrency"
                     android:id="@+id/ed_cost_finance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

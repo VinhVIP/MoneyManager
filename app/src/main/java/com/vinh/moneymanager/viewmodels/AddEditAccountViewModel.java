@@ -31,11 +31,12 @@ public class AddEditAccountViewModel extends BaseObservable {
         this.account = account;
     }
 
-    @BindingAdapter("android:text")
-    public static void setText(EditText view, String oldText, String newText) {
-        view.setText(newText);
-        if (newText != null) view.setSelection(newText.length());
-    }
+//    @BindingAdapter("android:text")
+//    public static void setText(EditText view, String oldText, String newText) {
+//        if (newText != null && newText.length() > 15) return;
+//        view.setText(newText);
+//        if (newText != null) view.setSelection(newText.length());
+//    }
 
     @Bindable
     public String getBalance() {
