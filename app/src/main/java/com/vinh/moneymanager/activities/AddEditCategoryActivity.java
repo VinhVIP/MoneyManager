@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +35,7 @@ import com.vinh.moneymanager.viewmodels.AddEditCategoryViewModel;
 import com.vinh.moneymanager.viewmodels.CategoryViewModel;
 import com.vinh.moneymanager.viewmodels.FinanceViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.vinh.moneymanager.libs.Helper.iconsExpense;
@@ -112,10 +115,6 @@ public class AddEditCategoryActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Thêm danh mục");
             mViewModel.setButtonText("Thêm");
         }
-
-//        if (type == Helper.TYPE_INCOME) radioIncome.setChecked(true);
-//        else radioExpense.setChecked(true);
-//        imgIcon.setImageResource(type == Helper.TYPE_EXPENSE ? iconsExpense[iconIndex] : iconsIncome[iconIndex]);
     }
 
     private void submitCategory() {
@@ -163,11 +162,12 @@ public class AddEditCategoryActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.finance_activity_menu, menu);
+        getMenuInflater().inflate(R.menu.category_activity_menu, menu);
 
         // ẩn nút delete khi
         if (!getIntent().hasExtra(Helper.EDIT_CATEGORY)) {
             menu.getItem(0).setVisible(false);
+            menu.getItem(1).setVisible(false);
         }
         return true;
     }
@@ -181,10 +181,21 @@ public class AddEditCategoryActivity extends AppCompatActivity {
             case R.id.action_delete:
                 deleteCategory();
                 break;
+            case R.id.action_move:
+                showDialogSelectCategory();
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void moveFinanceInCategory(int oldId, int newId) {
+        for (Finance finance : allFinances) {
+            if (finance.getCategoryId() == oldId) {
+                finance.setCategoryId(newId);
+                financeViewModel.update(finance);
+            }
+        }
     }
 
     private void deleteCategory() {
@@ -218,6 +229,79 @@ public class AddEditCategoryActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    private void showDialogSelectCategory() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_list);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        ImageView imgClose = dialog.findViewById(R.id.img_close_dialog);
+        imgClose.setOnClickListener(v -> dialog.cancel());
+
+        TextView tvTitle = dialog.findViewById(R.id.tv_dialog_title);
+        tvTitle.setText("Chọn danh mục đích");
+
+        ListView listView = dialog.findViewById(R.id.list_category_dialog);
+        List<Category> categories = new ArrayList<>();
+        for (Category c : allCategories) {
+            if (c.getType() == mViewModel.getType() && c.getCategoryId() != mViewModel.getCategory().getCategoryId()) {
+                categories.add(c);
+            }
+        }
+        listView.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return categories.size();
+            }
+
+            @Override
+            public Object getItem(int position) {
+                return categories.get(position);
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return allCategories.get(position).getCategoryId();
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    convertView = LayoutInflater.from(AddEditCategoryActivity.this).inflate(R.layout.list_image_text, null);
+                    ImageView imageView = convertView.findViewById(R.id.image_view);
+                    TextView tvName = convertView.findViewById(R.id.text_view);
+
+                    Category category = categories.get(position);
+                    tvName.setText(category.getName());
+                    imageView.setImageResource(category.getType() == Helper.TYPE_EXPENSE ? Helper.iconsExpense[category.getIcon()] : Helper.iconsIncome[category.getIcon()]);
+                }
+                return convertView;
+            }
+        });
+
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            dialog.cancel();
+            confirmMove(categories.get(position));
+        });
+        dialog.show();
+    }
+
+
+    private void confirmMove(Category target) {
+        int id = mViewModel.getCategory().getCategoryId();
+
+        if (target.getCategoryId() == id) {
+            Toast.makeText(this, "Không di chuyển!", Toast.LENGTH_SHORT).show();
+        } else {
+            new AlertDialog.Builder(this)
+                    .setTitle("Xác nhận chuyển!")
+                    .setMessage("Bạn có chắc chắn muốn di chuyển toàn bộ khoản giao dịch sang danh mục mới? Hành động này không thể hoàn tác!")
+                    .setPositiveButton("DI CHUYỂN", (dialog, which) -> {
+                        moveFinanceInCategory(id, target.getCategoryId());
+                        dialog.cancel();
+                        Toast.makeText(this, "Di chuyển hoàn tất!", Toast.LENGTH_SHORT).show();
+                    }).setNegativeButton("HỦY", (dialog, which) -> dialog.cancel()).show();
+        }
+    }
 
     public class HandlerClick {
 
