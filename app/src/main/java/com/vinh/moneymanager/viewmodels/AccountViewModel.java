@@ -14,8 +14,8 @@ import java.util.List;
 
 public class AccountViewModel extends AndroidViewModel {
     public ObservableLong totalBalance = new ObservableLong();
-    private AccountRepository repository;
-    private LiveData<List<Account>> accounts;
+    private final AccountRepository repository;
+    private final LiveData<List<Account>> accounts;
 
     public AccountViewModel(@NonNull Application application) {
         super(application);

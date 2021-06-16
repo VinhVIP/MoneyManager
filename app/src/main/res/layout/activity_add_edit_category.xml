@@ -57,9 +57,9 @@
                     android:textSize="18sp" />
 
                 <RadioGroup
-                    android:onCheckedChanged="@{handler.onTypeChanged}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:onCheckedChanged="@{handler.onTypeChanged}"
                     android:orientation="horizontal">
 
                     <RadioButton

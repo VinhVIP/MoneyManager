@@ -113,14 +113,14 @@
 
                 <TextView
                     android:id="@+id/tv_no_data"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/oswald"
                     android:gravity="center_horizontal"
                     android:text="Tháng này không có dữ liệu!"
                     android:textColor="@color/amber"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:visibility="gone" />
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pieChart"

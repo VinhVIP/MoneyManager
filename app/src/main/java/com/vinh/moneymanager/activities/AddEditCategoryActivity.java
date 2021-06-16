@@ -363,6 +363,7 @@ public class AddEditCategoryActivity extends AppCompatActivity {
 
         public void onTypeChanged(RadioGroup group, int id) {
             RadioButton radio = (RadioButton) group.getChildAt(0);
+            mViewModel.setIcon(0);
             mViewModel.setType(radio.isChecked() ? Helper.TYPE_INCOME : Helper.TYPE_EXPENSE);
         }
     }

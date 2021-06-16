@@ -18,7 +18,7 @@ import java.util.List;
 public class RecyclerAccountAdapter extends RecyclerView.Adapter<RecyclerAccountAdapter.ViewHolder> {
 
     private List<Account> accounts;
-    private OnItemAccountClickListener listener;
+    private final OnItemAccountClickListener listener;
 
     public RecyclerAccountAdapter(List<Account> accounts, OnItemAccountClickListener listener) {
         this.accounts = accounts;

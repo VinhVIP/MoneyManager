@@ -13,9 +13,9 @@ import java.util.List;
 
 public class TransferViewModel extends AndroidViewModel {
 
-    private TransferRepository repository;
+    private final TransferRepository repository;
 
-    private LiveData<List<Transfer>> transfers;
+    private final LiveData<List<Transfer>> transfers;
 
     public TransferViewModel(@NonNull Application application) {
         super(application);

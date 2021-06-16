@@ -13,9 +13,9 @@ import java.util.List;
 
 public class FinanceViewModel extends AndroidViewModel {
 
-    private FinanceRepository repository;
+    private final FinanceRepository repository;
 
-    private LiveData<List<Finance>> finances;
+    private final LiveData<List<Finance>> finances;
 
 
     public FinanceViewModel(@NonNull Application application) {

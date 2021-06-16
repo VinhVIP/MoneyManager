@@ -17,7 +17,7 @@ import com.vinh.moneymanager.viewmodels.SingleChoiceViewModel;
 public class SingleChoice extends Fragment {
 
 
-    private SingleChoiceViewModel viewModel;
+    private final SingleChoiceViewModel viewModel;
 
     public SingleChoice(OnChoiceSelectedListener listener) {
         viewModel = new SingleChoiceViewModel(listener);

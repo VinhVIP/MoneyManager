@@ -13,9 +13,9 @@ import java.util.List;
 
 public class CategoryViewModel extends AndroidViewModel {
 
-    private CategoryRepository repository;
+    private final CategoryRepository repository;
 
-    private LiveData<List<Category>> categories;
+    private final LiveData<List<Category>> categories;
 
     public CategoryViewModel(@NonNull Application application) {
         super(application);

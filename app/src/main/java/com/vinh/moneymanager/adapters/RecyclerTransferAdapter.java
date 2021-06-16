@@ -20,9 +20,9 @@ import java.util.List;
 public class RecyclerTransferAdapter extends RecyclerView.Adapter<RecyclerTransferAdapter.TransferHolder> {
 
     private List<Transfer> transfers;
-    private OnItemTransferListener listener;
+    private final OnItemTransferListener listener;
 
-    private AccountViewModel accountViewModel;
+    private final AccountViewModel accountViewModel;
 
     public RecyclerTransferAdapter(List<Transfer> transfers, OnItemTransferListener listener, AccountViewModel accountViewModel) {
         this.transfers = transfers;

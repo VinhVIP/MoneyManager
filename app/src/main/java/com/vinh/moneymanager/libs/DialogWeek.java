@@ -20,7 +20,7 @@ import java.util.List;
 public class DialogWeek implements View.OnClickListener {
 
     RecyclerWeekAdapter.OnItemWeekClickListener listener;
-    private Context context;
+    private final Context context;
     private Dialog dialog;
     private TextView tvMonth, tvYear;
     private View btnPreviousMonth, btnNextMonth, btnPreviousYear, btnNextYear, imgClose, btnCurWeek;

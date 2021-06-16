@@ -13,9 +13,9 @@ import java.util.List;
 
 public class CategoryRepository {
 
-    private CategoryDao categoryDao;
+    private final CategoryDao categoryDao;
 
-    private LiveData<List<Category>> categories;
+    private final LiveData<List<Category>> categories;
 
     private LiveData<List<Category>> incomeCategories;
     private LiveData<List<Category>> expenseCategories;
@@ -63,7 +63,7 @@ public class CategoryRepository {
 
     // --------------- AsyncTask -------------------
     private static class InsertCategoryAsyncTask extends AsyncTask<Category, Void, Void> {
-        private CategoryDao categoryDao;
+        private final CategoryDao categoryDao;
 
         private InsertCategoryAsyncTask(CategoryDao categoryDao) {
             this.categoryDao = categoryDao;
@@ -77,7 +77,7 @@ public class CategoryRepository {
     }
 
     private static class DeleteCategoryAsyncTask extends AsyncTask<Category, Void, Void> {
-        private CategoryDao categoryDao;
+        private final CategoryDao categoryDao;
 
         private DeleteCategoryAsyncTask(CategoryDao categoryDao) {
             this.categoryDao = categoryDao;
@@ -91,7 +91,7 @@ public class CategoryRepository {
     }
 
     private static class UpdateCategoryAsyncTask extends AsyncTask<Category, Void, Void> {
-        private CategoryDao categoryDao;
+        private final CategoryDao categoryDao;
 
         private UpdateCategoryAsyncTask(CategoryDao categoryDao) {
             this.categoryDao = categoryDao;

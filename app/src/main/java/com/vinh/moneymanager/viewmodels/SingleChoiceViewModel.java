@@ -6,7 +6,7 @@ import com.vinh.moneymanager.components.SingleChoice;
 
 public class SingleChoiceViewModel {
     public final ObservableInt selectedIndex = new ObservableInt();
-    private SingleChoice.OnChoiceSelectedListener listener;
+    private final SingleChoice.OnChoiceSelectedListener listener;
 
     public SingleChoiceViewModel(SingleChoice.OnChoiceSelectedListener listener) {
         this.listener = listener;

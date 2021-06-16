@@ -16,9 +16,9 @@ import java.util.List;
 
 public class RecyclerWeekAdapter extends RecyclerView.Adapter<RecyclerWeekAdapter.ViewHolder> {
 
-    private List<DateRange> list;
-    private Context context;
-    private OnItemWeekClickListener listener;
+    private final List<DateRange> list;
+    private final Context context;
+    private final OnItemWeekClickListener listener;
 
     public RecyclerWeekAdapter(Context context, List<DateRange> list, OnItemWeekClickListener listener) {
         this.list = list;

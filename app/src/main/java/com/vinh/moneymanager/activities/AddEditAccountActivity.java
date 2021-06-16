@@ -250,7 +250,7 @@ public class AddEditAccountActivity extends AppCompatActivity {
      * Xác nhận thêm/sửa tài khoản
      */
     public class HandlerClick {
-        private Dialog dialog;
+        private final Dialog dialog;
 
         public HandlerClick() {
             dialog = new Dialog(AddEditAccountActivity.this);

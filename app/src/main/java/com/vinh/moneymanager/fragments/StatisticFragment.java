@@ -62,8 +62,8 @@ public class StatisticFragment extends Fragment {
     private static StatisticFragment instance;
     private final int HORIZONTAL_BAR_HEIGHT = 50;
 
-    private ArrayList<BarEntry> entriesExpense = new ArrayList<>();
-    private ArrayList<BarEntry> entriesIncome = new ArrayList<>();
+    private final ArrayList<BarEntry> entriesExpense = new ArrayList<>();
+    private final ArrayList<BarEntry> entriesIncome = new ArrayList<>();
 
     private Dialog dialogSettings;
 
@@ -88,9 +88,9 @@ public class StatisticFragment extends Fragment {
     private int[] colorsResource;
     private int currentYear;
 
-    private ArrayList<String> labels = new ArrayList<>();
-    private ArrayList<PieEntry> pieEntries = new ArrayList<>();
-    private ArrayList<BarEntry> barEntries = new ArrayList<>();
+    private final ArrayList<String> labels = new ArrayList<>();
+    private final ArrayList<PieEntry> pieEntries = new ArrayList<>();
+    private final ArrayList<BarEntry> barEntries = new ArrayList<>();
 
     private int[] chartColors;
     private boolean isShowLabels = true;

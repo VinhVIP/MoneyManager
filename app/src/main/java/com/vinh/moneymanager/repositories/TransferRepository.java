@@ -13,9 +13,9 @@ import java.util.List;
 
 public class TransferRepository {
 
-    private TransferDao transferDao;
+    private final TransferDao transferDao;
 
-    private LiveData<List<Transfer>> transfers;
+    private final LiveData<List<Transfer>> transfers;
 
     public TransferRepository(Application application) {
         MoneyManagerDatabase database = MoneyManagerDatabase.getInstance(application);
@@ -44,7 +44,7 @@ public class TransferRepository {
     // AsyncTask
 
     private static class InsertTransferAsyncTask extends AsyncTask<Transfer, Void, Void> {
-        private TransferDao transferDao;
+        private final TransferDao transferDao;
 
         private InsertTransferAsyncTask(TransferDao transferDao) {
             this.transferDao = transferDao;
@@ -58,7 +58,7 @@ public class TransferRepository {
     }
 
     private static class DeleteTransferAsyncTask extends AsyncTask<Transfer, Void, Void> {
-        private TransferDao transferDao;
+        private final TransferDao transferDao;
 
         private DeleteTransferAsyncTask(TransferDao transferDao) {
             this.transferDao = transferDao;
@@ -72,7 +72,7 @@ public class TransferRepository {
     }
 
     private static class UpdateTransferAsyncTask extends AsyncTask<Transfer, Void, Void> {
-        private TransferDao transferDao;
+        private final TransferDao transferDao;
 
         private UpdateTransferAsyncTask(TransferDao transferDao) {
             this.transferDao = transferDao;

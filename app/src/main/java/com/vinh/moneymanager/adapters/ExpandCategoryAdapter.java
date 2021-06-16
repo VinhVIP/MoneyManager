@@ -22,12 +22,12 @@ import java.util.Map;
 
 public class ExpandCategoryAdapter extends BaseExpandableListAdapter {
 
-    private Context context;
-    private List<Category> categories;
+    private final Context context;
+    private final List<Category> categories;
     private Map<Category, List<Finance>> mapFinance;
     private List<Account> accounts;
 
-    private OnItemFinanceListener listener;
+    private final OnItemFinanceListener listener;
 
 
     public ExpandCategoryAdapter(Context context, List<Category> categories, Map<Category, List<Finance>> mapFinance, OnItemFinanceListener listener) {
@@ -127,7 +127,8 @@ public class ExpandCategoryAdapter extends BaseExpandableListAdapter {
                         Helper.iconsExpense[category.getIcon()] :
                         Helper.iconsIncome[category.getIcon()],
                 category.getName(),
-                totalCost);
+                totalCost,
+                isExpanded);
 
         convertView.setTag(holder);
         return convertView;
@@ -154,19 +155,21 @@ public class ExpandCategoryAdapter extends BaseExpandableListAdapter {
     }
 
     private class GroupHolder {
-        ImageView imgView;
+        ImageView imgView, imgArrow;
         TextView tvTitle, tvTotal;
 
         public GroupHolder(View view) {
             imgView = view.findViewById(R.id.image_view_list_group);
+            imgArrow = view.findViewById(R.id.img_arrow);
             tvTitle = view.findViewById(R.id.text_view_title);
             tvTotal = view.findViewById(R.id.text_view_total);
         }
 
-        public void bindData(int imgRes, String title, long total) {
+        public void bindData(int imgRes, String title, long total, boolean isExpanded) {
             imgView.setImageResource(imgRes);
             tvTitle.setText(title);
             tvTotal.setText(Helper.formatCurrency(total));
+            imgArrow.setImageResource(isExpanded ? R.drawable.ic_expand_arrow : R.drawable.ic_collapse_arrow);
         }
     }
 

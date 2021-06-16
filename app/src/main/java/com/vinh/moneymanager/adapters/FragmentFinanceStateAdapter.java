@@ -8,7 +8,7 @@ public class FragmentFinanceStateAdapter extends FragmentStateAdapter {
 
     private final int NUM_PAGES = 2;
 
-    private Fragment parentFragment;
+    private final Fragment parentFragment;
 
     private Fragment incomeFragment, expenseFragment;
 

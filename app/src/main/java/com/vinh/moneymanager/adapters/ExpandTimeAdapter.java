@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -25,12 +26,12 @@ import java.util.Map;
 public class ExpandTimeAdapter extends BaseExpandableListAdapter {
 
     private Map<String, List<Finance>> mapFinance;
-    private List<String> dates;
+    private final List<String> dates;
     private List<Category> categories;
-    private Context context;
+    private final Context context;
     private List<Account> accounts;
 
-    private OnItemFinanceListener listener;
+    private final OnItemFinanceListener listener;
 
     public ExpandTimeAdapter(Context context, List<String> dates, Map<String, List<Finance>> mapFinance, List<Category> categories, OnItemFinanceListener listener) {
         this.mapFinance = mapFinance;
@@ -123,7 +124,7 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
             totalCost += f.getMoney();
         }
 
-        holder.bindData(getGroup(groupPosition), totalCost);
+        holder.bindData(getGroup(groupPosition), totalCost, isExpanded);
 
         convertView.setTag(holder);
         return convertView;
@@ -155,7 +156,13 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
     }
 
     private class GroupHolder {
-        private TextView tvDay, tvMonthYear, tvDayOfWeek, tvDetail, tvTotal, tvAccountName;
+        private final TextView tvDay;
+        private final TextView tvMonthYear;
+        private final TextView tvDayOfWeek;
+        private final TextView tvDetail;
+        private final TextView tvTotal;
+        private final TextView tvAccountName;
+        private final ImageView imgArrow;
 
         public GroupHolder(View view) {
             tvDay = view.findViewById(R.id.tv_calendar_day);
@@ -164,9 +171,10 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
             tvDetail = view.findViewById(R.id.text_view_item_detail);
             tvTotal = view.findViewById(R.id.text_view_item_price);
             tvAccountName = view.findViewById(R.id.text_view_item_account);
+            imgArrow = view.findViewById(R.id.img_arrow);
         }
 
-        public void bindData(String strDate, long total) {
+        public void bindData(String strDate, long total, boolean isExpanded) {
             String[] date = strDate.split("-")[0].split("/");
             tvDay.setText(date[0].trim());
             tvMonthYear.setText(String.format("%s.%s", date[1].trim(), date[2].trim()));
@@ -183,6 +191,9 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
             tvTotal.setTypeface(ResourcesCompat.getFont(context, R.font.oswald), Typeface.BOLD);
             tvTotal.setTextColor(Color.BLACK);
             tvTotal.setText(Helper.formatCurrency(total));
+
+            imgArrow.setVisibility(View.VISIBLE);
+            imgArrow.setImageResource(isExpanded ? R.drawable.ic_expand_arrow : R.drawable.ic_collapse_arrow);
         }
     }
 

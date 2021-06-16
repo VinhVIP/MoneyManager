@@ -25,7 +25,7 @@ import com.vinh.moneymanager.room.entities.Type;
 public abstract class MoneyManagerDatabase extends RoomDatabase {
 
     private static MoneyManagerDatabase instance;
-    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
+    private static final RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
@@ -57,10 +57,10 @@ public abstract class MoneyManagerDatabase extends RoomDatabase {
 
     private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void> {
 
-        private TypeDao typeDao;
-        private CategoryDao categoryDao;
-        private FinanceDao financeDao;
-        private AccountDao accountDao;
+        private final TypeDao typeDao;
+        private final CategoryDao categoryDao;
+        private final FinanceDao financeDao;
+        private final AccountDao accountDao;
 
         private PopulateDBAsyncTask(MoneyManagerDatabase database) {
             typeDao = database.typeDao();

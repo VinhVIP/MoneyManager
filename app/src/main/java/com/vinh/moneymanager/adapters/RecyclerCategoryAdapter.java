@@ -22,7 +22,7 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
 
     private List<Category> categories;
     private Map<Category, List<Finance>> mapFinance;
-    private OnItemCategoryListener listener;
+    private final OnItemCategoryListener listener;
 
     public RecyclerCategoryAdapter(List<Category> categories, Map<Category, List<Finance>> mapFinance, OnItemCategoryListener listener) {
         this.categories = categories;

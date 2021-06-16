@@ -1,20 +1,12 @@
 package com.vinh.moneymanager;
 
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.vinh.moneymanager.activities.SplashActivity;
 import com.vinh.moneymanager.adapters.MainPagerAdapter;
 import com.vinh.moneymanager.fragments.AccountFragment;
 import com.vinh.moneymanager.fragments.ExpenseFragment;
@@ -23,7 +15,7 @@ import com.vinh.moneymanager.fragments.StatisticFragment;
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView navigationView;
-    private int fragmentIndex = 0;
+    private final int fragmentIndex = 0;
 
     private ViewPager2 viewPager;
 
@@ -31,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private AccountFragment accountFragment;
     private StatisticFragment statisticFragment;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = item -> {
+    private final BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = item -> {
         switch (item.getItemId()) {
             case R.id.nav_finance:
                 viewPager.setCurrentItem(0, true);

@@ -13,10 +13,10 @@ import java.util.List;
 
 public class FinanceRepository {
 
-    private FinanceDao financeDao;
+    private final FinanceDao financeDao;
 
 
-    private LiveData<List<Finance>> finances;
+    private final LiveData<List<Finance>> finances;
 
 
     public FinanceRepository(Application application) {
@@ -49,7 +49,7 @@ public class FinanceRepository {
     // ------------- AsyncTask --------------------
 
     private static class InsertFinanceAsyncTask extends AsyncTask<Finance, Void, Void> {
-        private FinanceDao financeDao;
+        private final FinanceDao financeDao;
 
         private InsertFinanceAsyncTask(FinanceDao financeDao) {
             this.financeDao = financeDao;
@@ -63,7 +63,7 @@ public class FinanceRepository {
     }
 
     private static class DeleteFinanceAsyncTask extends AsyncTask<Finance, Void, Void> {
-        private FinanceDao financeDao;
+        private final FinanceDao financeDao;
 
         private DeleteFinanceAsyncTask(FinanceDao financeDao) {
             this.financeDao = financeDao;
@@ -77,7 +77,7 @@ public class FinanceRepository {
     }
 
     private static class UpdateFinanceAsyncTask extends AsyncTask<Finance, Void, Void> {
-        private FinanceDao financeDao;
+        private final FinanceDao financeDao;
 
         private UpdateFinanceAsyncTask(FinanceDao financeDao) {
             this.financeDao = financeDao;

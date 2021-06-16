@@ -70,15 +70,15 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     private LinearLayout layoutBottomSheet, mainLayout;
     private BottomSheetBehavior sheetBehavior;
 
-    private Map<Category, List<Finance>> mapIncome = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
-    private Map<Category, List<Finance>> mapExpense = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
+    private final Map<Category, List<Finance>> mapIncome = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
+    private final Map<Category, List<Finance>> mapExpense = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
 
-    private Map<String, List<Finance>> mapTimeIncome = new TreeMap<>((o1, o2) -> {
+    private final Map<String, List<Finance>> mapTimeIncome = new TreeMap<>((o1, o2) -> {
         DateRange.Date d1 = new DateRange.Date(o1);
         DateRange.Date d2 = new DateRange.Date(o2);
         return d1.compare(d2);
     });
-    private Map<String, List<Finance>> mapTimeExpense = new TreeMap<>((o1, o2) -> {
+    private final Map<String, List<Finance>> mapTimeExpense = new TreeMap<>((o1, o2) -> {
         DateRange.Date d1 = new DateRange.Date(o1);
         DateRange.Date d2 = new DateRange.Date(o2);
         return d1.compare(d2);
@@ -90,7 +90,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     private ExpandCategoryAdapter expandFinanceAdapter;
     private ExpandTimeAdapter expandTimeAdapter;
 
-    private Calendar calendar;
+    private final Calendar calendar;
     private DialogWeek dialogWeek;
 
     private DateHandlerClick dateHandlerClick;
@@ -109,7 +109,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     private boolean isExpandedAll = false;
 
     private ListCategoryFragment listIncomeFragment, listExpenseFragment;
-    private List<Category> allCategories = new ArrayList<>();
+    private final List<Category> allCategories = new ArrayList<>();
 
     public ExpenseFragment() {
         calendar = Calendar.getInstance();
@@ -327,9 +327,9 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if(newState == BottomSheetBehavior.STATE_EXPANDED){
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     fabListFinances.setVisibility(View.INVISIBLE);
-                }else if(newState == BottomSheetBehavior.STATE_COLLAPSED){
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     fabListFinances.setImageResource(R.drawable.ic_fab_list);
                     fabListFinances.setVisibility(View.VISIBLE);
                 }

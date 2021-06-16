@@ -30,12 +30,12 @@ public class ListCategoryFragment extends Fragment {
     private String title;
 
     private RecyclerView recyclerView;
-    private RecyclerCategoryAdapter adapter;
+    private final RecyclerCategoryAdapter adapter;
 
-    private List<Category> categories;
+    private final List<Category> categories;
     private Map<Category, List<Finance>> mapCategoryFinance;
 
-    private Fragment parentFragment;
+    private final Fragment parentFragment;
 
     public ListCategoryFragment(Fragment parentFragment, OnItemCategoryListener listener) {
         this.parentFragment = parentFragment;

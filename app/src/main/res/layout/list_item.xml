@@ -5,6 +5,14 @@
     android:gravity="center_vertical"
     android:paddingVertical="3dp">
 
+    <ImageView
+        android:id="@+id/img_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_collapse_arrow"
+        android:visibility="invisible" />
+
     <include
         android:id="@+id/layout_calendar"
         layout="@layout/calendar"

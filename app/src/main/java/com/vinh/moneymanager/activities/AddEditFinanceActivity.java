@@ -60,7 +60,8 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
     private Button btnSubmit;
     private TextView swIncome, swExpense, swTransfer;
 
-    private List<Category> mCategories = new ArrayList<>(), allCategories = new ArrayList<>();
+    private final List<Category> mCategories = new ArrayList<>();
+    private List<Category> allCategories = new ArrayList<>();
     private List<Account> allAccounts = new ArrayList<>();
 
     private Finance currentFinance;

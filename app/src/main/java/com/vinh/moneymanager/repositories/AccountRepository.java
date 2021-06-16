@@ -14,9 +14,9 @@ import java.util.concurrent.ExecutionException;
 
 public class AccountRepository {
 
-    private AccountDao accountDao;
+    private final AccountDao accountDao;
 
-    private LiveData<List<Account>> accounts;
+    private final LiveData<List<Account>> accounts;
 
     public AccountRepository(Application application) {
         MoneyManagerDatabase database = MoneyManagerDatabase.getInstance(application);
@@ -57,7 +57,7 @@ public class AccountRepository {
     // AsyncTask
 
     private static class InsertAccountAsyncTask extends AsyncTask<Account, Void, Void> {
-        private AccountDao accountDao;
+        private final AccountDao accountDao;
 
         private InsertAccountAsyncTask(AccountDao accountDao) {
             this.accountDao = accountDao;
@@ -71,7 +71,7 @@ public class AccountRepository {
     }
 
     private static class DeleteAccountAsyncTask extends AsyncTask<Account, Void, Void> {
-        private AccountDao accountDao;
+        private final AccountDao accountDao;
 
         private DeleteAccountAsyncTask(AccountDao accountDao) {
             this.accountDao = accountDao;
@@ -85,7 +85,7 @@ public class AccountRepository {
     }
 
     private static class UpdateAccountAsyncTask extends AsyncTask<Account, Void, Void> {
-        private AccountDao accountDao;
+        private final AccountDao accountDao;
 
         private UpdateAccountAsyncTask(AccountDao accountDao) {
             this.accountDao = accountDao;
@@ -99,7 +99,7 @@ public class AccountRepository {
     }
 
     private static class SearchAccountAsyncTask extends AsyncTask<Integer, Void, Account> {
-        private AccountDao accountDao;
+        private final AccountDao accountDao;
 
         private SearchAccountAsyncTask(AccountDao accountDao) {
             this.accountDao = accountDao;
