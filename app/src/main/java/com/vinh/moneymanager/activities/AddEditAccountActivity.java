@@ -70,7 +70,10 @@ public class AddEditAccountActivity extends AppCompatActivity {
         // Get data from intent
         getData();
 
+        // Binding dữ liệu đến layout để hiển thị
         binding.setViewModel(mViewModel);
+
+        // Cài đặt click
         handler = new HandlerClick();
         binding.setHandler(handler);
     }
@@ -85,6 +88,9 @@ public class AddEditAccountActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_white);
     }
 
+    /**
+     * Thực hiện hành động thêm/chỉnh sửa tài khoản
+     */
     private void submit() {
         if (isAccountNameValid()) {
             Account account = mViewModel.getAccount();
@@ -98,7 +104,7 @@ public class AddEditAccountActivity extends AppCompatActivity {
                 accountViewModel.update(account);
                 System.out.println("Update account thành công!");
             }
-            finish();
+            finish();   // Đóng activity
         }
     }
 
@@ -128,9 +134,14 @@ public class AddEditAccountActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Hiển thị dialog xác nhận xóa tài khoản
+     */
     private void deleteAccount() {
         Account account = mViewModel.getAccount();
         if (canDelete(account.getAccountId())) {
+
+            // Tạo 1 dialog xác nhận
             new AlertDialog.Builder(this)
                     .setTitle("Xác nhận xóa")
                     .setMessage("Bạn có xác định muốn xóa tài khoản này?")
@@ -149,16 +160,29 @@ public class AddEditAccountActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Kiểm tra xem tài khoản hiện tại có thể xóa hay không
+     *
+     * @param id id tài khoản muốn kiểm tra
+     * @return có thể xóa hay không
+     */
     private boolean canDelete(int id) {
         for (Finance f : allFinances) {
+            // Nếu tài khoản đã có phát sinh giao dịch thu/chi => Không thể xóa
             if (f.getAccountId() == id) return false;
         }
         for (Transfer t : allTransfers) {
+            // Nếu tài khoản đã có phát sinh chuyển khoản => Không thể xóa
             if (t.getAccountInId() == id || t.getAccountOutId() == id) return false;
         }
         return true;
     }
 
+    /**
+     * Lấy data từ Intent được gửi từ MainActivity
+     * Bao gồm các thông tin cần thiết của 1 tài khoản
+     * Nhằm hiển thị dữ liệu lên màn hình
+     */
     private void getData() {
         if (getIntent().hasExtra(Helper.EDIT_ACCOUNT)) {
             Bundle data = getIntent().getBundleExtra(Helper.EDIT_ACCOUNT);
@@ -182,6 +206,11 @@ public class AddEditAccountActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Kiểm tra tên tài khoản có hợp lệ hay không?
+     *
+     * @return
+     */
     private boolean isAccountNameValid() {
         String name = mViewModel.getAccountName();
         if (name == null || name.isEmpty()) {
@@ -200,6 +229,7 @@ public class AddEditAccountActivity extends AppCompatActivity {
      *
      * @param accountName Tên tài khoản
      * @param ignoreId    ID tài khoản bỏ qua khi kiểm tra (bỏ qua trường hợp tự so sánh với chính nó)
+     * @return
      */
     private boolean isAccountNameExists(String accountName, int ignoreId) {
         if (allAccounts == null) return false;
@@ -214,6 +244,11 @@ public class AddEditAccountActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Lớp cài đặt sự kiện click, bao gồm:
+     * Hiển thị dialog chọn icon tài khoản
+     * Xác nhận thêm/sửa tài khoản
+     */
     public class HandlerClick {
         private Dialog dialog;
 

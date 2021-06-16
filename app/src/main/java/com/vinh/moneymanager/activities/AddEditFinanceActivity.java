@@ -427,9 +427,8 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         }
 
         Category currentCategorySelected = mViewModel.category.get();
-        assert (currentCategorySelected != null);
 
-        if (currentCategorySelected.getType() != mViewModel.categoryType.get()) {
+        if (currentCategorySelected != null && currentCategorySelected.getType() != mViewModel.categoryType.get()) {
             if (!mCategories.isEmpty()) {
                 mViewModel.category.set(mCategories.get(0));
             }

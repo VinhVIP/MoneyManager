@@ -1,10 +1,7 @@
 package com.vinh.moneymanager.viewmodels;
 
-import android.widget.EditText;
-
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-import androidx.databinding.BindingAdapter;
 
 import com.vinh.moneymanager.BR;
 import com.vinh.moneymanager.libs.Helper;
@@ -31,18 +28,16 @@ public class AddEditAccountViewModel extends BaseObservable {
         this.account = account;
     }
 
-//    @BindingAdapter("android:text")
-//    public static void setText(EditText view, String oldText, String newText) {
-//        if (newText != null && newText.length() > 15) return;
-//        view.setText(newText);
-//        if (newText != null) view.setSelection(newText.length());
-//    }
-
     @Bindable
     public String getBalance() {
         return Helper.formatCurrencyWithoutSymbol(account.getBalance());
     }
 
+    /**
+     * Thêm các dấu chấm vào giá trị tiền tệ cho dễ nhìn
+     *
+     * @param balance
+     */
     public void setBalance(String balance) {
         if (!balance.equals(this.balance)) {
             this.balance = Helper.formatCurrencyWithoutSymbol(balance);
