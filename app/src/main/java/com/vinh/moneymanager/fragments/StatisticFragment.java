@@ -51,6 +51,7 @@ import com.vinh.moneymanager.viewmodels.CategoryViewModel;
 import com.vinh.moneymanager.viewmodels.FinanceViewModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -89,6 +90,7 @@ public class StatisticFragment extends Fragment {
     private int currentYear;
 
     private final ArrayList<String> labels = new ArrayList<>();
+    private final ArrayList<Long> values = new ArrayList<>();
     private final ArrayList<PieEntry> pieEntries = new ArrayList<>();
     private final ArrayList<BarEntry> barEntries = new ArrayList<>();
 
@@ -165,8 +167,8 @@ public class StatisticFragment extends Fragment {
         barChart = view.findViewById(R.id.barChart);
         initBarChar();
 
-        categoryViewModel.getCategories().observe(this.getViewLifecycleOwner(), allCategories -> {
-            financeViewModel.getAllFinances().observe(this.getViewLifecycleOwner(), finances -> {
+        categoryViewModel.getCategories().observe(getActivity(), allCategories -> {
+            financeViewModel.getAllFinances().observe(getActivity(), finances -> {
                 allFinances = finances;
 
                 Map<Category, List<Finance>> map = new TreeMap<>((c1, c2) -> c1.getCategoryId() - c2.getCategoryId());
@@ -233,17 +235,13 @@ public class StatisticFragment extends Fragment {
         updateDataYear();
     }
 
+    long[][] money = new long[12][2];
+
     private void updateDataYear() {
         int selectedYear = dateRange.getStartDate().getYear();
         currentYear = selectedYear;
 
-        ArrayList<ArrayList<Long>> lists = new ArrayList<>();
-        lists.ensureCapacity(12);
-
-        long[][] money = new long[12][2];
-        for (int i = 0; i < money.length; i++)
-            for (int j = 0; j < money[0].length; j++)
-                money[i][j] = 0;
+        for (long[] longs : money) Arrays.fill(longs, 0);
 
         for (Finance f : allFinances) {
             String[] dates = f.getDateTime().split("-")[0].trim().split("/");
@@ -285,9 +283,7 @@ public class StatisticFragment extends Fragment {
         dataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                String s = String.format("%.2f", value / 1000000);
-                while (s.endsWith("0")) s = s.substring(0, s.length() - 1);
-                return s.endsWith(",") ? s.substring(0, s.length() - 1) : s;
+                return showValue(value);
             }
         });
 
@@ -300,9 +296,7 @@ public class StatisticFragment extends Fragment {
         dataSet2.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                String s = String.format("%.2f", value / 1000000);
-                while (s.endsWith("0")) s = s.substring(0, s.length() - 1);
-                return s.endsWith(",") ? s.substring(0, s.length() - 1) : s;
+                return showValue(value);
             }
         });
 
@@ -334,7 +328,12 @@ public class StatisticFragment extends Fragment {
         barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-                Toast.makeText(StatisticFragment.this.getContext(), labels[h.getDataSetIndex()] + " tháng " + (int) (e.getX() + 1) + ": " + Helper.formatCurrencyWithoutSymbol((long) e.getY()), Toast.LENGTH_SHORT).show();
+                int setIndex = h.getDataSetIndex();
+                int index = (int) e.getX();
+                int month = index + 1;
+                String currency = Helper.formatCurrency(money[index][setIndex]);
+                String mess = String.format("%s tháng %d: %s", labels[setIndex], month, currency);
+                Toast.makeText(StatisticFragment.this.getContext(), mess, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -382,7 +381,7 @@ public class StatisticFragment extends Fragment {
         leftAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return toM(value);
+                return showValue(value);
             }
         });
 
@@ -438,7 +437,7 @@ public class StatisticFragment extends Fragment {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
                 PieEntry entry = (PieEntry) e;
-                Toast.makeText(StatisticFragment.this.getContext(), entry.getLabel() + ": " + Helper.formatCurrency((long) entry.getY()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(StatisticFragment.this.getContext(), entry.getLabel() + ": " + Helper.formatCurrency(values.get((int) h.getX())), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -452,26 +451,27 @@ public class StatisticFragment extends Fragment {
         horizontalBarChart.setDrawGridBackground(false);
         horizontalBarChart.setFitBars(true);
 
+
         horizontalBarChart.getXAxis().setDrawGridLines(false);
         horizontalBarChart.getXAxis().setDrawAxisLine(false);
         horizontalBarChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         horizontalBarChart.getXAxis().setEnabled(true);
         horizontalBarChart.getXAxis().setTextSize(12);
         horizontalBarChart.getXAxis().setTypeface(tfRegular);
+
         horizontalBarChart.getAxisLeft().setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                if (value < 1000000) {
-                    return toK(value);
-                }
-                return toM(value);
+                return showValue(value);
             }
         });
 
+        // Bottom Axis
         horizontalBarChart.getAxisLeft().setEnabled(true);
         horizontalBarChart.getAxisLeft().setAxisMinimum(0f);
         horizontalBarChart.getAxisLeft().setTypeface(tfRegular);
         horizontalBarChart.getAxisRight().setEnabled(false);
+
 
         horizontalBarChart.getLegend().setEnabled(false);
         horizontalBarChart.setDrawValueAboveBar(true);
@@ -479,8 +479,11 @@ public class StatisticFragment extends Fragment {
         horizontalBarChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-                BarEntry entry = (BarEntry) e;
-                Toast.makeText(StatisticFragment.this.getContext(), labels.get(labels.size() - 1 - (int) entry.getX()) + ": " + Helper.formatCurrency((long) entry.getY()), Toast.LENGTH_SHORT).show();
+                int i = labels.size() - 1 - (int) h.getX();
+                String label = labels.get(i);
+                String currency = Helper.formatCurrency(values.get(i));
+                String mess = String.format("%s: %s", label, currency);
+                Toast.makeText(StatisticFragment.this.getContext(), mess, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -493,7 +496,7 @@ public class StatisticFragment extends Fragment {
 
     private String toK(float value) {
         if (value == 0) return "0";
-        return String.format("%.0fK", value / 1000);
+        return String.format("%.0fK", value / 1e3);
     }
 
     private String toM(float value) {
@@ -502,7 +505,18 @@ public class StatisticFragment extends Fragment {
     }
 
     private String toMWithoutSymbol(float value) {
-        String s = String.format("%.2f", value / 1000000);
+        String s = String.format("%.2f", value / 1e6);
+        while (s.endsWith("0")) s = s.substring(0, s.length() - 1);
+        return s.endsWith(",") ? s.substring(0, s.length() - 1) : s;
+    }
+
+    private String toB(float value) {
+        String s = toBWithoutSymbol(value);
+        return s + "B";
+    }
+
+    private String toBWithoutSymbol(float value) {
+        String s = String.format("%.2f", value / 1e9);
         while (s.endsWith("0")) s = s.substring(0, s.length() - 1);
         return s.endsWith(",") ? s.substring(0, s.length() - 1) : s;
     }
@@ -511,6 +525,7 @@ public class StatisticFragment extends Fragment {
         chartColors = getRandomColors();
 
         labels.clear();
+        values.clear();
         pieEntries.clear();
         barEntries.clear();
 
@@ -525,6 +540,7 @@ public class StatisticFragment extends Fragment {
             }
             if (money != 0) {
                 labels.add(category.getName());
+                values.add(money);
                 pieEntries.add(new PieEntry(money, category.getName().length() > 10 ? category.getName().substring(0, 10).trim().concat("...") : category.getName()));
                 listBarEntry.add(money);
             }
@@ -598,8 +614,7 @@ public class StatisticFragment extends Fragment {
         barDataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getBarLabel(BarEntry barEntry) {
-                if (barEntry.getY() < 1000000) return toK(barEntry.getY());
-                return toM(barEntry.getY());
+                return showValue(barEntry.getY());
             }
         });
 
@@ -614,6 +629,12 @@ public class StatisticFragment extends Fragment {
 
         horizontalBarChart.animateY(1500);
         horizontalBarChart.invalidate();
+    }
+
+    private String showValue(float value) {
+        if (value >= 1e9) return toB(value);
+        else if (value >= 1e6) return toM(value);
+        return toK(value);
     }
 
     public int[] getRandomColors() {
