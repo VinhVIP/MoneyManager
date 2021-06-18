@@ -257,6 +257,7 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
             return;
         }
         if (currentTransfer != null) {
+            getSupportActionBar().setTitle("Chỉnh sửa");
             Log.e("MM", "Load transfer");
 
             String[] dateTimeArray = currentTransfer.getDateTime().split("-");

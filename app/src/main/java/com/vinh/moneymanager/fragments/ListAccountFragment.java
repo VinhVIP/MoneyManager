@@ -37,7 +37,7 @@ public class ListAccountFragment extends Fragment implements RecyclerAccountAdap
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+        accountViewModel = new ViewModelProvider(getActivity()).get(AccountViewModel.class);
         return inflater.inflate(R.layout.fragment_list_account, container, false);
     }
 
@@ -59,7 +59,7 @@ public class ListAccountFragment extends Fragment implements RecyclerAccountAdap
         recyclerAccounts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerAccounts.setAdapter(adapter);
 
-        accountViewModel.getAccounts().observe(getViewLifecycleOwner(), accounts -> {
+        accountViewModel.getAccounts().observe(getActivity(), accounts -> {
             adapter.setAccounts(accounts);
         });
     }

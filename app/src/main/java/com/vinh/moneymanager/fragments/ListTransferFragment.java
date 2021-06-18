@@ -44,8 +44,8 @@ public class ListTransferFragment extends Fragment implements RecyclerTransferAd
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-        transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
+        accountViewModel = new ViewModelProvider(getActivity()).get(AccountViewModel.class);
+        transferViewModel = new ViewModelProvider(getActivity()).get(TransferViewModel.class);
         return inflater.inflate(R.layout.fragment_list_transfer, container, false);
     }
 
@@ -58,7 +58,7 @@ public class ListTransferFragment extends Fragment implements RecyclerTransferAd
         recyclerTransfers.setAdapter(adapter);
         recyclerTransfers.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        transferViewModel.getTransfers().observe(getViewLifecycleOwner(), transfers -> {
+        transferViewModel.getTransfers().observe(getActivity(), transfers -> {
             Log.d("MM", "observe list transfer: " + transfers.size());
             this.transfers = transfers;
             adapter.setAdapter(transfers);

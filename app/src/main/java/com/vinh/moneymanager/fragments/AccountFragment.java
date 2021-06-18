@@ -98,7 +98,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void updateBalance() {
-        mViewModel.getAccounts().observe(getViewLifecycleOwner(), accounts -> {
+        mViewModel.getAccounts().observe(getActivity(), accounts -> {
 
             long totalBalance = 0;
             for (Account a : accounts) {
