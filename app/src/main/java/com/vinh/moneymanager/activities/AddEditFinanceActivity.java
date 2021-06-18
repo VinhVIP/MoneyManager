@@ -22,6 +22,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
@@ -154,9 +155,15 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
 
     private void deleteFinance() {
         if (currentFinance != null && currentFinance.getFinanceId() != -1) {
-            financeViewModel.delete(currentFinance);
-            Log.d("MM", "Finance Deleted: " + currentFinance.getFinanceId());
-            finish();
+            new AlertDialog.Builder(this)
+                    .setTitle("Xác nhận xóa")
+                    .setMessage("Bạn có xác định muốn xóa khoản này?")
+                    .setPositiveButton("XÓA", (dialog, which) -> {
+                        financeViewModel.delete(currentFinance);
+                        Log.d("MM", "Finance Deleted: " + currentFinance.getFinanceId());
+                        finish();
+                    }).setNegativeButton("HỦY", (dialog, which) -> dialog.cancel()).show();
+
         }
     }
 

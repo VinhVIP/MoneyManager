@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.SearchActivity">
+
+
+    <ImageView
+        android:id="@+id/img_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/ic_back_black" />
+
+    <EditText
+        android:id="@+id/ed_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="6dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="4dp"
+        android:layout_toEndOf="@id/img_back"
+        android:background="@drawable/bg_search"
+        android:drawableStart="@drawable/ic_search"
+        android:fontFamily="@font/oswald"
+        android:hint="Tìm kiếm"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_mess"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ed_search"
+        android:fontFamily="@font/oswald"
+        android:gravity="center"
+        android:text="Không tìm thấy khoản giao dịch nào!"
+        android:textColor="@color/amber"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_finance_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ed_search"
+        android:layout_marginStart="-12dp"
+        android:visibility="visible"
+        tools:listitem="@layout/list_item" />
+
+</RelativeLayout>

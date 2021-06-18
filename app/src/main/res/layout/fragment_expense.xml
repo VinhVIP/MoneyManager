@@ -129,6 +129,14 @@
                             app:chipBackgroundColor="@color/chip_bg_color" />
 
                     </com.google.android.material.chip.ChipGroup>
+
+                    <ImageView
+                        android:id="@+id/img_search"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="12dp"
+                        android:src="@drawable/ic_search" />
                 </LinearLayout>
 
 

@@ -33,6 +33,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.activities.AddEditCategoryActivity;
 import com.vinh.moneymanager.activities.AddEditFinanceActivity;
+import com.vinh.moneymanager.activities.SearchActivity;
 import com.vinh.moneymanager.adapters.ExpandCategoryAdapter;
 import com.vinh.moneymanager.adapters.ExpandTimeAdapter;
 import com.vinh.moneymanager.adapters.FragmentFinanceStateAdapter;
@@ -44,7 +45,6 @@ import com.vinh.moneymanager.libs.DialogWeek;
 import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.listeners.OnItemCategoryListener;
 import com.vinh.moneymanager.listeners.OnItemFinanceListener;
-import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
 import com.vinh.moneymanager.viewmodels.CategoryFinanceViewModel;
@@ -54,8 +54,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import static android.app.Activity.RESULT_OK;
 
 public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSelectedListener,
         RecyclerWeekAdapter.OnItemWeekClickListener,
@@ -105,7 +103,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     private ChipGroup chipGroup;
     private Chip chipIncome, chipExpense;
 
-    private ImageView imgExpandCollapse;
+    private ImageView imgExpandCollapse, imgSearch;
     private boolean isExpandedAll = false;
 
     private ListCategoryFragment listIncomeFragment, listExpenseFragment;
@@ -166,6 +164,11 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         initExpandListFinances(view);
         initViewPager(view);
         setLayoutBottomSheet(view);
+        imgSearch = view.findViewById(R.id.img_search);
+        imgSearch.setOnClickListener(v -> {
+            Intent in = new Intent(getActivity(), SearchActivity.class);
+            startActivity(in);
+        });
 
 
         mViewModel.getMapTimeFinance().observe(getActivity(), timeListMap -> {
