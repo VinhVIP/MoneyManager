@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -92,20 +93,26 @@ public class ListTransferFragment extends Fragment implements RecyclerTransferAd
 
     @Override
     public void onItemDelete(Transfer transfer, int position) {
-        Log.d("MM", "Delete transfer: " + transfer.getTransferId());
 
-        Account accountOut = accountViewModel.search(transfer.getAccountOutId());
-        Account accountIn = accountViewModel.search(transfer.getAccountInId());
+        new AlertDialog.Builder(getContext())
+                .setTitle("Xác nhận xóa")
+                .setMessage("Bạn có xác định muốn xóa chuyển khoản này?")
+                .setPositiveButton("XÓA", (dialog, which) -> {
+                    Log.d("MM", "Delete transfer: " + transfer.getTransferId());
 
-        // Khôi phục lại số tiền trong tài khoản
-        accountOut.setBalance(accountOut.getBalance() + transfer.getMoney() + transfer.getFee());
-        accountIn.setBalance(accountIn.getBalance() - transfer.getMoney());
+                    Account accountOut = accountViewModel.search(transfer.getAccountOutId());
+                    Account accountIn = accountViewModel.search(transfer.getAccountInId());
 
-        accountViewModel.update(accountOut);
-        accountViewModel.update(accountIn);
+                    // Khôi phục lại số tiền trong tài khoản
+                    accountOut.setBalance(accountOut.getBalance() + transfer.getMoney() + transfer.getFee());
+                    accountIn.setBalance(accountIn.getBalance() - transfer.getMoney());
 
-        transferViewModel.delete(transfer);
-        adapter.deleteTransfer(position);
+                    accountViewModel.update(accountOut);
+                    accountViewModel.update(accountIn);
+
+                    transferViewModel.delete(transfer);
+                    adapter.deleteTransfer(position);
+                }).setNegativeButton("HỦY", (dialog, which) -> dialog.cancel()).show();
 
     }
 
