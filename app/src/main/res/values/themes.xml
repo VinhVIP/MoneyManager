@@ -37,4 +37,21 @@
     <style name="ChipText" parent="TextAppearance.MaterialComponents.Chip">
         <item name="android:fontFamily">@font/oswald</item>
     </style>
+
+    <style name="RadioSetting" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/oswald_light</item>
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/cb_setting_height</item>
+    </style>
+    <style name="CheckBoxSetting" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/oswald_light</item>
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/cb_setting_height</item>
+    </style>
 </resources>

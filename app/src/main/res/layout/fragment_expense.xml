@@ -130,13 +130,6 @@
 
                     </com.google.android.material.chip.ChipGroup>
 
-                    <ImageView
-                        android:id="@+id/img_search"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="12dp"
-                        android:src="@drawable/ic_search" />
                 </LinearLayout>
 
 
@@ -170,11 +163,11 @@
             <include layout="@layout/bottom_sheet" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_list_finance"
+                android:id="@+id/fab_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:src="@drawable/ic_fab_list"
+                android:src="@drawable/ic_search"
                 android:translationX="-16dp"
                 android:translationY="-16dp"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />

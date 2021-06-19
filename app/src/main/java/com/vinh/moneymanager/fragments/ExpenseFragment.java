@@ -97,13 +97,13 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     private CategoryFinanceViewModel mViewModel;
 
     private TabLayout tabLayout;
-    private FloatingActionButton fabListFinances;
+    private FloatingActionButton fabSearch;
     private ViewPager2 viewPager;
     private FragmentFinanceStateAdapter pagerAdapter;
     private ChipGroup chipGroup;
     private Chip chipIncome, chipExpense;
 
-    private ImageView imgExpandCollapse, imgSearch;
+    private ImageView imgExpandCollapse;
     private boolean isExpandedAll = false;
 
     private ListCategoryFragment listIncomeFragment, listExpenseFragment;
@@ -164,12 +164,6 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         initExpandListFinances(view);
         initViewPager(view);
         setLayoutBottomSheet(view);
-        imgSearch = view.findViewById(R.id.img_search);
-        imgSearch.setOnClickListener(v -> {
-            Intent in = new Intent(getActivity(), SearchActivity.class);
-            startActivity(in);
-        });
-
 
         mViewModel.getMapTimeFinance().observe(getActivity(), timeListMap -> {
             mapTimeIncome.clear();
@@ -315,27 +309,27 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         sheetBehavior.setDraggable(true);
 
-        fabListFinances = view.findViewById(R.id.fab_list_finance);
-        fabListFinances.setOnClickListener(v -> {
-
-            if (getBottomSheetState() == BottomSheetBehavior.STATE_EXPANDED) {
-                setBottomSheetState(BottomSheetBehavior.STATE_COLLAPSED);
-//                fabListFinances.setImageResource(R.drawable.ic_fab_list);
-            } else if (getBottomSheetState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                setBottomSheetState(BottomSheetBehavior.STATE_EXPANDED);
-//                fabListFinances.setImageResource(R.drawable.ic_close);
-            }
+        fabSearch = view.findViewById(R.id.fab_search);
+        fabSearch.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), SearchActivity.class));
+//            if (getBottomSheetState() == BottomSheetBehavior.STATE_EXPANDED) {
+//                setBottomSheetState(BottomSheetBehavior.STATE_COLLAPSED);
+////                fabListFinances.setImageResource(R.drawable.ic_fab_list);
+//            } else if (getBottomSheetState() == BottomSheetBehavior.STATE_COLLAPSED) {
+//                setBottomSheetState(BottomSheetBehavior.STATE_EXPANDED);
+////                fabListFinances.setImageResource(R.drawable.ic_close);
+//            }
         });
 
         sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    fabListFinances.setVisibility(View.INVISIBLE);
-                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    fabListFinances.setImageResource(R.drawable.ic_fab_list);
-                    fabListFinances.setVisibility(View.VISIBLE);
-                }
+//                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+//                    fabSearch.setVisibility(View.INVISIBLE);
+//                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+//                    fabSearch.setImageResource(R.drawable.ic_fab_list);
+//                    fabSearch.setVisibility(View.VISIBLE);
+//                }
             }
 
             @Override
@@ -354,13 +348,13 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     public void setBottomSheetState(int state) {
         if (getBottomSheetState() != state) {
             sheetBehavior.setState(state);
-            if (state == BottomSheetBehavior.STATE_EXPANDED) {
-                fabListFinances.setImageResource(R.drawable.ic_close);
-                fabListFinances.setVisibility(View.INVISIBLE);
-            } else if (state == BottomSheetBehavior.STATE_COLLAPSED) {
-                fabListFinances.setImageResource(R.drawable.ic_fab_list);
-                fabListFinances.setVisibility(View.VISIBLE);
-            }
+//            if (state == BottomSheetBehavior.STATE_EXPANDED) {
+//                fabSearch.setImageResource(R.drawable.ic_close);
+//                fabSearch.setVisibility(View.INVISIBLE);
+//            } else if (state == BottomSheetBehavior.STATE_COLLAPSED) {
+//                fabSearch.setImageResource(R.drawable.ic_fab_list);
+//                fabSearch.setVisibility(View.VISIBLE);
+//            }
         }
     }
 
