@@ -184,28 +184,23 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
         String strDate = finance.getDateTime().split("-")[0].trim();
         DateRange.Date date = new DateRange.Date(strDate);
         if (date.compare(startDate) >= 0 && date.compare(endDate) <= 0) {
-            Log.d("MMM", "ok1");
             return true;
         }
         if (date.compare(endDate) >= 0 && date.compare(startDate) <= 0) {
-            Log.d("MMM", "ok2");
             return true;
         }
         return false;
     }
 
     private boolean checkTransferTime(Transfer transfer) {
-        Log.d("MMM", "dm transfer");
         if (isFilterAllTime) return true;
 
         String strDate = transfer.getDateTime().split("-")[0].trim();
         DateRange.Date date = new DateRange.Date(strDate);
         if (date.compare(startDate) >= 0 && date.compare(endDate) <= 0) {
-            Log.d("MMM", "ok1");
             return true;
         }
         if (date.compare(endDate) >= 0 && date.compare(startDate) <= 0) {
-            Log.d("MMM", "ok2");
             return true;
         }
         return false;
