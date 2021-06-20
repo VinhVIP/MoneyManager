@@ -3,8 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:background="?selectableItemBackground"
-    android:longClickable="true"
-    android:focusable="true"
     android:gravity="center_vertical"
     android:paddingVertical="3dp">
 

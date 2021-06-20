@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +62,7 @@ import java.util.TreeMap;
 public class StatisticFragment extends Fragment {
 
     private static StatisticFragment instance;
-    private final int HORIZONTAL_BAR_HEIGHT = 50;
+    private final int HORIZONTAL_BAR_HEIGHT = 35;
 
     private final ArrayList<BarEntry> entriesExpense = new ArrayList<>();
     private final ArrayList<BarEntry> entriesIncome = new ArrayList<>();
@@ -597,7 +598,7 @@ public class StatisticFragment extends Fragment {
     }
 
     private void updateHorizontalBarChartData() {
-        horizontalBarChart.getLayoutParams().height = (int) Helper.convertDpToPixel(barEntries.size() * HORIZONTAL_BAR_HEIGHT, getContext());
+        horizontalBarChart.getLayoutParams().height = (int) Helper.convertDpToPixel(50 + barEntries.size() * HORIZONTAL_BAR_HEIGHT, getContext());
         horizontalBarChart.requestLayout();     // Cập nhật lại layout
 
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
@@ -622,7 +623,7 @@ public class StatisticFragment extends Fragment {
         BarData barData = new BarData(barDataSet);
         barData.setHighlightEnabled(true);
         barData.setValueTextColor(Color.BLACK);
-        barData.setBarWidth(0.8f);
+        barData.setBarWidth(0.7f);
         barData.setValueTypeface(tfRegular);
         horizontalBarChart.setData(barData);
 

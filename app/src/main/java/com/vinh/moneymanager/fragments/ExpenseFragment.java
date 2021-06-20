@@ -103,7 +103,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     private ChipGroup chipGroup;
     private Chip chipIncome, chipExpense;
 
-    private ImageView imgExpandCollapse;
+    private ImageView imgExpandCollapse, imgDoubleArrow;
     private boolean isExpandedAll = false;
 
     private ListCategoryFragment listIncomeFragment, listExpenseFragment;
@@ -268,6 +268,14 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
                 super.onPageSelected(position);
                 ((Chip) (chipGroup.getChildAt(position))).setChecked(true);
                 mViewModel.switchExpenseIncome.set(position + 1);
+
+                if(mViewModel.switchExpenseIncome.get() == Helper.TYPE_INCOME){
+                    expandFinanceAdapter.setMapFinance(mapIncome);
+                    expandTimeAdapter.setMapFinance(mapTimeIncome);
+                }else{
+                    expandFinanceAdapter.setMapFinance(mapExpense);
+                    expandTimeAdapter.setMapFinance(mapTimeExpense);
+                }
             }
         });
 
@@ -324,12 +332,13 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-//                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-//                    fabSearch.setVisibility(View.INVISIBLE);
-//                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-//                    fabSearch.setImageResource(R.drawable.ic_fab_list);
-//                    fabSearch.setVisibility(View.VISIBLE);
-//                }
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    fabSearch.setVisibility(View.INVISIBLE);
+                    imgDoubleArrow.setImageResource(R.drawable.double_down);
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    fabSearch.setVisibility(View.VISIBLE);
+                    imgDoubleArrow.setImageResource(R.drawable.double_up);
+                }
             }
 
             @Override
@@ -349,11 +358,9 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         if (getBottomSheetState() != state) {
             sheetBehavior.setState(state);
 //            if (state == BottomSheetBehavior.STATE_EXPANDED) {
-//                fabSearch.setImageResource(R.drawable.ic_close);
-//                fabSearch.setVisibility(View.INVISIBLE);
+//                imgDoubleArrow.setImageResource(R.drawable.double_down);
 //            } else if (state == BottomSheetBehavior.STATE_COLLAPSED) {
-//                fabSearch.setImageResource(R.drawable.ic_fab_list);
-//                fabSearch.setVisibility(View.VISIBLE);
+//                imgDoubleArrow.setImageResource(R.drawable.double_up);
 //            }
         }
     }
@@ -361,6 +368,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     private void initTabLayout(View view) {
         tabLayout = view.findViewById(R.id.tab_layout);
         imgExpandCollapse = view.findViewById(R.id.img_expand_collapse);
+        imgDoubleArrow = view.findViewById(R.id.img_double_arrow);
         imgExpandCollapse.setImageResource(isExpandedAll ? R.drawable.ic_collapse : R.drawable.ic_expand);
 
         setMarginTabItem(tabLayout);    // tab item margin
@@ -394,6 +402,12 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             imgExpandCollapse.setImageResource(isExpandedAll ? R.drawable.ic_collapse : R.drawable.ic_expand);
 
             expandCollapseGroup();
+        });
+
+        imgDoubleArrow.setOnClickListener(v -> {
+            setBottomSheetState(getBottomSheetState() == BottomSheetBehavior.STATE_COLLAPSED
+                    ? BottomSheetBehavior.STATE_EXPANDED
+                    : BottomSheetBehavior.STATE_COLLAPSED);
         });
     }
 
@@ -434,7 +448,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
         // ------------ Group Click -----------------
         expandListView.setOnGroupExpandListener(groupPosition -> {
-
+            Log.d("MMM", "open: " + groupPosition);
         });
 
     }
