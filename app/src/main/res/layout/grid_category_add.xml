@@ -22,7 +22,7 @@
             android:src="@drawable/ic_add_circle_outline" />
 
         <TextView
-            android:id="@+id/text_view_category_name"
+            android:id="@+id/text_view_account_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/image_view_category"

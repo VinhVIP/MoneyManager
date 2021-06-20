@@ -2,6 +2,7 @@ package com.vinh.moneymanager.activities;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -23,15 +24,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.adapters.RecyclerSearchAdapter;
+import com.vinh.moneymanager.libs.Helper;
+import com.vinh.moneymanager.listeners.OnItemSearchListener;
+import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
+import com.vinh.moneymanager.room.entities.Transfer;
 import com.vinh.moneymanager.viewmodels.AccountViewModel;
 import com.vinh.moneymanager.viewmodels.CategoryViewModel;
 import com.vinh.moneymanager.viewmodels.FinanceViewModel;
+import com.vinh.moneymanager.viewmodels.TransferViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements OnItemSearchListener {
 
     private ImageView imgBack, imgSetting;
     private EditText edSearch;
@@ -40,11 +46,13 @@ public class SearchActivity extends AppCompatActivity {
     private RecyclerSearchAdapter adapter;
 
     private FinanceViewModel financeViewModel;
+    private TransferViewModel transferViewModel;
     private CategoryViewModel categoryViewModel;
     private AccountViewModel accountViewModel;
 
-    private List<Finance> searchFinance = new ArrayList<>();
+    private ArrayList items = new ArrayList<>();
     private List<Finance> allFinances = new ArrayList<>();
+    private List<Transfer> allTransfers = new ArrayList<>();
 
     private Dialog dialog;
 
@@ -56,7 +64,7 @@ public class SearchActivity extends AppCompatActivity {
 
         edSearch = findViewById(R.id.ed_search);
         recyclerView = findViewById(R.id.recycler_finance_search);
-        adapter = new RecyclerSearchAdapter(this, new ArrayList<>(), null);
+        adapter = new RecyclerSearchAdapter(this, new ArrayList<>(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -77,10 +85,18 @@ public class SearchActivity extends AppCompatActivity {
 
     private void observeData() {
         financeViewModel = new ViewModelProvider(this).get(FinanceViewModel.class);
+        transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
 
-        financeViewModel.getAllFinances().observe(this, finances -> allFinances = finances);
+        financeViewModel.getAllFinances().observe(this, finances -> {
+            allFinances = finances;
+            updateDataList(edSearch.getText().toString().trim().toLowerCase());
+        });
+        transferViewModel.getTransfers().observe(this, transfers -> {
+            allTransfers = transfers;
+            updateDataList(edSearch.getText().toString().trim().toLowerCase());
+        });
         categoryViewModel.getCategories().observe(this, categories -> adapter.setCategories(categories));
         accountViewModel.getAccounts().observe(this, accounts -> adapter.setAccounts(accounts));
     }
@@ -99,26 +115,35 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                searchFinance.clear();
-                String keyword = s.toString().trim().toLowerCase();
-                if (keyword.length() != 0) {
-                    for (Finance f : allFinances) {
-                        if (f.getDetail().toLowerCase().contains(keyword)) {
-                            searchFinance.add(f);
-                        }
-                    }
-                }
-                adapter.setFinances(searchFinance);
-                if (searchFinance.isEmpty()) {
-                    recyclerView.setVisibility(View.GONE);
-                    tvMess.setVisibility(View.VISIBLE);
-                } else {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    tvMess.setVisibility(View.GONE);
-                }
+                updateDataList(s.toString().trim().toLowerCase());
             }
+
         });
 
+    }
+
+    private void updateDataList(String keyword) {
+        items.clear();
+        if (keyword.length() != 0) {
+            for (Finance f : allFinances) {
+                if (f.getDetail().toLowerCase().contains(keyword)) {
+                    items.add(f);
+                }
+            }
+            for (Transfer t : allTransfers) {
+                if (t.getDetail().toLowerCase().contains(keyword)) {
+                    items.add(t);
+                }
+            }
+        }
+        adapter.setFinances(items);
+        if (items.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            tvMess.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            tvMess.setVisibility(View.GONE);
+        }
     }
 
     private boolean isFilterIncome = true;
@@ -183,5 +208,41 @@ public class SearchActivity extends AppCompatActivity {
                     1);
             datePickerDialog.show();
         });
+    }
+
+    @Override
+    public void onFinanceClick(Finance finance, Category category) {
+        Bundle dataSend = new Bundle();
+
+        dataSend.putInt(Helper.FINANCE_ID, finance.getFinanceId());
+        dataSend.putInt(Helper.CATEGORY_ID, finance.getCategoryId());
+//        dataSend.putString(Helper.CATEGORY_NAME, category.getName());
+        dataSend.putInt(Helper.CATEGORY_TYPE, category.getType());
+        dataSend.putInt(Helper.ACCOUNT_ID, finance.getAccountId());
+        dataSend.putString(Helper.FINANCE_DATETIME, finance.getDateTime());
+        dataSend.putLong(Helper.FINANCE_COST, finance.getMoney());
+        dataSend.putString(Helper.FINANCE_DETAIL, finance.getDetail());
+
+        Intent intent = new Intent(this, AddEditFinanceActivity.class);
+        intent.putExtra(Helper.EDIT_FINANCE, dataSend);
+
+        startActivity(intent);
+    }
+
+    @Override
+    public void onTransferClick(Transfer transfer) {
+        Bundle bundle = new Bundle();
+
+        bundle.putInt(Helper.TRANSFER_ID, transfer.getTransferId());
+        bundle.putString(Helper.TRANSFER_DATETIME, transfer.getDateTime());
+        bundle.putInt(Helper.TRANSFER_ACCOUNT_OUT_ID, transfer.getAccountOutId());
+        bundle.putInt(Helper.TRANSFER_ACCOUNT_IN_ID, transfer.getAccountInId());
+        bundle.putLong(Helper.TRANSFER_MONEY, transfer.getMoney());
+        bundle.putLong(Helper.TRANSFER_FEE, transfer.getFee());
+        bundle.putString(Helper.TRANSFER_DETAIL, transfer.getDetail());
+
+        Intent intent = new Intent(this, AddEditFinanceActivity.class);
+        intent.putExtra(Helper.EDIT_TRANSFER, bundle);
+        startActivity(intent);
     }
 }

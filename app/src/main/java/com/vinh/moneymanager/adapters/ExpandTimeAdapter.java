@@ -168,7 +168,7 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
             tvDay = view.findViewById(R.id.tv_calendar_day);
             tvMonthYear = view.findViewById(R.id.tv_calendar_month_year);
             tvDayOfWeek = view.findViewById(R.id.tv_calendar_day_of_week);
-            tvDetail = view.findViewById(R.id.text_view_item_detail);
+            tvDetail = view.findViewById(R.id.text_view_transfer_detail);
             tvTotal = view.findViewById(R.id.text_view_item_price);
             tvAccountName = view.findViewById(R.id.text_view_item_account);
             imgArrow = view.findViewById(R.id.img_arrow);
@@ -205,11 +205,11 @@ public class ExpandTimeAdapter extends BaseExpandableListAdapter {
             this.view = view;
 
             tvTime = view.findViewById(R.id.text_view_time);
-            tvDetail = view.findViewById(R.id.text_view_item_detail);
-            tvCategoryName = view.findViewById(R.id.text_view_category_name);
+            tvDetail = view.findViewById(R.id.text_view_transfer_detail);
+            tvCategoryName = view.findViewById(R.id.text_view_account_out);
             tvCost = view.findViewById(R.id.text_view_item_price);
             tvCost = view.findViewById(R.id.text_view_item_price);
-            tvAccountName = view.findViewById(R.id.text_view_account_name);
+            tvAccountName = view.findViewById(R.id.text_view_account_in);
         }
 
         public void bindData(Finance finance) {

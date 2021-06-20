@@ -183,7 +183,7 @@ public class ExpandCategoryAdapter extends BaseExpandableListAdapter {
             tvDay = view.findViewById(R.id.tv_calendar_day);
             tvMonthYear = view.findViewById(R.id.tv_calendar_month_year);
             tvDayOfWeek = view.findViewById(R.id.tv_calendar_day_of_week);
-            tvDetail = view.findViewById(R.id.text_view_item_detail);
+            tvDetail = view.findViewById(R.id.text_view_transfer_detail);
             tvCost = view.findViewById(R.id.text_view_item_price);
             tvAccountName = view.findViewById(R.id.text_view_item_account);
         }
