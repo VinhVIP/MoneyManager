@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.vinh.moneymanager.R;
 import com.vinh.moneymanager.adapters.RecyclerSearchAdapter;
+import com.vinh.moneymanager.libs.DateRange;
 import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.listeners.OnItemSearchListener;
 import com.vinh.moneymanager.room.entities.Category;
@@ -54,7 +56,10 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
     private List<Finance> allFinances = new ArrayList<>();
     private List<Transfer> allTransfers = new ArrayList<>();
 
+    private List<Category> allCategories = new ArrayList<>();
+
     private Dialog dialog;
+    private DateRange.Date startDate, endDate;
 
 
     @Override
@@ -79,8 +84,11 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
         });
 
         observeData();
-        settingDialog();
         handlerSearch();
+
+        startDate = new DateRange.Date(1, 1, 2021);
+        endDate = new DateRange.Date(1, 12, 2021);
+        settingDialog();
     }
 
     private void observeData() {
@@ -97,7 +105,10 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
             allTransfers = transfers;
             updateDataList(edSearch.getText().toString().trim().toLowerCase());
         });
-        categoryViewModel.getCategories().observe(this, categories -> adapter.setCategories(categories));
+        categoryViewModel.getCategories().observe(this, categories -> {
+            allCategories = categories;
+            adapter.setCategories(categories);
+        });
         accountViewModel.getAccounts().observe(this, accounts -> adapter.setAccounts(accounts));
     }
 
@@ -127,12 +138,15 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
         if (keyword.length() != 0) {
             for (Finance f : allFinances) {
                 if (f.getDetail().toLowerCase().contains(keyword)) {
-                    items.add(f);
+                    if (canAddToList(f)) items.add(f);
                 }
             }
-            for (Transfer t : allTransfers) {
-                if (t.getDetail().toLowerCase().contains(keyword)) {
-                    items.add(t);
+
+            if (isFilterTransfer) {
+                for (Transfer t : allTransfers) {
+                    if (t.getDetail().toLowerCase().contains(keyword)) {
+                        if (checkTransferTime(t)) items.add(t);
+                    }
                 }
             }
         }
@@ -144,6 +158,57 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
             recyclerView.setVisibility(View.VISIBLE);
             tvMess.setVisibility(View.GONE);
         }
+    }
+
+    private Category getCategory(int categoryId) {
+        for (Category c : allCategories) {
+            if (c.getCategoryId() == categoryId) return c;
+        }
+        return null;
+    }
+
+
+    private boolean canAddToList(Finance finance) {
+        return checkFinanceType(finance) && checkFinanceTime(finance);
+    }
+
+    private boolean checkFinanceType(Finance finance) {
+        Category c = getCategory(finance.getCategoryId());
+        if (isFilterIncome && c.getType() == Helper.TYPE_INCOME) return true;
+        return isFilterExpense && c.getType() == Helper.TYPE_EXPENSE;
+    }
+
+    private boolean checkFinanceTime(Finance finance) {
+        if (isFilterAllTime) return true;
+
+        String strDate = finance.getDateTime().split("-")[0].trim();
+        DateRange.Date date = new DateRange.Date(strDate);
+        if (date.compare(startDate) >= 0 && date.compare(endDate) <= 0) {
+            Log.d("MMM", "ok1");
+            return true;
+        }
+        if (date.compare(endDate) >= 0 && date.compare(startDate) <= 0) {
+            Log.d("MMM", "ok2");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkTransferTime(Transfer transfer) {
+        Log.d("MMM", "dm transfer");
+        if (isFilterAllTime) return true;
+
+        String strDate = transfer.getDateTime().split("-")[0].trim();
+        DateRange.Date date = new DateRange.Date(strDate);
+        if (date.compare(startDate) >= 0 && date.compare(endDate) <= 0) {
+            Log.d("MMM", "ok1");
+            return true;
+        }
+        if (date.compare(endDate) >= 0 && date.compare(startDate) <= 0) {
+            Log.d("MMM", "ok2");
+            return true;
+        }
+        return false;
     }
 
     private boolean isFilterIncome = true;
@@ -177,35 +242,48 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
             if (radioAllTime.isChecked()) {
                 layoutFilterTime.setVisibility(View.GONE);
             }
+            isFilterAllTime = radioAllTime.isChecked();
         });
 
         radioFixedTime.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (radioFixedTime.isChecked()) {
                 layoutFilterTime.setVisibility(View.VISIBLE);
             }
+            isFilterAllTime = radioAllTime.isChecked();
         });
 
         Button btnApply = dialog.findViewById(R.id.btn_apply);
         btnApply.setOnClickListener(v -> {
+            updateDataList(edSearch.getText().toString().trim().toLowerCase());
             dialog.dismiss();
         });
 
         TextView tvStartDate = dialog.findViewById(R.id.tv_start_date);
         TextView tvEndDate = dialog.findViewById(R.id.tv_end_date);
+
+        tvStartDate.setText(String.format("%02d/%02d/%d", startDate.getDay(), startDate.getMonth(), startDate.getYear()));
+        tvEndDate.setText(String.format("%02d/%02d/%d", endDate.getDay(), endDate.getMonth(), endDate.getYear()));
+
         tvStartDate.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(SearchActivity.this,
-                    (view, year, month, dayOfMonth) -> tvStartDate.setText(String.format("%02d/%02d/%d", dayOfMonth, month + 1, year)),
-                    2021,
-                    0,
-                    1);
+                    (view, year, month, dayOfMonth) -> {
+                        tvStartDate.setText(String.format("%02d/%02d/%d", dayOfMonth, month + 1, year));
+                        startDate = new DateRange.Date(dayOfMonth, month + 1, year);
+                    },
+                    startDate.getYear(),
+                    startDate.getMonth() - 1,
+                    startDate.getDay());
             datePickerDialog.show();
         });
         tvEndDate.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(SearchActivity.this,
-                    (view, year, month, dayOfMonth) -> tvEndDate.setText(String.format("%02d/%02d/%d", dayOfMonth, month + 1, year)),
-                    2021,
-                    0,
-                    1);
+                    (view, year, month, dayOfMonth) -> {
+                        tvEndDate.setText(String.format("%02d/%02d/%d", dayOfMonth, month + 1, year));
+                        endDate = new DateRange.Date(dayOfMonth, month + 1, year);
+                    },
+                    endDate.getYear(),
+                    endDate.getMonth() - 1,
+                    endDate.getDay());
             datePickerDialog.show();
         });
     }
