@@ -153,6 +153,7 @@
             android:id="@+id/view_pager_expense_income"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="40dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
