@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/milk"
     android:orientation="vertical"
     tools:context=".activities.SearchActivity">
 
@@ -39,8 +40,8 @@
 
         <ImageView
             android:id="@+id/img_setting"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_marginStart="-36dp"
             android:layout_marginTop="12dp"
             android:src="@drawable/ic_setting" />

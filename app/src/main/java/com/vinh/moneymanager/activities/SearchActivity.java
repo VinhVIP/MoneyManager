@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -154,6 +153,11 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
         if (items.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             tvMess.setVisibility(View.VISIBLE);
+            if (keyword.isEmpty()) {
+                tvMess.setText("Hãy nhập nội dung muốn tìm kiếm!");
+            } else {
+                tvMess.setText("Không tìm thấy khoản giao dịch nào!");
+            }
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             tvMess.setVisibility(View.GONE);

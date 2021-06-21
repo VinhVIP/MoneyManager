@@ -5,7 +5,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -566,7 +567,16 @@ public class StatisticFragment extends Fragment {
     }
 
     private void updatePieChartData() {
-        pieChart.setCenterText(statisticMode == Helper.TYPE_INCOME ? "THU NHẬP" : "CHI TIÊU");
+        long total = 0;
+        for (long money : values) {
+            total += money;
+        }
+        String title = (statisticMode == Helper.TYPE_INCOME ? "THU NHẬP\n" : "CHI TIÊU\n") + Helper.formatCurrency(total);
+        SpannableString str = new SpannableString(title);
+        str.setSpan(new StyleSpan(Typeface.BOLD), 0,8,0);
+
+        pieChart.setCenterText(str);
+
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
         pieDataSet.setSliceSpace(1);
         pieDataSet.setValueTextSize(13);
