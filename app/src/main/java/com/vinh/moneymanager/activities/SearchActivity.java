@@ -125,7 +125,9 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
 
             @Override
             public void afterTextChanged(Editable s) {
-                updateDataList(s.toString().trim().toLowerCase());
+                String keyword = s.toString().trim().toLowerCase();
+                adapter.setKeyword(keyword);
+                updateDataList(keyword);
             }
 
         });

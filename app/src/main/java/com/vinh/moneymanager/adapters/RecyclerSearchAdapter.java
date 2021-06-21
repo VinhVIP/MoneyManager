@@ -1,6 +1,9 @@
 package com.vinh.moneymanager.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +35,11 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private List<Category> categories;
     private List<Account> accounts;
 
+    private String keyword;
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
 
     public static final int TYPE_FINANCE = 1;
     public static final int TYPE_TRANSFER = 2;
@@ -152,7 +160,13 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 tvDayOfWeek.setBackgroundResource(R.color.colorDayOfWeek);
             }
 
-            tvDetail.setText(finance.getDetail());
+            String detail = finance.getDetail();
+            SpannableString span = new SpannableString(detail);
+            if(keyword != null && !keyword.isEmpty()){
+                int startIndex = detail.indexOf(keyword);
+                span.setSpan(new BackgroundColorSpan(Color.GREEN), startIndex, startIndex + keyword.length(), 0);
+            }
+            tvDetail.setText(span);
 
             long cost = finance.getMoney();
 
@@ -191,7 +205,13 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 tvDayOfWeek.setBackgroundResource(R.color.colorDayOfWeek);
             }
 
-            tvDetail.setText(transfer.getDetail());
+            String detail = transfer.getDetail();
+            SpannableString span = new SpannableString(detail);
+            if(keyword != null && !keyword.isEmpty()){
+                int startIndex = detail.indexOf(keyword);
+                span.setSpan(new BackgroundColorSpan(Color.GREEN), startIndex, startIndex + keyword.length(), 0);
+            }
+            tvDetail.setText(span);
 
             long cost = transfer.getMoney();
             long fee = transfer.getFee();
