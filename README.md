@@ -13,5 +13,5 @@ Room + LiveData + MVVM
 
 # Một số hình ảnh
 
-![img](https://github.com/VinhVIP/blog/blob/gh-pages/img/MoneyManager/a1.jpg)
-![img](https://github.com/VinhVIP/blog/blob/gh-pages/img/MoneyManager/a2.jpg)
+![img](https://github.com/VinhVIP/blog/blob/gh-pages/img/MoneyManager/a1.png)
+![img](https://github.com/VinhVIP/blog/blob/gh-pages/img/MoneyManager/a2.png)
