@@ -150,7 +150,22 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
                     }
                 }
             }
+        }else{
+            for (Finance f : allFinances) {
+                if (f.getDetail().isEmpty()) {
+                    if (canAddToList(f)) items.add(f);
+                }
+            }
+
+            if (isFilterTransfer) {
+                for (Transfer t : allTransfers) {
+                    if (t.getDetail().isEmpty()) {
+                        if (checkTransferTime(t)) items.add(t);
+                    }
+                }
+            }
         }
+
         adapter.setFinances(items);
         if (items.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
