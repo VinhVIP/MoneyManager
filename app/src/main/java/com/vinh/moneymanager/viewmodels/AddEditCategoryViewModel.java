@@ -4,6 +4,7 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
+import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.room.entities.Category;
 
 public class AddEditCategoryViewModel extends BaseObservable {
@@ -36,11 +37,11 @@ public class AddEditCategoryViewModel extends BaseObservable {
     }
 
     public String getName() {
-        return category.getName();
+        return Helper.validName(category.getName());
     }
 
     public void setName(String name) {
-        category.setName(name);
+        category.setName(Helper.validName(name));
     }
 
     @Bindable

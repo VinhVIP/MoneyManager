@@ -144,6 +144,17 @@ public class Helper {
         return "";
     }
 
+    public static String validName(String name) {
+        name = name.trim();
+        String[] s = name.split(" ");
+        String res = "";
+        for (int i = 0; i < s.length - 1; i++) {
+            if (!s[i].isEmpty()) res += s[i] + " ";
+        }
+        res += s[s.length - 1];
+        return res;
+    }
+
     public static float convertDpToPixel(float dp, Context context) {
         return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }

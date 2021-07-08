@@ -50,11 +50,11 @@ public class AddEditAccountViewModel extends BaseObservable {
     }
 
     public String getAccountName() {
-        return account.getAccountName();
+        return Helper.validName(account.getAccountName());
     }
 
     public void setAccountName(String accountName) {
-        account.setAccountName(accountName);
+        account.setAccountName(Helper.validName(accountName));
     }
 
     public String getDescription() {
