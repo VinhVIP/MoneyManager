@@ -125,8 +125,8 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
 
             @Override
             public void afterTextChanged(Editable s) {
-                String keyword = s.toString().trim().toLowerCase();
-                adapter.setKeyword(keyword);
+                String keyword = s.toString().toLowerCase();
+                adapter.setKeyword(keyword.trim());
                 updateDataList(keyword);
             }
 
@@ -136,21 +136,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
 
     private void updateDataList(String keyword) {
         items.clear();
-        if (keyword.length() != 0) {
-            for (Finance f : allFinances) {
-                if (f.getDetail().toLowerCase().contains(keyword)) {
-                    if (canAddToList(f)) items.add(f);
-                }
-            }
-
-            if (isFilterTransfer) {
-                for (Transfer t : allTransfers) {
-                    if (t.getDetail().toLowerCase().contains(keyword)) {
-                        if (checkTransferTime(t)) items.add(t);
-                    }
-                }
-            }
-        }else{
+        if(keyword.equals(" ")){
             for (Finance f : allFinances) {
                 if (f.getDetail().isEmpty()) {
                     if (canAddToList(f)) items.add(f);
@@ -160,6 +146,20 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
             if (isFilterTransfer) {
                 for (Transfer t : allTransfers) {
                     if (t.getDetail().isEmpty()) {
+                        if (checkTransferTime(t)) items.add(t);
+                    }
+                }
+            }
+        }else if(keyword.length() > 0){
+            for (Finance f : allFinances) {
+                if (f.getDetail().toLowerCase().contains(keyword.trim())) {
+                    if (canAddToList(f)) items.add(f);
+                }
+            }
+
+            if (isFilterTransfer) {
+                for (Transfer t : allTransfers) {
+                    if (t.getDetail().toLowerCase().contains(keyword.trim())) {
                         if (checkTransferTime(t)) items.add(t);
                     }
                 }
