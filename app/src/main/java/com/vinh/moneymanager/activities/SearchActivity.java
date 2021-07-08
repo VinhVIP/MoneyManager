@@ -136,31 +136,35 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
 
     private void updateDataList(String keyword) {
         items.clear();
-        if(keyword.equals(" ")){
-            for (Finance f : allFinances) {
-                if (f.getDetail().isEmpty()) {
-                    if (canAddToList(f)) items.add(f);
-                }
-            }
 
-            if (isFilterTransfer) {
-                for (Transfer t : allTransfers) {
-                    if (t.getDetail().isEmpty()) {
-                        if (checkTransferTime(t)) items.add(t);
+        if (keyword.length() > 0) {
+            if (keyword.trim().length() == 0) {
+                // Nhập toàn dấu space
+                for (Finance f : allFinances) {
+                    if (f.getDetail().isEmpty()) {
+                        if (canAddToList(f)) items.add(f);
                     }
                 }
-            }
-        }else if(keyword.length() > 0){
-            for (Finance f : allFinances) {
-                if (f.getDetail().toLowerCase().contains(keyword.trim())) {
-                    if (canAddToList(f)) items.add(f);
-                }
-            }
 
-            if (isFilterTransfer) {
-                for (Transfer t : allTransfers) {
-                    if (t.getDetail().toLowerCase().contains(keyword.trim())) {
-                        if (checkTransferTime(t)) items.add(t);
+                if (isFilterTransfer) {
+                    for (Transfer t : allTransfers) {
+                        if (t.getDetail().isEmpty()) {
+                            if (checkTransferTime(t)) items.add(t);
+                        }
+                    }
+                }
+            } else {
+                for (Finance f : allFinances) {
+                    if (f.getDetail().toLowerCase().contains(keyword.trim())) {
+                        if (canAddToList(f)) items.add(f);
+                    }
+                }
+
+                if (isFilterTransfer) {
+                    for (Transfer t : allTransfers) {
+                        if (t.getDetail().toLowerCase().contains(keyword.trim())) {
+                            if (checkTransferTime(t)) items.add(t);
+                        }
                     }
                 }
             }
