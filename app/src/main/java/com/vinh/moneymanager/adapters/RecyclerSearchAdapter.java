@@ -51,7 +51,7 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.listener = listener;
     }
 
-    public void setFinances(ArrayList items) {
+    public void setData(ArrayList items) {
         this.items = items;
         notifyDataSetChanged();
     }
@@ -162,7 +162,7 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             String detail = finance.getDetail();
             SpannableString span = new SpannableString(detail);
-            if(keyword != null && !keyword.isEmpty()){
+            if (keyword != null && !keyword.isEmpty()) {
                 int startIndex = detail.indexOf(keyword);
                 span.setSpan(new BackgroundColorSpan(Color.GREEN), startIndex, startIndex + keyword.length(), 0);
             }
@@ -207,7 +207,7 @@ public class RecyclerSearchAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             String detail = transfer.getDetail();
             SpannableString span = new SpannableString(detail);
-            if(keyword != null && !keyword.isEmpty()){
+            if (keyword != null && !keyword.isEmpty()) {
                 int startIndex = detail.indexOf(keyword);
                 span.setSpan(new BackgroundColorSpan(Color.GREEN), startIndex, startIndex + keyword.length(), 0);
             }

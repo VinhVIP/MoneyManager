@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.vinh.moneymanager.room.entities.Finance;
 import com.vinh.moneymanager.room.entities.Transfer;
 
 import java.util.List;
@@ -26,4 +27,6 @@ public interface TransferDao {
     @Query("SELECT * FROM transfer ORDER BY t_id DESC")
     LiveData<List<Transfer>> getTransfers();
 
+    @Query("SELECT * FROM transfer WHERE t_detail LIKE :keyword ORDER BY t_id ASC")
+    LiveData<List<Transfer>> getTransfersSearch(String keyword);
 }

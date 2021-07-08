@@ -54,16 +54,16 @@
         android:layout_height="match_parent"
         android:fontFamily="@font/oswald"
         android:gravity="center"
-        android:text="Không tìm thấy khoản giao dịch nào!"
+        android:text="Hãy nhập nội dung muốn tìm kiếm!"
         android:textColor="@color/amber"
         android:textSize="18sp"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_finance_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         tools:listitem="@layout/item_search_finance" />
 
 </LinearLayout>

@@ -40,6 +40,10 @@ public class TransferRepository {
         return transfers;
     }
 
+    public LiveData<List<Transfer>> getTransfersSearch(String keyword) {
+        return transferDao.getTransfersSearch(keyword);
+    }
+
 
     // AsyncTask
 

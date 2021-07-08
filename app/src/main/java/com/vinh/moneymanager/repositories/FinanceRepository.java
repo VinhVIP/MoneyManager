@@ -46,6 +46,10 @@ public class FinanceRepository {
         return financeDao.getFinances(categoryId);
     }
 
+    public LiveData<List<Finance>> getFinancesSearch(String keyword) {
+        return financeDao.getFinancesSearch(keyword);
+    }
+
     // ------------- AsyncTask --------------------
 
     private static class InsertFinanceAsyncTask extends AsyncTask<Finance, Void, Void> {

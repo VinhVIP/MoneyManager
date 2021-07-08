@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -96,19 +97,28 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
 
-        financeViewModel.getAllFinances().observe(this, finances -> {
-            allFinances = finances;
-            updateDataList(edSearch.getText().toString().trim().toLowerCase());
-        });
-        transferViewModel.getTransfers().observe(this, transfers -> {
-            allTransfers = transfers;
-            updateDataList(edSearch.getText().toString().trim().toLowerCase());
-        });
+//        financeViewModel.getAllFinances().observe(this, finances -> {
+//            allFinances = finances;
+//            updateDataList(edSearch.getText().toString().trim().toLowerCase());
+//        });
+//        transferViewModel.getTransfers().observe(this, transfers -> {
+//            allTransfers = transfers;
+//            updateDataList(edSearch.getText().toString().trim().toLowerCase());
+//        });
         categoryViewModel.getCategories().observe(this, categories -> {
             allCategories = categories;
             adapter.setCategories(categories);
         });
         accountViewModel.getAccounts().observe(this, accounts -> adapter.setAccounts(accounts));
+        // Search
+        financeViewModel.search().observe(this, finances -> {
+            if (finances != null) items.addAll(finances);
+            updateDataList();
+        });
+        transferViewModel.search().observe(this, transfers -> {
+            if (transfers != null) items.addAll(transfers);
+            updateDataList();
+        });
     }
 
     private void handlerSearch() {
@@ -127,61 +137,38 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
             public void afterTextChanged(Editable s) {
                 String keyword = s.toString().toLowerCase();
                 adapter.setKeyword(keyword.trim());
-                updateDataList(keyword);
+                items.clear();
+                if (keyword.trim().length() > 0) {
+                    financeViewModel.search("%" + keyword + "%", SearchActivity.this);
+                    transferViewModel.search("%" + keyword + "%", SearchActivity.this);
+                } else {
+                    adapter.setData(items);
+                    updateDataList();
+                }
             }
-
         });
 
     }
 
-    private void updateDataList(String keyword) {
-        items.clear();
-
-        if (keyword.length() > 0) {
-            if (keyword.trim().length() == 0) {
-                // Nhập toàn dấu space
-                for (Finance f : allFinances) {
-                    if (f.getDetail().isEmpty()) {
-                        if (canAddToList(f)) items.add(f);
-                    }
-                }
-
-                if (isFilterTransfer) {
-                    for (Transfer t : allTransfers) {
-                        if (t.getDetail().isEmpty()) {
-                            if (checkTransferTime(t)) items.add(t);
-                        }
-                    }
-                }
-            } else {
-                for (Finance f : allFinances) {
-                    if (f.getDetail().toLowerCase().contains(keyword.trim())) {
-                        if (canAddToList(f)) items.add(f);
-                    }
-                }
-
-                if (isFilterTransfer) {
-                    for (Transfer t : allTransfers) {
-                        if (t.getDetail().toLowerCase().contains(keyword.trim())) {
-                            if (checkTransferTime(t)) items.add(t);
-                        }
-                    }
-                }
+    private void updateDataList() {
+        ArrayList list = new ArrayList();
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) instanceof Finance) {
+                if (canAddToList((Finance) items.get(i))) list.add(items.get(i));
+            } else if (items.get(i) instanceof Transfer) {
+                if (isFilterTransfer && checkTransferTime((Transfer) items.get(i)))
+                    list.add(items.get(i));
             }
         }
+        items.clear();
+        items.addAll(list);
+        adapter.setData(items);
+        Log.e("MMM", "data size: " + items.size());
 
-        adapter.setFinances(items);
         if (items.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            tvMess.setVisibility(View.VISIBLE);
-            if (keyword.isEmpty()) {
-                tvMess.setText("Hãy nhập nội dung muốn tìm kiếm!");
-            } else {
-                tvMess.setText("Không tìm thấy khoản giao dịch nào!");
-            }
+            showMessage();
         } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            tvMess.setVisibility(View.GONE);
+            hideMessage();
         }
     }
 
@@ -192,6 +179,20 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
         return null;
     }
 
+    private void showMessage() {
+        recyclerView.setVisibility(View.GONE);
+        tvMess.setVisibility(View.VISIBLE);
+        if (edSearch.getText().toString().isEmpty()) {
+            tvMess.setText("Hãy nhập nội dung muốn tìm kiếm!");
+        } else {
+            tvMess.setText("Không tìm thấy khoản giao dịch nào!");
+        }
+    }
+
+    private void hideMessage() {
+        recyclerView.setVisibility(View.VISIBLE);
+        tvMess.setVisibility(View.GONE);
+    }
 
     private boolean canAddToList(Finance finance) {
         return checkFinanceType(finance) && checkFinanceTime(finance);
@@ -274,7 +275,15 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
 
         Button btnApply = dialog.findViewById(R.id.btn_apply);
         btnApply.setOnClickListener(v -> {
-            updateDataList(edSearch.getText().toString().trim().toLowerCase());
+            String keyword = edSearch.getText().toString();
+            items.clear();
+            if (keyword.trim().length() > 0) {
+                financeViewModel.search("%" + keyword + "%", SearchActivity.this);
+                transferViewModel.search("%" + keyword + "%", SearchActivity.this);
+            } else {
+                adapter.setData(items);
+                showMessage();
+            }
             dialog.dismiss();
         });
 

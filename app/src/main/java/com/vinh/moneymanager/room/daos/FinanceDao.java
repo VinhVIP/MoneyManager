@@ -28,6 +28,9 @@ public interface FinanceDao {
     @Query("SELECT * FROM finance WHERE c_id = :categoryId")
     LiveData<List<Finance>> getFinances(int categoryId);
 
+    @Query("SELECT * FROM finance WHERE f_detail LIKE :keyword ORDER BY f_id ASC")
+    LiveData<List<Finance>> getFinancesSearch(String keyword);
+
     @Query("SELECT * FROM finance")
     LiveData<List<Finance>> getAllFinances();
 

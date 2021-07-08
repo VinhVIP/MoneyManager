@@ -1,10 +1,13 @@
 package com.vinh.moneymanager.viewmodels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.vinh.moneymanager.repositories.TransferRepository;
 import com.vinh.moneymanager.room.entities.Transfer;
@@ -16,6 +19,8 @@ public class TransferViewModel extends AndroidViewModel {
     private final TransferRepository repository;
 
     private final LiveData<List<Transfer>> transfers;
+    private final MutableLiveData<List<Transfer>> transfersSearch = new MutableLiveData<>();
+
 
     public TransferViewModel(@NonNull Application application) {
         super(application);
@@ -39,4 +44,17 @@ public class TransferViewModel extends AndroidViewModel {
     public LiveData<List<Transfer>> getTransfers() {
         return transfers;
     }
+
+    public LiveData<List<Transfer>> search() {
+        return transfersSearch;
+    }
+
+    public void search(String keyword, LifecycleOwner owner) {
+        repository.getTransfersSearch(keyword).observe(owner, transfers1 ->
+        {
+            transfersSearch.setValue(transfers1);
+            Log.e("MMM", "size finances search: " + transfers1.size());
+        });
+    }
+
 }
