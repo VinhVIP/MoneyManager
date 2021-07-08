@@ -26,6 +26,7 @@ import com.vinh.moneymanager.viewmodels.AccountViewModel;
 import com.vinh.moneymanager.viewmodels.TransferViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ListTransferFragment extends Fragment implements RecyclerTransferAdapter.OnItemTransferListener {
@@ -60,6 +61,10 @@ public class ListTransferFragment extends Fragment implements RecyclerTransferAd
 
         transferViewModel.getTransfers().observe(getActivity(), transfers -> {
             Log.d("MM", "observe list transfer: " + transfers.size());
+
+            // Sắp xếp
+            sortByTimeDesc(transfers);
+
             this.transfers = transfers;
             adapter.setAdapter(transfers);
         });
@@ -69,6 +74,34 @@ public class ListTransferFragment extends Fragment implements RecyclerTransferAd
             Intent intent = new Intent(this.getActivity(), AddEditFinanceActivity.class);
             intent.putExtra(Helper.ADD_TRANSFER, new Bundle());
             startActivity(intent);
+        });
+    }
+
+    /**
+     * Sắp xếp danh sách chuyển khoản giảm dần theo thời gian
+     *
+     * @param list danh sách muốn sắp xếp
+     */
+    private void sortByTimeDesc(List<Transfer> list) {
+        Collections.sort(list, (t1, t2) -> {
+            String[] date1 = t1.getDateTime().split("-")[0].split("/");
+            String[] time1 = t1.getDateTime().split("-")[1].split(":");
+            String[] date2 = t2.getDateTime().split("-")[0].split("/");
+            String[] time2 = t2.getDateTime().split("-")[1].split(":");
+
+            int[] a = new int[5];
+            for (int i = 0; i < 3; i++) a[i] = Integer.parseInt(date1[2 - i].trim());
+            for (int i = 3; i < 5; i++) a[i] = Integer.parseInt(time1[i - 3].trim());
+
+            int[] b = new int[5];
+            for (int i = 0; i < 3; i++) b[i] = Integer.parseInt(date2[2 - i].trim());
+            for (int i = 3; i < 5; i++) b[i] = Integer.parseInt(time2[i - 3].trim());
+
+            for (int i = 0; i < 5; i++) {
+                if (a[i] < b[i]) return 1;
+                else if (a[i] > b[i]) return -1;
+            }
+            return 0;
         });
     }
 
