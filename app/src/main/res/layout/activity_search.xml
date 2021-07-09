@@ -27,7 +27,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="4dp"
             android:background="@drawable/bg_search"
             android:drawableStart="@drawable/ic_search"
             android:fontFamily="@font/oswald"
@@ -47,23 +47,20 @@
             android:src="@drawable/ic_setting" />
     </LinearLayout>
 
-
     <TextView
         android:id="@+id/tv_mess"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:fontFamily="@font/oswald"
         android:gravity="center"
         android:text="Hãy nhập nội dung muốn tìm kiếm!"
         android:textColor="@color/amber"
-        android:textSize="18sp"
-        android:visibility="visible" />
+        android:textSize="17sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_finance_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         tools:listitem="@layout/item_search_finance" />
 
 </LinearLayout>

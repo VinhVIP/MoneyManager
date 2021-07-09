@@ -1,14 +1,11 @@
 package com.vinh.moneymanager.activities;
 
-import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,10 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,13 +36,6 @@ import com.vinh.moneymanager.viewmodels.CategoryViewModel;
 import com.vinh.moneymanager.viewmodels.FinanceViewModel;
 import com.vinh.moneymanager.viewmodels.TransferViewModel;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -177,11 +165,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
         adapter.setData(items);
         Log.e("MMM", "data size: " + items.size());
 
-        if (items.isEmpty()) {
-            showMessage();
-        } else {
-            hideMessage();
-        }
+        showMessage();
     }
 
     private Category getCategory(int categoryId) {
@@ -192,18 +176,15 @@ public class SearchActivity extends AppCompatActivity implements OnItemSearchLis
     }
 
     private void showMessage() {
-        recyclerView.setVisibility(View.GONE);
-        tvMess.setVisibility(View.VISIBLE);
         if (edSearch.getText().toString().isEmpty()) {
             tvMess.setText("Hãy nhập nội dung muốn tìm kiếm!");
         } else {
-            tvMess.setText("Không tìm thấy khoản giao dịch nào!");
+            if (items.size() > 0) {
+                tvMess.setText(String.format("Tìm thấy %d kết quả!", items.size()));
+            } else{
+                tvMess.setText("Không tìm thấy khoản giao dịch nào!");
+            }
         }
-    }
-
-    private void hideMessage() {
-        recyclerView.setVisibility(View.VISIBLE);
-        tvMess.setVisibility(View.GONE);
     }
 
     private boolean canAddToList(Finance finance) {

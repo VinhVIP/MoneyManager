@@ -181,7 +181,7 @@
                     android:inputType="textMultiLine"
                     android:maxLength="100"
                     android:maxLines="3"
-                    android:text="@={viewModel.description}"
+                    android:text="@{viewModel.description}"
                     android:textSize="18sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>

@@ -193,8 +193,6 @@ public class AddEditAccountActivity extends AppCompatActivity {
             String desc = data.getString(Helper.ACCOUNT_DESCRIPTION);
             int iconIndex = data.getInt(Helper.ACCOUNT_ICON, 0);
 
-            Log.e("MMM", "desc: " + desc);
-
             Account account = new Account(accountName, balance, desc, iconIndex);
             account.setAccountId(accountId);
 

@@ -594,7 +594,11 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
     private void showDialogChooseDay(DateRange.Date date) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, year, month, dayOfMonth) -> {
-                    tvDay.setText(String.format("%02d/%02d/%02d", dayOfMonth, month + 1, year));
+                    if (Helper.compareDateNow(new int[]{year, month, dayOfMonth}) <= 0) {
+                        tvDay.setText(String.format("%02d/%02d/%02d", dayOfMonth, month + 1, year));
+                    } else {
+                        Toast.makeText(this, "Không thể chọn ngày trong tương lai!", Toast.LENGTH_SHORT).show();
+                    }
                 },
                 date.getYear(),
                 date.getMonth() - 1,

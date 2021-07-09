@@ -155,6 +155,20 @@ public class Helper {
         return res;
     }
 
+    public static int compareDateNow(int[] a) {
+        int[] b = new int[3];
+        Calendar now = Calendar.getInstance();
+        b[0] = now.get(Calendar.YEAR);
+        b[1] = now.get(Calendar.MONTH);
+        b[2] = now.get(Calendar.DAY_OF_MONTH);
+
+        for (int i = 0; i < 3; i++) {
+            if (a[i] < b[i]) return -1;
+            else if (a[i] > b[i]) return 1;
+        }
+        return 0;
+    }
+
     public static float convertDpToPixel(float dp, Context context) {
         return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }

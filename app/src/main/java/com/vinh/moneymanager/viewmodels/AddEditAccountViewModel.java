@@ -1,5 +1,7 @@
 package com.vinh.moneymanager.viewmodels;
 
+import android.util.Log;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
