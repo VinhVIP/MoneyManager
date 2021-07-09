@@ -1,5 +1,6 @@
 package com.vinh.moneymanager.room.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -17,6 +18,7 @@ import androidx.room.PrimaryKey;
                         onDelete = ForeignKey.CASCADE)
         })
 public class Transfer {
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "t_id")
     private int transferId;
@@ -27,6 +29,7 @@ public class Transfer {
     @ColumnInfo(name = "t_fee")
     private long fee;
 
+    @NonNull
     @ColumnInfo(name = "t_date_time")
     private String dateTime;
 
@@ -39,7 +42,7 @@ public class Transfer {
     @ColumnInfo(name = "a_in_id")
     private int accountInId;
 
-    public Transfer(long money, long fee, String dateTime, String detail, int accountOutId, int accountInId) {
+    public Transfer(long money, long fee, @NonNull String dateTime, String detail, int accountOutId, int accountInId) {
         this.money = money;
         this.fee = fee;
         this.dateTime = dateTime;
@@ -72,11 +75,12 @@ public class Transfer {
         this.fee = fee;
     }
 
+    @NonNull
     public String getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(String dateTime) {
+    public void setDateTime(@NonNull String dateTime) {
         this.dateTime = dateTime;
     }
 

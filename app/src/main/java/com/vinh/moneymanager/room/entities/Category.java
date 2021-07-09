@@ -1,9 +1,11 @@
 package com.vinh.moneymanager.room.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "category",
@@ -12,13 +14,16 @@ import androidx.room.PrimaryKey;
                         parentColumns = "type_id",
                         childColumns = "type_id",
                         onDelete = ForeignKey.CASCADE)
-        })
+        },
+        indices = {@Index(value = {"c_name"},
+                unique = true)})
 public class Category {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "c_id")
     private int categoryId;
 
+    @NonNull
     @ColumnInfo(name = "c_name")
     private String name;
 
@@ -34,7 +39,7 @@ public class Category {
     @Ignore
     private long totalCost;
 
-    public Category(String name, int type, String description, int icon) {
+    public Category(@NonNull String name, int type, String description, int icon) {
         this.name = name;
         this.type = type;
         this.description = description;
@@ -49,6 +54,7 @@ public class Category {
         this.categoryId = categoryId;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }

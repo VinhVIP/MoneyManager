@@ -1,5 +1,6 @@
 package com.vinh.moneymanager.room.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -26,6 +27,7 @@ public class Finance {
     @ColumnInfo(name = "f_money")
     private long money;
 
+    @NonNull
     @ColumnInfo(name = "f_date_time")
     private String dateTime;
 
@@ -38,7 +40,7 @@ public class Finance {
     @ColumnInfo(name = "a_id")
     private int accountId;
 
-    public Finance(long money, String dateTime, String detail, int categoryId, int accountId) {
+    public Finance(long money, @NonNull String dateTime, String detail, int categoryId, int accountId) {
         this.money = money;
         this.dateTime = dateTime;
         this.detail = detail;
@@ -63,11 +65,12 @@ public class Finance {
         this.money = money;
     }
 
+    @NonNull
     public String getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(String dateTime) {
+    public void setDateTime(@NonNull String dateTime) {
         this.dateTime = dateTime;
     }
 

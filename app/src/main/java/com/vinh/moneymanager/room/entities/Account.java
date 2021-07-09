@@ -1,16 +1,22 @@
 package com.vinh.moneymanager.room.entities;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "account")
+@Entity(tableName = "account",
+        indices = {@Index(value = {"a_name"},
+                unique = true)})
 public class Account {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "a_id")
     private int accountId;
 
+    @NonNull
     @ColumnInfo(name = "a_name")
     private String accountName;
 
@@ -23,7 +29,7 @@ public class Account {
     @ColumnInfo(name = "a_icon")
     private int icon;
 
-    public Account(String accountName, long balance, String description, int icon) {
+    public Account(@NonNull String accountName, long balance, String description, int icon) {
         this.accountName = accountName;
         this.balance = balance;
         this.description = description;
@@ -38,11 +44,12 @@ public class Account {
         this.accountId = accountId;
     }
 
+    @NonNull
     public String getAccountName() {
         return accountName;
     }
 
-    public void setAccountName(String accountName) {
+    public void setAccountName(@NonNull String accountName) {
         this.accountName = accountName;
     }
 
