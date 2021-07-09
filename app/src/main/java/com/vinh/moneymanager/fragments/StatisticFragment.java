@@ -738,6 +738,8 @@ public class StatisticFragment extends Fragment {
                 int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
                 range.setStartDate(new DateRange.Date(1, month, year));
                 range.setEndDate(new DateRange.Date(DateRange.getLastDay(month, year), month, year));
+                binding.setDate(range);
+                update();
 //                mViewModel.setDateRangeValue(range);
                 dialog.cancel();
             });

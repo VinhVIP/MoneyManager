@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,10 +47,18 @@ import com.vinh.moneymanager.libs.DialogWeek;
 import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.listeners.OnItemCategoryListener;
 import com.vinh.moneymanager.listeners.OnItemFinanceListener;
+import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
 import com.vinh.moneymanager.viewmodels.CategoryFinanceViewModel;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -103,7 +113,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
     private ChipGroup chipGroup;
     private Chip chipIncome, chipExpense;
 
-    private ImageView imgExpandCollapse, imgDoubleArrow;
+    private ImageView imgExpandCollapse, imgDoubleArrow, imgExcel;
     private boolean isExpandedAll = false;
 
     private ListCategoryFragment listIncomeFragment, listExpenseFragment;
@@ -164,6 +174,27 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         initExpandListFinances(view);
         initViewPager(view);
         setLayoutBottomSheet(view);
+
+        imgExcel = view.findViewById(R.id.img_excel);
+        imgExcel.setOnClickListener(v -> {
+            List<Finance> finances = new ArrayList<>();
+            if (mViewModel.switchExpenseIncome.get() == Helper.TYPE_INCOME) {
+                for (String t : mapTimeIncome.keySet()) {
+                    finances.addAll(mapTimeIncome.get(t));
+                }
+//                for (Category c : mapIncome.keySet()) {
+//                    finances.addAll(mapIncome.get(c));
+//                }
+            } else {
+//                for (Category c : mapExpense.keySet()) {
+//                    finances.addAll(mapExpense.get(c));
+//                }
+                for (String t : mapTimeExpense.keySet()) {
+                    finances.addAll(mapTimeExpense.get(t));
+                }
+            }
+            createExcel(finances);
+        });
 
         mViewModel.getMapTimeFinance().observe(getActivity(), timeListMap -> {
             mapTimeIncome.clear();
@@ -243,10 +274,74 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         });
 
         mViewModel.getAccounts().observe(getActivity(), accounts -> {
+            allAccounts = accounts;
             expandFinanceAdapter.setAccounts(accounts);
             expandTimeAdapter.setAccounts(accounts);
         });
         return view;
+    }
+
+    private List<Account> allAccounts;
+
+    private Account getAccount(int accountId) {
+        for (Account account : allAccounts) {
+            if (account.getAccountId() == accountId) return account;
+        }
+        return null;
+    }
+
+    private void createExcel(List<Finance> finances) {
+        Calendar calendar = Calendar.getInstance();
+        String fileName = "";
+        if (mViewModel.switchExpenseIncome.get() == Helper.TYPE_INCOME)
+            fileName = "Income-";
+        else fileName = "Expense-";
+        fileName += String.format("%d%d%d-%d%d%d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.DAY_OF_MONTH),
+                calendar.get(Calendar.HOUR),
+                calendar.get(Calendar.MINUTE),
+                calendar.get(Calendar.SECOND));
+
+        File filePath = new File(Environment.getExternalStorageDirectory() + "/" + fileName + ".xls");
+
+        HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
+        HSSFSheet hssfSheet = hssfWorkbook.createSheet("Money Manager");
+
+        HSSFRow hssfRow = hssfSheet.createRow(0);
+        HSSFCell hssfCell = hssfRow.createCell(0);
+
+        String[] title = new String[]{"STT", "Thời gian", "Danh mục", "Tài khoản", "Số tiền", "Ghi chú"};
+        for (int i = 0; i < title.length; i++) {
+            hssfRow.createCell(i).setCellValue(title[i]);
+        }
+
+        for (int i = 1; i <= finances.size(); i++) {
+            Finance f = finances.get(i - 1);
+            HSSFRow row = hssfSheet.createRow(i);
+
+            row.createCell(0).setCellValue(i);
+            row.createCell(1).setCellValue(f.getDateTime());
+            row.createCell(2).setCellValue(getCategory(f.getCategoryId()).getName());
+            row.createCell(3).setCellValue(getAccount(f.getAccountId()).getAccountName());
+            row.createCell(4).setCellValue(f.getMoney());
+            row.createCell(5).setCellValue(f.getDetail());
+
+        }
+
+        try {
+            if (!filePath.exists()) {
+                filePath.createNewFile();
+            }
+
+            FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+            hssfWorkbook.write(fileOutputStream);
+
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            Toast.makeText(this.getContext(), "Tạo file excel thành công: " + fileName + ".xls", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initViewPager(View view) {
@@ -269,10 +364,10 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
                 ((Chip) (chipGroup.getChildAt(position))).setChecked(true);
                 mViewModel.switchExpenseIncome.set(position + 1);
 
-                if(mViewModel.switchExpenseIncome.get() == Helper.TYPE_INCOME){
+                if (mViewModel.switchExpenseIncome.get() == Helper.TYPE_INCOME) {
                     expandFinanceAdapter.setMapFinance(mapIncome);
                     expandTimeAdapter.setMapFinance(mapTimeIncome);
-                }else{
+                } else {
                     expandFinanceAdapter.setMapFinance(mapExpense);
                     expandTimeAdapter.setMapFinance(mapTimeExpense);
                 }
