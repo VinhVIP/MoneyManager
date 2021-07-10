@@ -159,6 +159,18 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
                     .setTitle("Xác nhận xóa")
                     .setMessage("Bạn có xác định muốn xóa khoản này?")
                     .setPositiveButton("XÓA", (dialog, which) -> {
+                        long money = currentFinance.getMoney();
+                        Account account = getAccount(currentFinance.getAccountId());
+
+                        Category category = getCategory(currentFinance.getCategoryId());
+                        if(category.getType() == Helper.TYPE_INCOME){
+                            account.setBalance(account.getBalance() - money);
+                        }else if(category.getType() == Helper.TYPE_EXPENSE){
+                            account.setBalance(account.getBalance() + money);
+                        }
+
+                        accountViewModel.update(account);
+
                         financeViewModel.delete(currentFinance);
                         Log.d("MM", "Finance Deleted: " + currentFinance.getFinanceId());
                         finish();
