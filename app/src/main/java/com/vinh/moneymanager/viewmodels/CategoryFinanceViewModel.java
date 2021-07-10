@@ -17,6 +17,7 @@ import com.vinh.moneymanager.libs.Helper;
 import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
+import com.vinh.moneymanager.room.entities.Transfer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +29,19 @@ public class CategoryFinanceViewModel extends ViewModel {
     public FinanceViewModel financeViewModel;
     public CategoryViewModel categoryViewModel;
     public AccountViewModel accountViewModel;
+    public TransferViewModel transferViewModel;
 
     public ObservableField<DateRange> dateRange = new ObservableField<>();
 
     public ObservableLong totalCostIncome = new ObservableLong();
     public ObservableLong totalCostExpense = new ObservableLong();
     public ObservableInt switchExpenseIncome = new ObservableInt();
+
+    public Map<Category, List<Finance>> getAllFinances() {
+        return allFinances;
+    }
+
+    private List<Transfer> allTransfer;
 
     private Map<Category, List<Finance>> allFinances;
     private MutableLiveData<List<Category>> categories;
@@ -50,6 +58,7 @@ public class CategoryFinanceViewModel extends ViewModel {
         financeViewModel = new ViewModelProvider(owner).get(FinanceViewModel.class);
         categoryViewModel = new ViewModelProvider(owner).get(CategoryViewModel.class);
         accountViewModel = new ViewModelProvider(owner).get(AccountViewModel.class);
+        transferViewModel = new ViewModelProvider(owner).get(TransferViewModel.class);
 
         switchExpenseIncome.set(Helper.TYPE_EXPENSE);
 
@@ -97,6 +106,10 @@ public class CategoryFinanceViewModel extends ViewModel {
 
         accountViewModel.getAccounts().observe(lifecycleOwner, accounts -> {
             this.accounts.setValue(accounts);
+        });
+
+        transferViewModel.getTransfers().observe(lifecycleOwner, transfers -> {
+            allTransfer = transfers;
         });
     }
 
@@ -167,5 +180,9 @@ public class CategoryFinanceViewModel extends ViewModel {
 
     public LiveData<List<Account>> getAccounts() {
         return accounts;
+    }
+
+    public List<Transfer> getAllTransfer() {
+        return allTransfer;
     }
 }

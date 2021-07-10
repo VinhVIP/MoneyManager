@@ -4,8 +4,12 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 
 import com.vinh.moneymanager.R;
+import com.vinh.moneymanager.room.entities.Finance;
+import com.vinh.moneymanager.room.entities.Transfer;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 public class Helper {
     public static final int TYPE_INCOME = 1;
@@ -167,6 +171,46 @@ public class Helper {
             else if (a[i] > b[i]) return 1;
         }
         return 0;
+    }
+
+    public static int compareTime(String[] date1, String[] time1, String[] date2, String[] time2) {
+        int[] a = new int[5];
+        for (int i = 0; i < 3; i++) a[i] = Integer.parseInt(date1[2 - i].trim());
+        for (int i = 3; i < 5; i++) a[i] = Integer.parseInt(time1[i - 3].trim());
+
+        int[] b = new int[5];
+        for (int i = 0; i < 3; i++) b[i] = Integer.parseInt(date2[2 - i].trim());
+        for (int i = 3; i < 5; i++) b[i] = Integer.parseInt(time2[i - 3].trim());
+
+        for (int i = 0; i < 5; i++) {
+            if (a[i] < b[i]) return -1;
+            else if (a[i] > b[i]) return 1;
+        }
+        return 0;
+    }
+
+    public static void sortFinanceByTimeAsc(List<Finance> list) {
+        Collections.sort(list, (t1, t2) ->
+        {
+            String[] date1 = t1.getDateTime().split("-")[0].split("/");
+            String[] time1 = t1.getDateTime().split("-")[1].split(":");
+            String[] date2 = t2.getDateTime().split("-")[0].split("/");
+            String[] time2 = t2.getDateTime().split("-")[1].split(":");
+
+            return compareTime(date1, time1, date2, time2);
+        });
+    }
+
+    public static void sortTransferByTimeAsc(List<Transfer> list) {
+        Collections.sort(list, (t1, t2) ->
+        {
+            String[] date1 = t1.getDateTime().split("-")[0].split("/");
+            String[] time1 = t1.getDateTime().split("-")[1].split(":");
+            String[] date2 = t2.getDateTime().split("-")[0].split("/");
+            String[] time2 = t2.getDateTime().split("-")[1].split(":");
+
+            return compareTime(date1, time1, date2, time2);
+        });
     }
 
     public static float convertDpToPixel(float dp, Context context) {

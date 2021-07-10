@@ -12,10 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ExpandableListView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +53,7 @@ import com.vinh.moneymanager.listeners.OnItemFinanceListener;
 import com.vinh.moneymanager.room.entities.Account;
 import com.vinh.moneymanager.room.entities.Category;
 import com.vinh.moneymanager.room.entities.Finance;
+import com.vinh.moneymanager.room.entities.Transfer;
 import com.vinh.moneymanager.viewmodels.CategoryFinanceViewModel;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -151,6 +155,7 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         dateHandlerClick = new DateHandlerClick();
         dialogWeek = new DialogWeek(getContext(), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR), this);
 
+        settingDialog();
     }
 
     @Override
@@ -177,23 +182,24 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
 
         imgExcel = view.findViewById(R.id.img_excel);
         imgExcel.setOnClickListener(v -> {
-            List<Finance> finances = new ArrayList<>();
-            if (mViewModel.switchExpenseIncome.get() == Helper.TYPE_INCOME) {
-                for (String t : mapTimeIncome.keySet()) {
-                    finances.addAll(mapTimeIncome.get(t));
-                }
-//                for (Category c : mapIncome.keySet()) {
-//                    finances.addAll(mapIncome.get(c));
+            showDialog();
+//            List<Finance> finances = new ArrayList<>();
+//            if (mViewModel.switchExpenseIncome.get() == Helper.TYPE_INCOME) {
+//                for (String t : mapTimeIncome.keySet()) {
+//                    finances.addAll(mapTimeIncome.get(t));
 //                }
-            } else {
-//                for (Category c : mapExpense.keySet()) {
-//                    finances.addAll(mapExpense.get(c));
+////                for (Category c : mapIncome.keySet()) {
+////                    finances.addAll(mapIncome.get(c));
+////                }
+//            } else {
+////                for (Category c : mapExpense.keySet()) {
+////                    finances.addAll(mapExpense.get(c));
+////                }
+//                for (String t : mapTimeExpense.keySet()) {
+//                    finances.addAll(mapTimeExpense.get(t));
 //                }
-                for (String t : mapTimeExpense.keySet()) {
-                    finances.addAll(mapTimeExpense.get(t));
-                }
-            }
-            createExcel(finances);
+//            }
+//            createExcel(finances);
         });
 
         mViewModel.getMapTimeFinance().observe(getActivity(), timeListMap -> {
@@ -290,12 +296,78 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         return null;
     }
 
-    private void createExcel(List<Finance> finances) {
+    private void prepareExcel() {
+        List<Finance> financesIncome = new ArrayList<>();
+        List<Finance> financesExpense = new ArrayList<>();
+        List<Transfer> transfers = new ArrayList<>();
+
+        if (isFilterIncome) {
+            for (Category c : mViewModel.getAllFinances().keySet()) {
+                if (c.getType() == Helper.TYPE_INCOME) {
+                    if (isFilterAllTime) {
+                        financesIncome.addAll(mViewModel.getAllFinances().get(c));
+                    } else {
+                        for (Finance f : mViewModel.getAllFinances().get(c)) {
+                            String strDate = f.getDateTime().split("-")[0].trim();
+                            if (inRange(new DateRange.Date(strDate), startDate, endDate)) {
+                                financesIncome.add(f);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (isFilterExpense) {
+            for (Category c : mViewModel.getAllFinances().keySet()) {
+                if (c.getType() == Helper.TYPE_EXPENSE) {
+                    if (isFilterAllTime) {
+                        financesExpense.addAll(mViewModel.getAllFinances().get(c));
+                    } else {
+                        for (Finance f : mViewModel.getAllFinances().get(c)) {
+                            String strDate = f.getDateTime().split("-")[0].trim();
+                            if (inRange(new DateRange.Date(strDate), startDate, endDate)) {
+                                financesExpense.add(f);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (isFilterTransfer) {
+            if (isFilterAllTime) {
+                transfers.addAll(mViewModel.getAllTransfer());
+            } else {
+                for (Transfer t : mViewModel.getAllTransfer()) {
+                    String strDate = t.getDateTime().split("-")[0].trim();
+                    if (inRange(new DateRange.Date(strDate), startDate, endDate)) {
+                        transfers.add(t);
+                    }
+                }
+            }
+        }
+
+        Helper.sortFinanceByTimeAsc(financesIncome);
+        Helper.sortFinanceByTimeAsc(financesExpense);
+        Helper.sortTransferByTimeAsc(transfers);
+
+        createExcel(financesIncome, financesExpense, transfers);
+    }
+
+    private boolean inRange(DateRange.Date date, DateRange.Date start, DateRange.Date end) {
+        if (date.compare(start) >= 0 && date.compare(end) <= 0) {
+            return true;
+        }
+        if (date.compare(end) >= 0 && date.compare(start) <= 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private void createExcel(List<Finance> financesIncome, List<Finance> financesExpense, List<Transfer> transfers) {
         Calendar calendar = Calendar.getInstance();
-        String fileName = "";
-        if (mViewModel.switchExpenseIncome.get() == Helper.TYPE_INCOME)
-            fileName = "Income-";
-        else fileName = "Expense-";
+        String fileName = "Data-";
         fileName += String.format("%d%d%d-%d%d%d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1,
                 calendar.get(Calendar.DAY_OF_MONTH),
                 calendar.get(Calendar.HOUR),
@@ -305,27 +377,80 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
         File filePath = new File(Environment.getExternalStorageDirectory() + "/" + fileName + ".xls");
 
         HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
-        HSSFSheet hssfSheet = hssfWorkbook.createSheet("Money Manager");
 
-        HSSFRow hssfRow = hssfSheet.createRow(0);
-        HSSFCell hssfCell = hssfRow.createCell(0);
+        HSSFSheet sheetIncome, sheetExpense, sheetTransfer;
 
-        String[] title = new String[]{"STT", "Thời gian", "Danh mục", "Tài khoản", "Số tiền", "Ghi chú"};
-        for (int i = 0; i < title.length; i++) {
-            hssfRow.createCell(i).setCellValue(title[i]);
+        if (isFilterIncome) {
+            sheetIncome = hssfWorkbook.createSheet("Thu nhập");
+
+            HSSFRow hssfRow = sheetIncome.createRow(0);
+            HSSFCell hssfCell = hssfRow.createCell(0);
+
+            String[] title = new String[]{"STT", "Thời gian", "Danh mục", "Tài khoản", "Số tiền", "Ghi chú"};
+            for (int i = 0; i < title.length; i++) {
+                hssfRow.createCell(i).setCellValue(title[i]);
+            }
+
+            for (int i = 1; i <= financesIncome.size(); i++) {
+                Finance f = financesIncome.get(i - 1);
+                HSSFRow row = sheetIncome.createRow(i);
+
+                row.createCell(0).setCellValue(i);
+                row.createCell(1).setCellValue(f.getDateTime());
+                row.createCell(2).setCellValue(getCategory(f.getCategoryId()).getName());
+                row.createCell(3).setCellValue(getAccount(f.getAccountId()).getAccountName());
+                row.createCell(4).setCellValue(f.getMoney());
+                row.createCell(5).setCellValue(f.getDetail());
+            }
         }
+        if (isFilterExpense) {
+            sheetExpense = hssfWorkbook.createSheet("Chi tiêu");
 
-        for (int i = 1; i <= finances.size(); i++) {
-            Finance f = finances.get(i - 1);
-            HSSFRow row = hssfSheet.createRow(i);
+            HSSFRow hssfRow = sheetExpense.createRow(0);
+            HSSFCell hssfCell = hssfRow.createCell(0);
 
-            row.createCell(0).setCellValue(i);
-            row.createCell(1).setCellValue(f.getDateTime());
-            row.createCell(2).setCellValue(getCategory(f.getCategoryId()).getName());
-            row.createCell(3).setCellValue(getAccount(f.getAccountId()).getAccountName());
-            row.createCell(4).setCellValue(f.getMoney());
-            row.createCell(5).setCellValue(f.getDetail());
+            String[] title = new String[]{"STT", "Thời gian", "Danh mục", "Tài khoản", "Số tiền", "Ghi chú"};
+            for (int i = 0; i < title.length; i++) {
+                hssfRow.createCell(i).setCellValue(title[i]);
+            }
 
+            for (int i = 1; i <= financesExpense.size(); i++) {
+                Finance f = financesExpense.get(i - 1);
+                HSSFRow row = sheetExpense.createRow(i);
+
+                row.createCell(0).setCellValue(i);
+                row.createCell(1).setCellValue(f.getDateTime());
+                row.createCell(2).setCellValue(getCategory(f.getCategoryId()).getName());
+                row.createCell(3).setCellValue(getAccount(f.getAccountId()).getAccountName());
+                row.createCell(4).setCellValue(f.getMoney());
+                row.createCell(5).setCellValue(f.getDetail());
+
+            }
+        }
+        if (isFilterTransfer) {
+            sheetTransfer = hssfWorkbook.createSheet("Chuyển khoản");
+
+            HSSFRow hssfRow = sheetTransfer.createRow(0);
+            HSSFCell hssfCell = hssfRow.createCell(0);
+
+            String[] title = new String[]{"STT", "Thời gian", "Tài khoản chuyển", "Tài khoản nhận", "Số tiền", "Phí", "Ghi chú"};
+            for (int i = 0; i < title.length; i++) {
+                hssfRow.createCell(i).setCellValue(title[i]);
+            }
+
+            for (int i = 1; i <= transfers.size(); i++) {
+                Transfer t = transfers.get(i - 1);
+                HSSFRow row = sheetTransfer.createRow(i);
+
+                row.createCell(0).setCellValue(i);
+                row.createCell(1).setCellValue(t.getDateTime());
+                row.createCell(2).setCellValue(getAccount(t.getAccountOutId()).getAccountName());
+                row.createCell(3).setCellValue(getAccount(t.getAccountInId()).getAccountName());
+                row.createCell(4).setCellValue(t.getMoney());
+                row.createCell(5).setCellValue(t.getFee());
+                row.createCell(6).setCellValue(t.getDetail());
+
+            }
         }
 
         try {
@@ -341,7 +466,97 @@ public class ExpenseFragment extends Fragment implements SingleChoice.OnChoiceSe
             Toast.makeText(this.getContext(), "Tạo file excel thành công: " + fileName + ".xls", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(this.getContext(), "Tạo file excel thất bại :((", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private Dialog dialog;
+    private DateRange.Date startDate, endDate;
+    private TextView tvStartDate, tvEndDate;
+
+    private boolean isFilterIncome = true;
+    private boolean isFilterExpense = true;
+    private boolean isFilterTransfer = true;
+
+    private boolean isFilterAllTime = true;
+
+    private void showDialog() {
+        startDate = mViewModel.dateRange.get().getStartDate();
+        endDate = mViewModel.dateRange.get().getEndDate();
+
+        tvStartDate.setText(String.format("%02d/%02d/%d", startDate.getDay(), startDate.getMonth(), startDate.getYear()));
+        tvEndDate.setText(String.format("%02d/%02d/%d", endDate.getDay(), endDate.getMonth(), endDate.getYear()));
+
+        dialog.show();
+    }
+
+    private void settingDialog() {
+        dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_search_filter);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        ImageView imgClose = dialog.findViewById(R.id.img_close_dialog);
+        imgClose.setOnClickListener((v) -> dialog.cancel());
+
+        CheckBox cbIncome = dialog.findViewById(R.id.cb_filter_income);
+        CheckBox cbExpense = dialog.findViewById(R.id.cb_filter_expense);
+        CheckBox cbTransfer = dialog.findViewById(R.id.cb_filter_transfer);
+
+        RadioButton radioAllTime = dialog.findViewById(R.id.radio_all_time);
+        RadioButton radioFixedTime = dialog.findViewById(R.id.radio_fixed_time);
+
+        cbIncome.setOnCheckedChangeListener((buttonView, isChecked) -> isFilterIncome = isChecked);
+        cbExpense.setOnCheckedChangeListener((buttonView, isChecked) -> isFilterExpense = isChecked);
+        cbTransfer.setOnCheckedChangeListener((buttonView, isChecked) -> isFilterTransfer = isChecked);
+
+        LinearLayout layoutFilterTime = dialog.findViewById(R.id.layout_filter_time);
+
+        radioAllTime.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (radioAllTime.isChecked()) {
+                layoutFilterTime.setVisibility(View.GONE);
+            }
+            isFilterAllTime = radioAllTime.isChecked();
+        });
+
+        radioFixedTime.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (radioFixedTime.isChecked()) {
+                layoutFilterTime.setVisibility(View.VISIBLE);
+            }
+            isFilterAllTime = radioAllTime.isChecked();
+        });
+
+        Button btnApply = dialog.findViewById(R.id.btn_apply);
+        btnApply.setOnClickListener(v -> {
+            prepareExcel();
+            dialog.dismiss();
+        });
+
+        tvStartDate = dialog.findViewById(R.id.tv_start_date);
+        tvEndDate = dialog.findViewById(R.id.tv_end_date);
+
+
+        tvStartDate.setOnClickListener(v -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                    (view, year, month, dayOfMonth) -> {
+                        tvStartDate.setText(String.format("%02d/%02d/%d", dayOfMonth, month + 1, year));
+                        startDate = new DateRange.Date(dayOfMonth, month + 1, year);
+                    },
+                    startDate.getYear(),
+                    startDate.getMonth() - 1,
+                    startDate.getDay());
+            datePickerDialog.show();
+        });
+        tvEndDate.setOnClickListener(v -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                    (view, year, month, dayOfMonth) -> {
+                        tvEndDate.setText(String.format("%02d/%02d/%d", dayOfMonth, month + 1, year));
+                        endDate = new DateRange.Date(dayOfMonth, month + 1, year);
+                    },
+                    endDate.getYear(),
+                    endDate.getMonth() - 1,
+                    endDate.getDay());
+            datePickerDialog.show();
+        });
     }
 
     private void initViewPager(View view) {
