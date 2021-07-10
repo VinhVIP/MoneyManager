@@ -284,7 +284,9 @@ public class AddEditFinanceActivity extends AppCompatActivity implements View.On
         Account accountIn = mViewModel.accountIn.get();
 
         if (accountIn != null && accountOut != null) {
-            if (edCost.getText().toString().isEmpty()) {
+            if (accountIn.getAccountId() == accountOut.getAccountId()) {
+                Toast.makeText(this, "Không thể chuyển khoản cho chính nó", Toast.LENGTH_SHORT).show();
+            } else if (edCost.getText().toString().isEmpty()) {
                 Toast.makeText(this, "Chưa nhập số tiền", Toast.LENGTH_SHORT).show();
             } else {
                 String dateTime = tvDay.getText() + "-" + tvTime.getText();
